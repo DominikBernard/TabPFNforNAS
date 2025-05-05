@@ -1,0 +1,18 @@
+{
+    "benchmark_suite_id": 293,
+    "benchmark_suite_name": "AutoML Benchmark Training Datasets",
+    "run_timestamp": "20250505_113358",
+    "algorithm": "TabPFNClassifier",
+    "algorithm_params": "default",
+    "sklearn_random_state": 42,
+    "test_size": 0.25,
+    "total_tasks": 208,
+    "successful_tasks": 139,
+    "failed_tasks": 69,
+    "summary_statistics": {
+        "mean_accuracy": 0.8753583486329858,
+        "std_accuracy": 0.1539638923470201,
+        "mean_roc_auc": 0.912269196493511,
+        "std_roc_auc": 0.11958410662072046
+    }
+}

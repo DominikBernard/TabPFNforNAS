@@ -1,0 +1,1690 @@
+{
+    "metadata": {
+        "benchmark_suite_id": 293,
+        "benchmark_suite_name": "AutoML Benchmark Training Datasets",
+        "run_timestamp": "20250505_113358",
+        "algorithm": "TabPFNClassifier",
+        "algorithm_params": "default",
+        "sklearn_random_state": 42,
+        "test_size": 0.25,
+        "total_tasks": 208,
+        "successful_tasks": 139,
+        "failed_tasks": 69,
+        "summary_statistics": {
+            "mean_accuracy": 0.8753583486329858,
+            "std_accuracy": 0.1539638923470201,
+            "mean_roc_auc": 0.912269196493511,
+            "std_roc_auc": 0.11958410662072046
+        }
+    },
+    "results": [
+        {
+            "task_id": 241,
+            "dataset_id": 11,
+            "dataset_name": "balance-scale",
+            "n_samples": 625,
+            "n_features": 4,
+            "n_classes": 3,
+            "accuracy": 0.9745222929936306,
+            "roc_auc": 0.9941933066933067
+        },
+        {
+            "task_id": 245,
+            "dataset_id": 15,
+            "dataset_name": "breast-w",
+            "n_samples": 699,
+            "n_features": 9,
+            "n_classes": 2,
+            "accuracy": 0.96,
+            "roc_auc": 0.9976211715730003
+        },
+        {
+            "task_id": 253,
+            "dataset_id": 23,
+            "dataset_name": "cmc",
+            "n_samples": 1473,
+            "n_features": 9,
+            "n_classes": 3,
+            "accuracy": 0.5880758807588076,
+            "roc_auc": 0.7797954559723485
+        },
+        {
+            "task_id": 254,
+            "dataset_id": 24,
+            "dataset_name": "mushroom",
+            "n_samples": 8124,
+            "n_features": 22,
+            "n_classes": 2,
+            "accuracy": 1.0,
+            "roc_auc": 1.0
+        },
+        {
+            "task_id": 258,
+            "dataset_id": 28,
+            "dataset_name": "optdigits",
+            "n_samples": 5620,
+            "n_features": 64,
+            "n_classes": 10,
+            "accuracy": 0.9822064056939501,
+            "roc_auc": 0.9997700095308637
+        },
+        {
+            "task_id": 260,
+            "dataset_id": 30,
+            "dataset_name": "page-blocks",
+            "n_samples": 5473,
+            "n_features": 10,
+            "n_classes": 5,
+            "accuracy": 0.9802775748721695,
+            "roc_auc": 0.9963868279629746
+        },
+        {
+            "task_id": 262,
+            "dataset_id": 32,
+            "dataset_name": "pendigits",
+            "n_samples": 10992,
+            "n_features": 16,
+            "n_classes": 10,
+            "accuracy": 0.9963609898107715,
+            "roc_auc": 0.9999926485842294
+        },
+        {
+            "task_id": 267,
+            "dataset_id": 37,
+            "dataset_name": "diabetes",
+            "n_samples": 768,
+            "n_features": 8,
+            "n_classes": 2,
+            "accuracy": 0.7447916666666666,
+            "roc_auc": 0.8081772122069046
+        },
+        {
+            "task_id": 273,
+            "dataset_id": 44,
+            "dataset_name": "spambase",
+            "n_samples": 4601,
+            "n_features": 57,
+            "n_classes": 2,
+            "accuracy": 0.9617723718505647,
+            "roc_auc": 0.9915291186546248
+        },
+        {
+            "task_id": 275,
+            "dataset_id": 46,
+            "dataset_name": "splice",
+            "n_samples": 3190,
+            "n_features": 60,
+            "n_classes": 3,
+            "accuracy": 0.9699248120300752,
+            "roc_auc": 0.9963441569734117
+        },
+        {
+            "task_id": 279,
+            "dataset_id": 50,
+            "dataset_name": "tic-tac-toe",
+            "n_samples": 958,
+            "n_features": 9,
+            "n_classes": 2,
+            "accuracy": 0.9791666666666666,
+            "roc_auc": 0.9994343434343433
+        },
+        {
+            "task_id": 288,
+            "dataset_id": 60,
+            "dataset_name": "waveform-5000",
+            "n_samples": 5000,
+            "n_features": 40,
+            "n_classes": 3,
+            "accuracy": 0.8784,
+            "roc_auc": 0.9777210817575118
+        },
+        {
+            "task_id": 2120,
+            "dataset_id": 182,
+            "dataset_name": "satimage",
+            "n_samples": 6430,
+            "n_features": 36,
+            "n_classes": 6,
+            "accuracy": 0.9396766169154229,
+            "roc_auc": 0.995219140364393
+        },
+        {
+            "task_id": 2123,
+            "dataset_id": 185,
+            "dataset_name": "baseball",
+            "n_samples": 1340,
+            "n_features": 16,
+            "n_classes": 3,
+            "accuracy": 0.9522388059701492,
+            "roc_auc": 0.9696251432482009
+        },
+        {
+            "task_id": 2125,
+            "dataset_id": 188,
+            "dataset_name": "eucalyptus",
+            "n_samples": 736,
+            "n_features": 19,
+            "n_classes": 5,
+            "accuracy": 0.6521739130434783,
+            "roc_auc": 0.9143031049930459
+        },
+        {
+            "task_id": 3048,
+            "dataset_id": 310,
+            "dataset_name": "mammography",
+            "n_samples": 11183,
+            "n_features": 6,
+            "n_classes": 2,
+            "accuracy": 0.9907010014306151,
+            "roc_auc": 0.9626144884103173
+        },
+        {
+            "task_id": 3049,
+            "dataset_id": 311,
+            "dataset_name": "oil_spill",
+            "n_samples": 937,
+            "n_features": 49,
+            "n_classes": 2,
+            "accuracy": 0.9787234042553191,
+            "roc_auc": 0.9877089478859391
+        },
+        {
+            "task_id": 3053,
+            "dataset_id": 333,
+            "dataset_name": "monks-problems-1",
+            "n_samples": 556,
+            "n_features": 6,
+            "n_classes": 2,
+            "accuracy": 1.0,
+            "roc_auc": 1.0
+        },
+        {
+            "task_id": 3054,
+            "dataset_id": 334,
+            "dataset_name": "monks-problems-2",
+            "n_samples": 601,
+            "n_features": 6,
+            "n_classes": 2,
+            "accuracy": 1.0,
+            "roc_auc": 1.0
+        },
+        {
+            "task_id": 3055,
+            "dataset_id": 335,
+            "dataset_name": "monks-problems-3",
+            "n_samples": 554,
+            "n_features": 6,
+            "n_classes": 2,
+            "accuracy": 0.9856115107913669,
+            "roc_auc": 0.9906015037593985
+        },
+        {
+            "task_id": 75089,
+            "dataset_id": 1547,
+            "dataset_name": "autoUniv-au1-1000",
+            "n_samples": 1000,
+            "n_features": 20,
+            "n_classes": 2,
+            "accuracy": 0.768,
+            "roc_auc": 0.7346464889102411
+        },
+        {
+            "task_id": 75092,
+            "dataset_id": 1049,
+            "dataset_name": "pc4",
+            "n_samples": 1458,
+            "n_features": 37,
+            "n_classes": 2,
+            "accuracy": 0.9205479452054794,
+            "roc_auc": 0.9646226415094339
+        },
+        {
+            "task_id": 75093,
+            "dataset_id": 1053,
+            "dataset_name": "jm1",
+            "n_samples": 10885,
+            "n_features": 21,
+            "n_classes": 2,
+            "accuracy": 0.8115356355620867,
+            "roc_auc": 0.7459826793009922
+        },
+        {
+            "task_id": 75100,
+            "dataset_id": 1069,
+            "dataset_name": "pc2",
+            "n_samples": 5589,
+            "n_features": 36,
+            "n_classes": 2,
+            "accuracy": 0.9928469241773963,
+            "roc_auc": 0.9135536398467433
+        },
+        {
+            "task_id": 75108,
+            "dataset_id": 1116,
+            "dataset_name": "musk",
+            "n_samples": 6598,
+            "n_features": 167,
+            "n_classes": 2,
+            "accuracy": 0.9981818181818182,
+            "roc_auc": 0.9999671035498011
+        },
+        {
+            "task_id": 75109,
+            "dataset_id": 4538,
+            "dataset_name": "GesturePhaseSegmentationProcessed",
+            "n_samples": 9873,
+            "n_features": 32,
+            "n_classes": 5,
+            "accuracy": 0.720129607128392,
+            "roc_auc": 0.9212173531733457
+        },
+        {
+            "task_id": 75118,
+            "dataset_id": 1552,
+            "dataset_name": "autoUniv-au7-1100",
+            "n_samples": 1100,
+            "n_features": 12,
+            "n_classes": 5,
+            "accuracy": 0.4509090909090909,
+            "roc_auc": 0.7624637525379467
+        },
+        {
+            "task_id": 75129,
+            "dataset_id": 1050,
+            "dataset_name": "pc3",
+            "n_samples": 1563,
+            "n_features": 37,
+            "n_classes": 2,
+            "accuracy": 0.887468030690537,
+            "roc_auc": 0.7787759057700909
+        },
+        {
+            "task_id": 75131,
+            "dataset_id": 799,
+            "dataset_name": "fri_c0_1000_5",
+            "n_samples": 1000,
+            "n_features": 5,
+            "n_classes": 2,
+            "accuracy": 0.912,
+            "roc_auc": 0.9832917226810063
+        },
+        {
+            "task_id": 75133,
+            "dataset_id": 1056,
+            "dataset_name": "mc1",
+            "n_samples": 9466,
+            "n_features": 38,
+            "n_classes": 2,
+            "accuracy": 0.9945078158005914,
+            "roc_auc": 0.9542529293910509
+        },
+        {
+            "task_id": 75136,
+            "dataset_id": 715,
+            "dataset_name": "fri_c3_1000_25",
+            "n_samples": 1000,
+            "n_features": 25,
+            "n_classes": 2,
+            "accuracy": 0.944,
+            "roc_auc": 0.9882692307692307
+        },
+        {
+            "task_id": 75141,
+            "dataset_id": 725,
+            "dataset_name": "bank8FM",
+            "n_samples": 8192,
+            "n_features": 8,
+            "n_classes": 2,
+            "accuracy": 0.94482421875,
+            "roc_auc": 0.9905780494015788
+        },
+        {
+            "task_id": 75143,
+            "dataset_id": 728,
+            "dataset_name": "analcatdata_supreme",
+            "n_samples": 4052,
+            "n_features": 7,
+            "n_classes": 2,
+            "accuracy": 0.9940769990128332,
+            "roc_auc": 0.9997109700499531
+        },
+        {
+            "task_id": 75147,
+            "dataset_id": 735,
+            "dataset_name": "cpu_small",
+            "n_samples": 8192,
+            "n_features": 12,
+            "n_classes": 2,
+            "accuracy": 0.9306640625,
+            "roc_auc": 0.9770908511190421
+        },
+        {
+            "task_id": 75148,
+            "dataset_id": 737,
+            "dataset_name": "space_ga",
+            "n_samples": 3107,
+            "n_features": 6,
+            "n_classes": 2,
+            "accuracy": 0.87001287001287,
+            "roc_auc": 0.9414552975961602
+        },
+        {
+            "task_id": 75149,
+            "dataset_id": 740,
+            "dataset_name": "fri_c3_1000_10",
+            "n_samples": 1000,
+            "n_features": 10,
+            "n_classes": 2,
+            "accuracy": 0.96,
+            "roc_auc": 0.9928025191183085
+        },
+        {
+            "task_id": 75153,
+            "dataset_id": 752,
+            "dataset_name": "puma32H",
+            "n_samples": 8192,
+            "n_features": 32,
+            "n_classes": 2,
+            "accuracy": 0.87353515625,
+            "roc_auc": 0.961888485244062
+        },
+        {
+            "task_id": 75157,
+            "dataset_id": 772,
+            "dataset_name": "quake",
+            "n_samples": 2178,
+            "n_features": 3,
+            "n_classes": 2,
+            "accuracy": 0.5284403669724771,
+            "roc_auc": 0.49569012105490706
+        },
+        {
+            "task_id": 75159,
+            "dataset_id": 1068,
+            "dataset_name": "pc1",
+            "n_samples": 1109,
+            "n_features": 21,
+            "n_classes": 2,
+            "accuracy": 0.920863309352518,
+            "roc_auc": 0.8930446194225722
+        },
+        {
+            "task_id": 75163,
+            "dataset_id": 803,
+            "dataset_name": "delta_ailerons",
+            "n_samples": 7129,
+            "n_features": 5,
+            "n_classes": 2,
+            "accuracy": 0.9467190128996074,
+            "roc_auc": 0.9843770478581295
+        },
+        {
+            "task_id": 75166,
+            "dataset_id": 807,
+            "dataset_name": "kin8nm",
+            "n_samples": 8192,
+            "n_features": 8,
+            "n_classes": 2,
+            "accuracy": 0.90478515625,
+            "roc_auc": 0.9742208225975761
+        },
+        {
+            "task_id": 75171,
+            "dataset_id": 816,
+            "dataset_name": "puma8NH",
+            "n_samples": 8192,
+            "n_features": 8,
+            "n_classes": 2,
+            "accuracy": 0.828125,
+            "roc_auc": 0.9113841568591534
+        },
+        {
+            "task_id": 75173,
+            "dataset_id": 819,
+            "dataset_name": "delta_elevators",
+            "n_samples": 9517,
+            "n_features": 6,
+            "n_classes": 2,
+            "accuracy": 0.8932773109243698,
+            "roc_auc": 0.9552339802746127
+        },
+        {
+            "task_id": 75179,
+            "dataset_id": 833,
+            "dataset_name": "bank32nh",
+            "n_samples": 8192,
+            "n_features": 32,
+            "n_classes": 2,
+            "accuracy": 0.8251953125,
+            "roc_auc": 0.8939885597494294
+        },
+        {
+            "task_id": 75180,
+            "dataset_id": 837,
+            "dataset_name": "fri_c1_1000_50",
+            "n_samples": 1000,
+            "n_features": 50,
+            "n_classes": 2,
+            "accuracy": 0.924,
+            "roc_auc": 0.9875974025974026
+        },
+        {
+            "task_id": 75185,
+            "dataset_id": 847,
+            "dataset_name": "wind",
+            "n_samples": 6574,
+            "n_features": 14,
+            "n_classes": 2,
+            "accuracy": 0.871654501216545,
+            "roc_auc": 0.9447224574640081
+        },
+        {
+            "task_id": 75187,
+            "dataset_id": 1507,
+            "dataset_name": "twonorm",
+            "n_samples": 7400,
+            "n_features": 20,
+            "n_classes": 2,
+            "accuracy": 0.9762162162162162,
+            "roc_auc": 0.9977625675561759
+        },
+        {
+            "task_id": 75192,
+            "dataset_id": 871,
+            "dataset_name": "pollen",
+            "n_samples": 3848,
+            "n_features": 5,
+            "n_classes": 2,
+            "accuracy": 0.47193347193347196,
+            "roc_auc": 0.480624823970362
+        },
+        {
+            "task_id": 75196,
+            "dataset_id": 897,
+            "dataset_name": "colleges_aaup",
+            "n_samples": 1161,
+            "n_features": 15,
+            "n_classes": 2,
+            "accuracy": 0.9965635738831615,
+            "roc_auc": 0.9999424890729239
+        },
+        {
+            "task_id": 75199,
+            "dataset_id": 903,
+            "dataset_name": "fri_c2_1000_25",
+            "n_samples": 1000,
+            "n_features": 25,
+            "n_classes": 2,
+            "accuracy": 0.956,
+            "roc_auc": 0.9935835115691232
+        },
+        {
+            "task_id": 75210,
+            "dataset_id": 923,
+            "dataset_name": "visualizing_soil",
+            "n_samples": 8641,
+            "n_features": 4,
+            "n_classes": 2,
+            "accuracy": 1.0,
+            "roc_auc": 1.0
+        },
+        {
+            "task_id": 75212,
+            "dataset_id": 930,
+            "dataset_name": "colleges_usnews",
+            "n_samples": 1302,
+            "n_features": 33,
+            "n_classes": 2,
+            "accuracy": 0.7116564417177914,
+            "roc_auc": 0.8115177326348321
+        },
+        {
+            "task_id": 75213,
+            "dataset_id": 934,
+            "dataset_name": "socmob",
+            "n_samples": 1156,
+            "n_features": 5,
+            "n_classes": 2,
+            "accuracy": 0.9515570934256056,
+            "roc_auc": 0.9819895769466584
+        },
+        {
+            "task_id": 75215,
+            "dataset_id": 4534,
+            "dataset_name": "PhishingWebsites",
+            "n_samples": 11055,
+            "n_features": 30,
+            "n_classes": 2,
+            "accuracy": 0.9645441389290883,
+            "roc_auc": 0.9950401615122094
+        },
+        {
+            "task_id": 75217,
+            "dataset_id": 1466,
+            "dataset_name": "cardiotocography",
+            "n_samples": 2126,
+            "n_features": 35,
+            "n_classes": 10,
+            "accuracy": 1.0,
+            "roc_auc": 1.0
+        },
+        {
+            "task_id": 75221,
+            "dataset_id": 1475,
+            "dataset_name": "first-order-theorem-proving",
+            "n_samples": 6118,
+            "n_features": 51,
+            "n_classes": 6,
+            "accuracy": 0.5816993464052288,
+            "roc_auc": 0.8362361028747477
+        },
+        {
+            "task_id": 75225,
+            "dataset_id": 1487,
+            "dataset_name": "ozone-level-8hr",
+            "n_samples": 2534,
+            "n_features": 72,
+            "n_classes": 2,
+            "accuracy": 0.944794952681388,
+            "roc_auc": 0.9390993265993266
+        },
+        {
+            "task_id": 75232,
+            "dataset_id": 1494,
+            "dataset_name": "qsar-biodeg",
+            "n_samples": 1055,
+            "n_features": 41,
+            "n_classes": 2,
+            "accuracy": 0.8712121212121212,
+            "roc_auc": 0.9417494642509254
+        },
+        {
+            "task_id": 75233,
+            "dataset_id": 761,
+            "dataset_name": "cpu_act",
+            "n_samples": 8192,
+            "n_features": 21,
+            "n_classes": 2,
+            "accuracy": 0.93994140625,
+            "roc_auc": 0.9843672725114652
+        },
+        {
+            "task_id": 75234,
+            "dataset_id": 1496,
+            "dataset_name": "ringnorm",
+            "n_samples": 7400,
+            "n_features": 20,
+            "n_classes": 2,
+            "accuracy": 0.9767567567567568,
+            "roc_auc": 0.9976115571174546
+        },
+        {
+            "task_id": 75235,
+            "dataset_id": 1497,
+            "dataset_name": "wall-robot-navigation",
+            "n_samples": 5456,
+            "n_features": 24,
+            "n_classes": 4,
+            "accuracy": 0.9912023460410557,
+            "roc_auc": 0.9998819521292464
+        },
+        {
+            "task_id": 75236,
+            "dataset_id": 1501,
+            "dataset_name": "semeion",
+            "n_samples": 1593,
+            "n_features": 256,
+            "n_classes": 10,
+            "accuracy": 0.9398496240601504,
+            "roc_auc": 0.995813733763806
+        },
+        {
+            "task_id": 75239,
+            "dataset_id": 1504,
+            "dataset_name": "steel-plates-fault",
+            "n_samples": 1941,
+            "n_features": 33,
+            "n_classes": 2,
+            "accuracy": 1.0,
+            "roc_auc": 1.0
+        },
+        {
+            "task_id": 126021,
+            "dataset_id": 375,
+            "dataset_name": "JapaneseVowels",
+            "n_samples": 9961,
+            "n_features": 14,
+            "n_classes": 9,
+            "accuracy": 0.9971898835808912,
+            "roc_auc": 0.9999976063242677
+        },
+        {
+            "task_id": 126028,
+            "dataset_id": 1459,
+            "dataset_name": "artificial-characters",
+            "n_samples": 10218,
+            "n_features": 7,
+            "n_classes": 10,
+            "accuracy": 0.7604696673189824,
+            "roc_auc": 0.9774648879861708
+        },
+        {
+            "task_id": 146574,
+            "dataset_id": 377,
+            "dataset_name": "synthetic_control",
+            "n_samples": 600,
+            "n_features": 60,
+            "n_classes": 6,
+            "accuracy": 1.0,
+            "roc_auc": 1.0
+        },
+        {
+            "task_id": 146575,
+            "dataset_id": 451,
+            "dataset_name": "irish",
+            "n_samples": 500,
+            "n_features": 5,
+            "n_classes": 2,
+            "accuracy": 1.0,
+            "roc_auc": 1.0
+        },
+        {
+            "task_id": 146576,
+            "dataset_id": 458,
+            "dataset_name": "analcatdata_authorship",
+            "n_samples": 841,
+            "n_features": 70,
+            "n_classes": 4,
+            "accuracy": 1.0,
+            "roc_auc": 1.0
+        },
+        {
+            "task_id": 146577,
+            "dataset_id": 469,
+            "dataset_name": "analcatdata_dmft",
+            "n_samples": 797,
+            "n_features": 4,
+            "n_classes": 6,
+            "accuracy": 0.145,
+            "roc_auc": 0.5827805968180187
+        },
+        {
+            "task_id": 146578,
+            "dataset_id": 470,
+            "dataset_name": "profb",
+            "n_samples": 672,
+            "n_features": 9,
+            "n_classes": 2,
+            "accuracy": 0.6607142857142857,
+            "roc_auc": 0.6367283950617284
+        },
+        {
+            "task_id": 146583,
+            "dataset_id": 1063,
+            "dataset_name": "kc2",
+            "n_samples": 522,
+            "n_features": 21,
+            "n_classes": 2,
+            "accuracy": 0.8244274809160306,
+            "roc_auc": 0.7688973647711512
+        },
+        {
+            "task_id": 146586,
+            "dataset_id": 1462,
+            "dataset_name": "banknote-authentication",
+            "n_samples": 1372,
+            "n_features": 4,
+            "n_classes": 2,
+            "accuracy": 1.0,
+            "roc_auc": 1.0
+        },
+        {
+            "task_id": 146592,
+            "dataset_id": 1479,
+            "dataset_name": "hill-valley",
+            "n_samples": 1212,
+            "n_features": 100,
+            "n_classes": 2,
+            "accuracy": 0.9966996699669967,
+            "roc_auc": 0.9970693727582889
+        },
+        {
+            "task_id": 146593,
+            "dataset_id": 1480,
+            "dataset_name": "ilpd",
+            "n_samples": 583,
+            "n_features": 10,
+            "n_classes": 2,
+            "accuracy": 0.726027397260274,
+            "roc_auc": 0.7684106124473097
+        },
+        {
+            "task_id": 146594,
+            "dataset_id": 1485,
+            "dataset_name": "madelon",
+            "n_samples": 2600,
+            "n_features": 500,
+            "n_classes": 2,
+            "accuracy": 0.8876923076923077,
+            "roc_auc": 0.9519682503599303
+        },
+        {
+            "task_id": 146596,
+            "dataset_id": 1510,
+            "dataset_name": "wdbc",
+            "n_samples": 569,
+            "n_features": 30,
+            "n_classes": 2,
+            "accuracy": 0.9790209790209791,
+            "roc_auc": 0.9966708281315022
+        },
+        {
+            "task_id": 146600,
+            "dataset_id": 6332,
+            "dataset_name": "cylinder-bands",
+            "n_samples": 540,
+            "n_features": 37,
+            "n_classes": 2,
+            "accuracy": 0.7703703703703704,
+            "roc_auc": 0.8848403058929375
+        },
+        {
+            "task_id": 146601,
+            "dataset_id": 23380,
+            "dataset_name": "cjs",
+            "n_samples": 2796,
+            "n_features": 33,
+            "n_classes": 6,
+            "accuracy": 0.9899856938483548,
+            "roc_auc": 0.9999552258595857
+        },
+        {
+            "task_id": 146602,
+            "dataset_id": 23381,
+            "dataset_name": "dresses-sales",
+            "n_samples": 500,
+            "n_features": 12,
+            "n_classes": 2,
+            "accuracy": 0.568,
+            "roc_auc": 0.5779768177028451
+        },
+        {
+            "task_id": 146603,
+            "dataset_id": 40496,
+            "dataset_name": "LED-display-domain-7digit",
+            "n_samples": 500,
+            "n_features": 7,
+            "n_classes": 10,
+            "accuracy": 0.736,
+            "roc_auc": 0.9557648678834367
+        },
+        {
+            "task_id": 146679,
+            "dataset_id": 40536,
+            "dataset_name": "SpeedDating",
+            "n_samples": 8378,
+            "n_features": 120,
+            "n_classes": 2,
+            "accuracy": 0.8534606205250597,
+            "roc_auc": 0.8544325724461712
+        },
+        {
+            "task_id": 166859,
+            "dataset_id": 717,
+            "dataset_name": "rmftsa_ladata",
+            "n_samples": 508,
+            "n_features": 10,
+            "n_classes": 2,
+            "accuracy": 0.8582677165354331,
+            "roc_auc": 0.9413983903420523
+        },
+        {
+            "task_id": 166866,
+            "dataset_id": 742,
+            "dataset_name": "fri_c4_500_100",
+            "n_samples": 500,
+            "n_features": 100,
+            "n_classes": 2,
+            "accuracy": 0.944,
+            "roc_auc": 0.983836777954425
+        },
+        {
+            "task_id": 166872,
+            "dataset_id": 750,
+            "dataset_name": "pm10",
+            "n_samples": 500,
+            "n_features": 7,
+            "n_classes": 2,
+            "accuracy": 0.592,
+            "roc_auc": 0.591141833077317
+        },
+        {
+            "task_id": 166875,
+            "dataset_id": 757,
+            "dataset_name": "meta",
+            "n_samples": 528,
+            "n_features": 21,
+            "n_classes": 2,
+            "accuracy": 0.9166666666666666,
+            "roc_auc": 0.8894634776987719
+        },
+        {
+            "task_id": 166882,
+            "dataset_id": 770,
+            "dataset_name": "strikes",
+            "n_samples": 625,
+            "n_features": 6,
+            "n_classes": 2,
+            "accuracy": 1.0,
+            "roc_auc": 1.0
+        },
+        {
+            "task_id": 166897,
+            "dataset_id": 802,
+            "dataset_name": "pbcseq",
+            "n_samples": 1945,
+            "n_features": 18,
+            "n_classes": 2,
+            "accuracy": 0.8521560574948666,
+            "roc_auc": 0.9331274678546116
+        },
+        {
+            "task_id": 166905,
+            "dataset_id": 825,
+            "dataset_name": "boston_corrected",
+            "n_samples": 506,
+            "n_features": 20,
+            "n_classes": 2,
+            "accuracy": 0.8582677165354331,
+            "roc_auc": 0.9548872180451129
+        },
+        {
+            "task_id": 166906,
+            "dataset_id": 826,
+            "dataset_name": "sensory",
+            "n_samples": 576,
+            "n_features": 11,
+            "n_classes": 2,
+            "accuracy": 0.6388888888888888,
+            "roc_auc": 0.7493631197334901
+        },
+        {
+            "task_id": 166913,
+            "dataset_id": 839,
+            "dataset_name": "kdd_el_nino-small",
+            "n_samples": 782,
+            "n_features": 8,
+            "n_classes": 2,
+            "accuracy": 0.9336734693877551,
+            "roc_auc": 0.9926470588235294
+        },
+        {
+            "task_id": 166915,
+            "dataset_id": 841,
+            "dataset_name": "stock",
+            "n_samples": 950,
+            "n_features": 9,
+            "n_classes": 2,
+            "accuracy": 0.9621848739495799,
+            "roc_auc": 0.9971735443753532
+        },
+        {
+            "task_id": 166931,
+            "dataset_id": 884,
+            "dataset_name": "fri_c0_500_5",
+            "n_samples": 500,
+            "n_features": 5,
+            "n_classes": 2,
+            "accuracy": 0.888,
+            "roc_auc": 0.9679487179487178
+        },
+        {
+            "task_id": 166932,
+            "dataset_id": 886,
+            "dataset_name": "no2",
+            "n_samples": 500,
+            "n_features": 7,
+            "n_classes": 2,
+            "accuracy": 0.712,
+            "roc_auc": 0.7435897435897435
+        },
+        {
+            "task_id": 166944,
+            "dataset_id": 920,
+            "dataset_name": "fri_c2_500_50",
+            "n_samples": 500,
+            "n_features": 50,
+            "n_classes": 2,
+            "accuracy": 0.96,
+            "roc_auc": 0.9857142857142858
+        },
+        {
+            "task_id": 166950,
+            "dataset_id": 936,
+            "dataset_name": "fri_c3_500_10",
+            "n_samples": 500,
+            "n_features": 10,
+            "n_classes": 2,
+            "accuracy": 0.944,
+            "roc_auc": 0.9938524590163934
+        },
+        {
+            "task_id": 166951,
+            "dataset_id": 937,
+            "dataset_name": "fri_c3_500_50",
+            "n_samples": 500,
+            "n_features": 50,
+            "n_classes": 2,
+            "accuracy": 0.92,
+            "roc_auc": 0.9672
+        },
+        {
+            "task_id": 166953,
+            "dataset_id": 940,
+            "dataset_name": "water-treatment",
+            "n_samples": 527,
+            "n_features": 36,
+            "n_classes": 2,
+            "accuracy": 1.0,
+            "roc_auc": 1.0
+        },
+        {
+            "task_id": 166956,
+            "dataset_id": 947,
+            "dataset_name": "arsenic-male-bladder",
+            "n_samples": 559,
+            "n_features": 4,
+            "n_classes": 2,
+            "accuracy": 0.9714285714285714,
+            "roc_auc": 0.6753846153846154
+        },
+        {
+            "task_id": 166957,
+            "dataset_id": 949,
+            "dataset_name": "arsenic-female-bladder",
+            "n_samples": 559,
+            "n_features": 4,
+            "n_classes": 2,
+            "accuracy": 0.9,
+            "roc_auc": 0.887600806451613
+        },
+        {
+            "task_id": 166958,
+            "dataset_id": 950,
+            "dataset_name": "arsenic-female-lung",
+            "n_samples": 559,
+            "n_features": 4,
+            "n_classes": 2,
+            "accuracy": 0.9857142857142858,
+            "roc_auc": 0.9327651515151515
+        },
+        {
+            "task_id": 166959,
+            "dataset_id": 951,
+            "dataset_name": "arsenic-male-lung",
+            "n_samples": 559,
+            "n_features": 4,
+            "n_classes": 2,
+            "accuracy": 1.0,
+            "roc_auc": 1.0
+        },
+        {
+            "task_id": 166970,
+            "dataset_id": 981,
+            "dataset_name": "kdd_internet_usage",
+            "n_samples": 10108,
+            "n_features": 68,
+            "n_classes": 2,
+            "accuracy": 0.8979026513652553,
+            "roc_auc": 0.9567131827099551
+        },
+        {
+            "task_id": 167086,
+            "dataset_id": 40646,
+            "dataset_name": "GAMETES_Epistasis_2-Way_20atts_0.1H_EDM-1_1",
+            "n_samples": 1600,
+            "n_features": 20,
+            "n_classes": 2,
+            "accuracy": 0.675,
+            "roc_auc": 0.7183965569012112
+        },
+        {
+            "task_id": 167087,
+            "dataset_id": 40647,
+            "dataset_name": "GAMETES_Epistasis_2-Way_20atts_0.4H_EDM-1_1",
+            "n_samples": 1600,
+            "n_features": 20,
+            "n_classes": 2,
+            "accuracy": 0.7975,
+            "roc_auc": 0.8688194374937444
+        },
+        {
+            "task_id": 167088,
+            "dataset_id": 40648,
+            "dataset_name": "GAMETES_Epistasis_3-Way_20atts_0.2H_EDM-1_1",
+            "n_samples": 1600,
+            "n_features": 20,
+            "n_classes": 2,
+            "accuracy": 0.4975,
+            "roc_auc": 0.517303072765489
+        },
+        {
+            "task_id": 167089,
+            "dataset_id": 40649,
+            "dataset_name": "GAMETES_Heterogeneity_20atts_1600_Het_0.4_0.2_50_EDM-2_001",
+            "n_samples": 1600,
+            "n_features": 20,
+            "n_classes": 2,
+            "accuracy": 0.7325,
+            "roc_auc": 0.7948653788409569
+        },
+        {
+            "task_id": 167090,
+            "dataset_id": 40650,
+            "dataset_name": "GAMETES_Heterogeneity_20atts_1600_Het_0.4_0.2_75_EDM-2_001",
+            "n_samples": 1600,
+            "n_features": 20,
+            "n_classes": 2,
+            "accuracy": 0.7425,
+            "roc_auc": 0.792187969172255
+        },
+        {
+            "task_id": 167094,
+            "dataset_id": 40680,
+            "dataset_name": "mofn-3-7-10",
+            "n_samples": 1324,
+            "n_features": 10,
+            "n_classes": 2,
+            "accuracy": 1.0,
+            "roc_auc": 1.0
+        },
+        {
+            "task_id": 167096,
+            "dataset_id": 40693,
+            "dataset_name": "xd6",
+            "n_samples": 973,
+            "n_features": 9,
+            "n_classes": 2,
+            "accuracy": 1.0,
+            "roc_auc": 1.0
+        },
+        {
+            "task_id": 167097,
+            "dataset_id": 40701,
+            "dataset_name": "churn",
+            "n_samples": 5000,
+            "n_features": 20,
+            "n_classes": 2,
+            "accuracy": 0.964,
+            "roc_auc": 0.9166506430799471
+        },
+        {
+            "task_id": 167099,
+            "dataset_id": 40704,
+            "dataset_name": "Titanic",
+            "n_samples": 2201,
+            "n_features": 3,
+            "n_classes": 2,
+            "accuracy": 0.7404718693284936,
+            "roc_auc": 0.7409536156727169
+        },
+        {
+            "task_id": 167100,
+            "dataset_id": 40705,
+            "dataset_name": "tokyo1",
+            "n_samples": 959,
+            "n_features": 44,
+            "n_classes": 2,
+            "accuracy": 0.9125,
+            "roc_auc": 0.9765359678913244
+        },
+        {
+            "task_id": 167101,
+            "dataset_id": 40706,
+            "dataset_name": "parity5_plus_5",
+            "n_samples": 1124,
+            "n_features": 10,
+            "n_classes": 2,
+            "accuracy": 1.0,
+            "roc_auc": 1.0
+        },
+        {
+            "task_id": 167105,
+            "dataset_id": 40983,
+            "dataset_name": "wilt",
+            "n_samples": 4839,
+            "n_features": 5,
+            "n_classes": 2,
+            "accuracy": 0.9859504132231405,
+            "roc_auc": 0.9980120721437091
+        },
+        {
+            "task_id": 167106,
+            "dataset_id": 40994,
+            "dataset_name": "climate-model-simulation-crashes",
+            "n_samples": 540,
+            "n_features": 18,
+            "n_classes": 2,
+            "accuracy": 0.9333333333333333,
+            "roc_auc": 0.9728739002932552
+        },
+        {
+            "task_id": 167202,
+            "dataset_id": 40670,
+            "dataset_name": "dna",
+            "n_samples": 3186,
+            "n_features": 180,
+            "n_classes": 3,
+            "accuracy": 0.9686323713927227,
+            "roc_auc": 0.995893494345232
+        },
+        {
+            "task_id": 167205,
+            "dataset_id": 40966,
+            "dataset_name": "MiceProtein",
+            "n_samples": 1080,
+            "n_features": 77,
+            "n_classes": 8,
+            "accuracy": 1.0,
+            "roc_auc": 1.0
+        },
+        {
+            "task_id": 168785,
+            "dataset_id": 40982,
+            "dataset_name": "steel-plates-fault",
+            "n_samples": 1941,
+            "n_features": 27,
+            "n_classes": 7,
+            "accuracy": 0.845679012345679,
+            "roc_auc": 0.9750907086166519
+        },
+        {
+            "task_id": 189779,
+            "dataset_id": 1044,
+            "dataset_name": "eye_movements",
+            "n_samples": 10936,
+            "n_features": 27,
+            "n_classes": 3,
+            "accuracy": 0.8174835405998537,
+            "roc_auc": 0.9412289135000597
+        },
+        {
+            "task_id": 189841,
+            "dataset_id": 40677,
+            "dataset_name": "led24",
+            "n_samples": 3200,
+            "n_features": 24,
+            "n_classes": 10,
+            "accuracy": 0.73875,
+            "roc_auc": 0.9555178270835956
+        },
+        {
+            "task_id": 189843,
+            "dataset_id": 40691,
+            "dataset_name": "wine-quality-red",
+            "n_samples": 1599,
+            "n_features": 11,
+            "n_classes": 6,
+            "accuracy": 0.665,
+            "roc_auc": 0.8816485180991461
+        },
+        {
+            "task_id": 189844,
+            "dataset_id": 40900,
+            "dataset_name": "Satellite",
+            "n_samples": 5100,
+            "n_features": 36,
+            "n_classes": 2,
+            "accuracy": 0.9921568627450981,
+            "roc_auc": 0.9939043824701195
+        },
+        {
+            "task_id": 189858,
+            "dataset_id": 41082,
+            "dataset_name": "USPS",
+            "n_samples": 9298,
+            "n_features": 256,
+            "n_classes": 10,
+            "accuracy": 0.9686021505376344,
+            "roc_auc": 0.9989612334323473
+        },
+        {
+            "task_id": 189863,
+            "dataset_id": 41144,
+            "dataset_name": "madeline",
+            "n_samples": 3140,
+            "n_features": 259,
+            "n_classes": 2,
+            "accuracy": 0.913375796178344,
+            "roc_auc": 0.9715659519168292
+        },
+        {
+            "task_id": 189864,
+            "dataset_id": 41145,
+            "dataset_name": "philippine",
+            "n_samples": 5832,
+            "n_features": 308,
+            "n_classes": 2,
+            "accuracy": 0.8292181069958847,
+            "roc_auc": 0.9231575481018018
+        },
+        {
+            "task_id": 189880,
+            "dataset_id": 1528,
+            "dataset_name": "volcanoes-a2",
+            "n_samples": 1623,
+            "n_features": 3,
+            "n_classes": 5,
+            "accuracy": 0.9482758620689655,
+            "roc_auc": 0.9260044935415305
+        },
+        {
+            "task_id": 189881,
+            "dataset_id": 1529,
+            "dataset_name": "volcanoes-a3",
+            "n_samples": 1521,
+            "n_features": 3,
+            "n_classes": 5,
+            "accuracy": 0.9028871391076115,
+            "roc_auc": 0.909473215342819
+        },
+        {
+            "task_id": 189882,
+            "dataset_id": 1530,
+            "dataset_name": "volcanoes-a4",
+            "n_samples": 1515,
+            "n_features": 3,
+            "n_classes": 5,
+            "accuracy": 0.9076517150395779,
+            "roc_auc": 0.9019961566650858
+        },
+        {
+            "task_id": 189883,
+            "dataset_id": 1531,
+            "dataset_name": "volcanoes-b1",
+            "n_samples": 10176,
+            "n_features": 3,
+            "n_classes": 5,
+            "accuracy": 0.9677672955974843,
+            "roc_auc": 0.8824448597689756
+        },
+        {
+            "task_id": 189884,
+            "dataset_id": 1532,
+            "dataset_name": "volcanoes-b2",
+            "n_samples": 10668,
+            "n_features": 3,
+            "n_classes": 5,
+            "accuracy": 0.9673790776152981,
+            "roc_auc": 0.8509857878434042
+        },
+        {
+            "task_id": 189887,
+            "dataset_id": 1535,
+            "dataset_name": "volcanoes-b5",
+            "n_samples": 9989,
+            "n_features": 3,
+            "n_classes": 5,
+            "accuracy": 0.9623698959167334,
+            "roc_auc": 0.8898968368327027
+        },
+        {
+            "task_id": 189890,
+            "dataset_id": 1538,
+            "dataset_name": "volcanoes-d1",
+            "n_samples": 8753,
+            "n_features": 3,
+            "n_classes": 5,
+            "accuracy": 0.9502055733211512,
+            "roc_auc": 0.7806302470065123
+        },
+        {
+            "task_id": 189893,
+            "dataset_id": 1541,
+            "dataset_name": "volcanoes-d4",
+            "n_samples": 8654,
+            "n_features": 3,
+            "n_classes": 5,
+            "accuracy": 0.9514787430683919,
+            "roc_auc": 0.8062400892135628
+        },
+        {
+            "task_id": 189894,
+            "dataset_id": 1542,
+            "dataset_name": "volcanoes-e1",
+            "n_samples": 1183,
+            "n_features": 3,
+            "n_classes": 5,
+            "accuracy": 0.9222972972972973,
+            "roc_auc": 0.8597707084932307
+        },
+        {
+            "task_id": 189899,
+            "dataset_id": 1549,
+            "dataset_name": "autoUniv-au6-750",
+            "n_samples": 750,
+            "n_features": 40,
+            "n_classes": 8,
+            "accuracy": 0.31382978723404253,
+            "roc_auc": 0.6266068932879801
+        },
+        {
+            "task_id": 189900,
+            "dataset_id": 1553,
+            "dataset_name": "autoUniv-au7-700",
+            "n_samples": 700,
+            "n_features": 12,
+            "n_classes": 3,
+            "accuracy": 0.5085714285714286,
+            "roc_auc": 0.7456116205257395
+        },
+        {
+            "task_id": 189902,
+            "dataset_id": 1536,
+            "dataset_name": "volcanoes-b6",
+            "n_samples": 10130,
+            "n_features": 3,
+            "n_classes": 5,
+            "accuracy": 0.9664429530201343,
+            "roc_auc": 0.8911220248057257
+        },
+        {
+            "task_id": 211720,
+            "dataset_id": 41972,
+            "dataset_name": "Indian_pines",
+            "n_samples": 9144,
+            "n_features": 220,
+            "n_classes": 8,
+            "accuracy": 0.9693788276465442,
+            "roc_auc": 0.9984435451103673
+        },
+        {
+            "task_id": 211721,
+            "dataset_id": 42193,
+            "dataset_name": "compas-two-years",
+            "n_samples": 5278,
+            "n_features": 13,
+            "n_classes": 2,
+            "accuracy": 0.681060606060606,
+            "roc_auc": 0.7387723653006801
+        }
+    ],
+    "failures": [
+        {
+            "task_id": 232,
+            "error": "ufunc 'isnan' not supported for the input types, and the inputs could not be safely coerced to any supported types according to the casting rule ''safe''"
+        },
+        {
+            "task_id": 236,
+            "error": "Number of samples 15000 in the input data is greater than the maximum number of samples 10000 officially supported by TabPFN. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 256,
+            "error": "Number of classes in y_true not equal to the number of columns in 'y_score'"
+        },
+        {
+            "task_id": 271,
+            "error": "Number of classes 19 exceeds the maximal number of classes supported by TabPFN. Consider using a strategy to reduce the number of classes. For code see https://github.com/PriorLabs/tabpfn-extensions/blob/main/src/tabpfn_extensions/many_class/many_class_classifier.py"
+        },
+        {
+            "task_id": 336,
+            "error": "Number of samples 33984 in the input data is greater than the maximum number of samples 10000 officially supported by TabPFN. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 340,
+            "error": "Number of samples 621900 in the input data is greater than the maximum number of samples 10000 officially supported by TabPFN. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 2119,
+            "error": "Number of classes in y_true not equal to the number of columns in 'y_score'"
+        },
+        {
+            "task_id": 2121,
+            "error": "Number of classes 28 exceeds the maximal number of classes supported by TabPFN. Consider using a strategy to reduce the number of classes. For code see https://github.com/PriorLabs/tabpfn-extensions/blob/main/src/tabpfn_extensions/many_class/many_class_classifier.py"
+        },
+        {
+            "task_id": 2122,
+            "error": "Number of samples 21042 in the input data is greater than the maximum number of samples 10000 officially supported by TabPFN. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 2356,
+            "error": "Number of samples 33873 in the input data is greater than the maximum number of samples 10000 officially supported by TabPFN. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 3044,
+            "error": "could not convert string to float: '__MISSING__'"
+        },
+        {
+            "task_id": 3047,
+            "error": "Number of classes 11 exceeds the maximal number of classes supported by TabPFN. Consider using a strategy to reduce the number of classes. For code see https://github.com/PriorLabs/tabpfn-extensions/blob/main/src/tabpfn_extensions/many_class/many_class_classifier.py"
+        },
+        {
+            "task_id": 75098,
+            "error": "Number of features 784 in the input data is greater than the maximum number of features 500 officially supported by the TabPFN model. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 75112,
+            "error": "Number of samples 14265 in the input data is greater than the maximum number of samples 10000 officially supported by TabPFN. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 75114,
+            "error": "Number of features 10935 in the input data is greater than the maximum number of features 500 officially supported by the TabPFN model. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 75115,
+            "error": "Number of features 10935 in the input data is greater than the maximum number of features 500 officially supported by the TabPFN model. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 75116,
+            "error": "Number of features 10935 in the input data is greater than the maximum number of features 500 officially supported by the TabPFN model. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 75120,
+            "error": "Number of features 10935 in the input data is greater than the maximum number of features 500 officially supported by the TabPFN model. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 75121,
+            "error": "Number of features 10935 in the input data is greater than the maximum number of features 500 officially supported by the TabPFN model. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 75125,
+            "error": "Number of features 10935 in the input data is greater than the maximum number of features 500 officially supported by the TabPFN model. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 75126,
+            "error": "Number of features 10935 in the input data is greater than the maximum number of features 500 officially supported by the TabPFN model. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 75134,
+            "error": "Number of samples 123645 in the input data is greater than the maximum number of samples 10000 officially supported by TabPFN. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 75139,
+            "error": "Number of samples 11250 in the input data is greater than the maximum number of samples 10000 officially supported by TabPFN. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 75142,
+            "error": "Number of samples 30576 in the input data is greater than the maximum number of samples 10000 officially supported by TabPFN. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 75146,
+            "error": "Number of samples 10312 in the input data is greater than the maximum number of samples 10000 officially supported by TabPFN. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 75154,
+            "error": "Number of classes 100 exceeds the maximal number of classes supported by TabPFN. Consider using a strategy to reduce the number of classes. For code see https://github.com/PriorLabs/tabpfn-extensions/blob/main/src/tabpfn_extensions/many_class/many_class_classifier.py"
+        },
+        {
+            "task_id": 75156,
+            "error": "Number of features 1776 in the input data is greater than the maximum number of features 500 officially supported by the TabPFN model. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 75161,
+            "error": "Number of samples 30576 in the input data is greater than the maximum number of samples 10000 officially supported by TabPFN. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 75169,
+            "error": "Number of features 617 in the input data is greater than the maximum number of features 500 officially supported by the TabPFN model. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 75174,
+            "error": "Number of samples 17088 in the input data is greater than the maximum number of samples 10000 officially supported by TabPFN. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 75176,
+            "error": "Number of samples 15480 in the input data is greater than the maximum number of samples 10000 officially supported by TabPFN. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 75178,
+            "error": "Number of samples 197442 in the input data is greater than the maximum number of samples 10000 officially supported by TabPFN. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 75184,
+            "error": "Number of samples 12449 in the input data is greater than the maximum number of samples 10000 officially supported by TabPFN. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 75195,
+            "error": "Number of samples 30576 in the input data is greater than the maximum number of samples 10000 officially supported by TabPFN. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 75219,
+            "error": "Number of samples 11235 in the input data is greater than the maximum number of samples 10000 officially supported by TabPFN. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 75223,
+            "error": "Number of samples 21042 in the input data is greater than the maximum number of samples 10000 officially supported by TabPFN. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 75237,
+            "error": "Number of samples 183792 in the input data is greater than the maximum number of samples 10000 officially supported by TabPFN. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 75250,
+            "error": "Number of samples 111999 in the input data is greater than the maximum number of samples 10000 officially supported by TabPFN. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 126024,
+            "error": "Number of samples 11658 in the input data is greater than the maximum number of samples 10000 officially supported by TabPFN. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 126030,
+            "error": "Number of features 561 in the input data is greater than the maximum number of features 500 officially supported by the TabPFN model. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 126031,
+            "error": "Number of classes 11 exceeds the maximal number of classes supported by TabPFN. Consider using a strategy to reduce the number of classes. For code see https://github.com/PriorLabs/tabpfn-extensions/blob/main/src/tabpfn_extensions/many_class/many_class_classifier.py"
+        },
+        {
+            "task_id": 146597,
+            "error": "Number of features 1300 in the input data is greater than the maximum number of features 500 officially supported by the TabPFN model. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 166996,
+            "error": "Number of features 1617 in the input data is greater than the maximum number of features 500 officially supported by the TabPFN model. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 167085,
+            "error": "Number of features 1000 in the input data is greater than the maximum number of features 500 officially supported by the TabPFN model. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 167103,
+            "error": "Number of samples 66441 in the input data is greater than the maximum number of samples 10000 officially supported by TabPFN. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 167203,
+            "error": "Number of features 1024 in the input data is greater than the maximum number of features 500 officially supported by the TabPFN model. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 167204,
+            "error": "Number of features 3072 in the input data is greater than the maximum number of features 500 officially supported by the TabPFN model. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 168791,
+            "error": "Number of features 1558 in the input data is greater than the maximum number of features 500 officially supported by the TabPFN model. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 189786,
+            "error": "Number of features 6373 in the input data is greater than the maximum number of features 500 officially supported by the TabPFN model. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 189828,
+            "error": "Number of samples 76324 in the input data is greater than the maximum number of samples 10000 officially supported by TabPFN. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 189829,
+            "error": "Number of classes 100 exceeds the maximal number of classes supported by TabPFN. Consider using a strategy to reduce the number of classes. For code see https://github.com/PriorLabs/tabpfn-extensions/blob/main/src/tabpfn_extensions/many_class/many_class_classifier.py"
+        },
+        {
+            "task_id": 189836,
+            "error": "Number of classes in y_true not equal to the number of columns in 'y_score'"
+        },
+        {
+            "task_id": 189840,
+            "error": "Number of samples 75726 in the input data is greater than the maximum number of samples 10000 officially supported by TabPFN. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 189845,
+            "error": "Number of classes 30 exceeds the maximal number of classes supported by TabPFN. Consider using a strategy to reduce the number of classes. For code see https://github.com/PriorLabs/tabpfn-extensions/blob/main/src/tabpfn_extensions/many_class/many_class_classifier.py"
+        },
+        {
+            "task_id": 189846,
+            "error": "Number of samples 34335 in the input data is greater than the maximum number of samples 10000 officially supported by TabPFN. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 189859,
+            "error": "Number of features 10304 in the input data is greater than the maximum number of features 500 officially supported by the TabPFN model. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 189869,
+            "error": "Number of samples 23554 in the input data is greater than the maximum number of samples 10000 officially supported by TabPFN. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 189870,
+            "error": "Number of samples 54737 in the input data is greater than the maximum number of samples 10000 officially supported by TabPFN. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 189875,
+            "error": "Number of samples 15000 in the input data is greater than the maximum number of samples 10000 officially supported by TabPFN. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 189878,
+            "error": "Number of features 10000 in the input data is greater than the maximum number of features 500 officially supported by the TabPFN model. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 190154,
+            "error": "Number of features 784 in the input data is greater than the maximum number of features 500 officially supported by the TabPFN model. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 190155,
+            "error": "Number of samples 38879 in the input data is greater than the maximum number of samples 10000 officially supported by TabPFN. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 190156,
+            "error": "Number of features 2916 in the input data is greater than the maximum number of features 500 officially supported by the TabPFN model. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 190157,
+            "error": "Number of features 1568 in the input data is greater than the maximum number of features 500 officially supported by the TabPFN model. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 190158,
+            "error": "Number of features 1568 in the input data is greater than the maximum number of features 500 officially supported by the TabPFN model. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 190159,
+            "error": "Number of features 784 in the input data is greater than the maximum number of features 500 officially supported by the TabPFN model. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 211722,
+            "error": "Number of samples 446409 in the input data is greater than the maximum number of samples 10000 officially supported by TabPFN. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 211723,
+            "error": "Number of samples 61738 in the input data is greater than the maximum number of samples 10000 officially supported by TabPFN. Set `ignore_pretraining_limits=True` to override this error!"
+        },
+        {
+            "task_id": 211724,
+            "error": "Number of samples 52755 in the input data is greater than the maximum number of samples 10000 officially supported by TabPFN. Set `ignore_pretraining_limits=True` to override this error!"
+        }
+    ]
+}
