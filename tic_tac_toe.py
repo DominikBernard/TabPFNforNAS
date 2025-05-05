@@ -10,7 +10,7 @@ dataset = openml.datasets.get_dataset('tic-tac-toe')
 
 # Load data
 X, y, _, _ = dataset.get_data(target=dataset.default_target_attribute)
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42)
 
 # Initialize a classifier
 clf = TabPFNClassifier()
