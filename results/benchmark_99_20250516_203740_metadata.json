@@ -1,0 +1,18 @@
+{
+    "benchmark_suite_id": 99,
+    "benchmark_suite_name": "OpenML-CC18 Curated Classification benchmark",
+    "run_timestamp": "20250516_203740",
+    "algorithm": "TabPFNClassifier",
+    "algorithm_params": "default",
+    "sklearn_random_state": 42,
+    "test_size": 0.25,
+    "total_tasks": 72,
+    "successful_tasks": 50,
+    "failed_tasks": 22,
+    "summary_statistics": {
+        "mean_accuracy": 0.8692323326024939,
+        "std_accuracy": 0.15726426044967862,
+        "mean_roc_auc": 0.9235350262499807,
+        "std_roc_auc": 0.10831777600550818
+    }
+}
