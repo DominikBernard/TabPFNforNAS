@@ -9,7 +9,7 @@ from typing import Any, Dict, List, Optional, Tuple, cast
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, roc_auc_score
 from tabpfn import TabPFNClassifier
-
+from tqdm import tqdm
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--suite_id", type=int, default=99, help="OpenML benchmark suite ID")
@@ -121,7 +121,7 @@ def run_benchmark(
     results: List[Dict[str, Any]] = []
     failures: List[Dict[str, Any]] = []
     
-    for i, task_id in enumerate(tasks):
+    for i, task_id in enumerate(tqdm(tasks, desc="Evaluating tasks", unit="task")):
         task_order: tuple[int, int] = (i + 1, len(tasks))
         result, failure = evaluate_task(task_id, test_size, random_state, task_order)
         if result is not None:
