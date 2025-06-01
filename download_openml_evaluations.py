@@ -50,7 +50,7 @@ def download_benchmark_evaluations(benchmark_id: int=99, metrics: Optional[List[
                 evals = openml.evaluations.list_evaluations(
                     function=metric,
                     tasks=[task_id],
-                    size=10000,  # Limit to 10000 evaluations per task
+                    size=None, # Download all evaluations
                     output_format='dataframe'
                 )
                 
@@ -62,7 +62,7 @@ def download_benchmark_evaluations(benchmark_id: int=99, metrics: Optional[List[
                     min_val = evals['value'].min()
                     
                     # Get top 5 flows
-                    top_flows = evals.sort_values('value', ascending=False).head(5)
+                    sorted_runs = evals.sort_values('value', ascending=False)
                     
                     # Store statistics
                     task_evaluations[metric] = {
@@ -71,7 +71,7 @@ def download_benchmark_evaluations(benchmark_id: int=99, metrics: Optional[List[
                         'max': max_val,
                         'min': min_val,
                         'count': len(evals),
-                        'top_flows': top_flows[['flow_id', 'flow_name', 'value']].to_dict('records')
+                        'sorted_runs': sorted_runs[['run_id', 'flow_name', 'data_name', 'value']].to_dict('records')
                     }
                     
                     print(f"Task {task_id}, Metric {metric}: {len(evals)} evaluations")
