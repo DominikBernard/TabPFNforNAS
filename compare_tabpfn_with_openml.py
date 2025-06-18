@@ -7,6 +7,20 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from typing import cast
 from tqdm import tqdm
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--user_results_file", type=str, default='results/benchmark_99_kfold_2025-06-18_235524_full_output.json',
+                    help="Path to the user's benchmark results JSON file")
+parser.add_argument("--openml_evaluations_file", type=str, default='results/openml_cc18_evaluations.pkl',
+                    help="Path to the OpenML evaluations cache file")
+parser.add_argument("--output_plot_dir", type=str, default='results/plots_kfold/individual',
+                    help="Directory to save the output plots")
+parser.add_argument("--overall_plot_dir", type=str, default='results/plots_kfold/overall',
+                    help="Directory to save the overall plots")
+parser.add_argument("--output_comparison_file", type=str, default='results/tabpfn_vs_openml_comparison.csv',
+                    help="Path to save the comparison results CSV file")
+                    
 
 def load_user_results(results_file: str):
     """Load user's benchmark results from JSON file"""
@@ -27,16 +41,16 @@ def load_openml_evaluations(cache_file: str):
     with open(cache_file, 'rb') as f:
         return pickle.load(f)
     
-def create_violin_plot(data: pd.DataFrame, user_result: pd.DataFrame, dataset_name: str, metric: str, overall: bool = False):
+def create_violin_plot(args: argparse.Namespace, data: pd.DataFrame, user_result: pd.DataFrame, dataset_name: str, metric: str, overall: bool = False):
     """Create a violin plot for the given data and user result"""
 
     if overall:
         plt.figure(figsize=(50, 10))
-        directory = 'results/plots/overall'
+        directory = args.overall_plot_dir
         plt.xticks(rotation=75)
     else:
         plt.figure(figsize=(8, 6))
-        directory = 'results/plots'
+        directory = args.output_plot_dir
     
     plt.tight_layout()
     ax = sns.violinplot(x=data['dataset_name'], y=data['value'], inner="point", split=True, density_norm='width', cut=0)
@@ -56,7 +70,7 @@ def create_violin_plot(data: pd.DataFrame, user_result: pd.DataFrame, dataset_na
     plt.savefig(f'{directory}/violin_plot_{dataset_name}_{metric}.png', bbox_inches='tight')
     plt.close()
 
-def compute_performance_metrics(user_results: pd.DataFrame, openml_evaluations: dict):
+def compute_performance_metrics(args: argparse.Namespace, user_results: pd.DataFrame, openml_evaluations: dict) -> pd.DataFrame:
     """Compute comparison metrics between user results and OpenML evaluations"""
     comparison_rows = []
     
@@ -127,25 +141,28 @@ def compute_performance_metrics(user_results: pd.DataFrame, openml_evaluations: 
 
                     # create violin plot data
                     create_violin_plot(
+                        args,
                         sorted_runs,
                         user_value_df,
                         dataset_name,
-                        user_metric
+                        user_metric,
                     )
 
     # create final violin plots
     create_violin_plot(
+        args,
         accuracy_openml,
         accuracy_user,
-        'Overall Accuracy',
+        'Overall',
         'predictive_accuracy',
-        overall=True
+        overall=True,
     )
 
     create_violin_plot(
+        args,
         roc_auc_openml,
         roc_auc_user,
-        'Overall ROC AUC',
+        'Overall',
         'area_under_roc_curve',
         overall=True
     )
@@ -153,12 +170,17 @@ def compute_performance_metrics(user_results: pd.DataFrame, openml_evaluations: 
     return pd.DataFrame(comparison_rows)
 
 def main():
+    args = parser.parse_args([] if "__file__" not in globals() else None)
     # Load user results
-    user_results_file = 'results/benchmark_99_20250516_203740_full_output.json'
+    user_results_file = args.user_results_file
+    if not os.path.exists(user_results_file):
+        print(f"Error: User results file not found at {user_results_file}")
+        print("Please run the first script to generate the results first.")
+        return
     user_results = load_user_results(user_results_file)
     
     # Load OpenML evaluations
-    openml_evaluations_file = 'results/openml_cc18_evaluations.pkl'
+    openml_evaluations_file = args.openml_evaluations_file
     if not os.path.exists(openml_evaluations_file):
         print(f"Error: OpenML evaluations file not found at {openml_evaluations_file}")
         print("Please run the first script to download the evaluations first.")
@@ -167,11 +189,11 @@ def main():
     openml_evaluations = load_openml_evaluations(openml_evaluations_file)
     
     # Compute comparison metrics
-    comparison_df = compute_performance_metrics(user_results, openml_evaluations)
+    comparison_df = compute_performance_metrics(args, user_results, openml_evaluations)
     
     # Save results
-    comparison_df.to_csv('results/tabpfn_vs_openml_comparison.csv', index=False)
-    print(f"Saved comparison results to results/tabpfn_vs_openml_comparison.csv")
+    comparison_df.to_csv(args.output_comparison_file, index=False)
+    print(f"Saved comparison results to {args.output_comparison_file}")
     
     # Print summary statistics
     print("\nSummary of TabPFN performance:")
