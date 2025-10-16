@@ -1,0 +1,122 @@
+import nats_bench
+from arch_to_list import arch_to_list, is_arch_connected
+import argparse
+import numpy as np
+import tabpfn
+import matplotlib.pyplot as plt
+import os
+import datetime
+import regex as re
+
+parser = argparse.ArgumentParser(description='Get predictions from tabpfn')
+
+parser.add_argument('--train_size', type=int, default=1_000, help='Number of training samples to use')
+parser.add_argument('--test_size', type=int, default=200, help='Number of test samples to use')
+parser.add_argument('--seed', type=int, default=42, help='Random seed for sampling')
+parser.add_argument('--dataset', type=str, default='cifar10', choices=['cifar10', 'cifar100', 'ImageNet16-120'], help='Dataset to use')
+parser.add_argument('--connected_feature', action='store_true', default=False, help='Add a feature indicating if the architecture is connected')
+parser.add_argument('--arch_index_feature', action='store_true', default=False, help='Add the architecture index as a feature')
+parser.add_argument('--edge_features_onehot', action='store_true', default=False, help='Use one-hot encoding for edge features')
+parser.add_argument('--verbose', action='store_true', default=False, help='Enable verbose output')
+parser.add_argument('--logdir', type=str, default='logs', help='Directory to save logs and plots, if default, a timestamped directory will be created')
+
+def get_features(arch_str: str, arch_index: int, connected_feature: bool, arch_index_feature: bool, edge_features_onehot: bool) -> list[int]:
+    """Get features from architecture string."""
+    features = []
+    if arch_index_feature:
+        features.append(arch_index / 15624)  # normalize index to [0, 1]
+    edges = arch_to_list(arch_str)
+    if edge_features_onehot:
+        one_hot_edges = []
+        for edge in edges:
+            one_hot = [0] * 5
+            one_hot[edge] = 1
+            one_hot_edges.extend(one_hot)
+        features.extend(one_hot_edges)
+    else:
+        features.extend(edges)
+    if connected_feature:
+        features.append(int(is_arch_connected(arch_str)))
+    return features
+
+def change_logdir_if_default(main_args: argparse.Namespace):
+    """Change logdir if it is the default value."""
+    # check if logdir is default
+    if main_args.logdir == 'logs':
+        # Create logdir name.
+        main_args.logdir = os.path.join("logs", "{}-{}-{}".format(
+            os.path.basename(globals().get("__file__", "notebook")),
+            datetime.datetime.now().strftime("%Y-%m-%d_%H%M%S"),
+            ",".join(("{}={}".format(re.sub("(.)[^_]*_?", r"\1", k), v) for k, v in sorted(vars(main_args).items())))
+        ))
+    os.makedirs(main_args.logdir, exist_ok=True)
+
+def main(args: argparse.Namespace, api: nats_bench.NATStopology):
+    # set random seed
+    np.random.seed(args.seed)
+
+    change_logdir_if_default(args)
+
+    train_and_test_size = args.train_size + args.test_size
+    all_indices = np.random.choice(15625, train_and_test_size, replace=False)
+    assert isinstance(all_indices, np.ndarray), "all_indices is not a numpy array"
+
+    # get features and labels
+    archs = [get_features(api.arch(int(i)), i, args.connected_feature, args.arch_index_feature, args.edge_features_onehot) for i in all_indices]
+    features = np.array(archs)
+
+    labels = [api.get_more_info(int(i), args.dataset, hp="200", is_random=False)['test-accuracy'] for i in all_indices]
+    labels = np.array(labels)
+
+    # split into train and test
+    train_features = features[:args.train_size]
+    test_features = features[args.train_size:]
+    train_labels = labels[:args.train_size]
+    test_labels = labels[args.train_size:]
+    
+    if args.verbose:
+        print(f"Train features shape: {train_features.shape}")
+        print(f"Test features shape: {test_features.shape}")
+        print(f"Train labels shape: {train_labels.shape}")
+        print(f"Test labels shape: {test_labels.shape}")
+
+    # load tabpfn regression model
+    model = tabpfn.TabPFNRegressor()
+    model.fit(train_features, train_labels)
+
+    # make predictions
+    preds = model.predict(test_features)
+    if args.verbose:
+        print(f"Predictions shape: {preds.shape}")
+
+    # evaluate
+    mse = np.mean((preds - test_labels) ** 2)
+    print(f"Mean Squared Error: {mse}")
+
+    # plot the results
+    plt.figure(figsize=(7, 7))
+    plt.scatter(test_labels, preds, alpha=0.5)
+
+    # set x and y limits to 0-100
+    plt.xlim(0, 100)
+    plt.ylim(0, 100)
+    # add the y=x line
+    plt.plot([0, 100], [0, 100], 'r--')
+
+    plt.xlabel("True Labels")
+    plt.ylabel("Predictions")
+    plt.title("True Labels vs Predictions")
+    
+    # save the figure
+    plt.savefig(os.path.join(args.logdir, "true_vs_pred.png"))
+    # plt.show()
+
+if __name__ == "__main__":
+    main_args = parser.parse_args([] if "__file__" not in globals() else None)
+
+    api = nats_bench.create(None, 'tss', fast_mode=True, verbose=False)
+
+    assert isinstance(api, nats_bench.NATStopology), "API is not of type NATStopology" # assert api is tss type
+
+    main(main_args, api)
+
