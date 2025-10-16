@@ -7,8 +7,8 @@ from tabpfn import TabPFNRegressor
 
 from log_runs_to_tensors import extract_logs_from_subdirectories, create_tensors_from_logs
 
-splitting_epoch = 20  # Define the epoch at which to split training and testing data
-rotation = 9  # Define how many times to rotate the list of runs
+splitting_epoch = 20 # Define the epoch at which to split training and testing data
+rotation = 0 # Define how many times to rotate the list of runs
 
 # get the data from the log files with current directory as root
 # current derictory is path to this file without the filename
@@ -23,8 +23,8 @@ X_list = []
 y_list = []
 for i in range(len(learning_curve_data_list)):
     learning_curve_data = learning_curve_data_list[i]
-    X_i = learning_curve_data[:, 0].reshape(-1, 1)  # Epoch numbers as features
-    y_i = learning_curve_data[:, 1]  # Dev accuracy as target values
+    X_i = learning_curve_data[:, 0].reshape(-1, 1) # Epoch numbers as features
+    y_i = learning_curve_data[:, 1] # Dev accuracy as target values
 
     # add i as a first feature to distinguish runs
     X_i = np.hstack((np.full((X_i.shape[0], 1), i), X_i))
@@ -71,7 +71,7 @@ plt.title('Dev Accuracy vs Epoch')
 plt.legend()
 
 plt.grid()
-# plt.show()
-plt.savefig(f"plots/mnist_mlp_multiple_runs_tabpfn_example{rotation}.png")
+plt.show()
+# plt.savefig(f"plots/mnist_mlp_multiple_runs_tabpfn_example{rotation}.png")
 plt.close()
 
