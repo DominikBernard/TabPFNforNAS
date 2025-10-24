@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import os
 import datetime
 import regex as re
+from typing import Literal
 
 parser = argparse.ArgumentParser(description='Get predictions from tabpfn')
 
@@ -51,28 +52,40 @@ def change_logdir_if_default(main_args: argparse.Namespace):
         ))
     os.makedirs(main_args.logdir, exist_ok=True)
 
+def create_dataset(indices_to_choose_from: np.ndarray, args: argparse.Namespace, test_or_train: Literal["test", "train"] = "train") -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """
+    Create dataset of features and labels.
+    Args:
+        indices_to_choose_from: Indices to choose architectures from.
+        args: Command line arguments.
+        test_or_train: Whether to create test or train dataset.
+
+    Returns:
+        chosen_indices: Indices of chosen architectures.
+        features: Features of chosen architectures.
+        labels: Labels of chosen architectures.
+    """
+    size = args.test_size if test_or_train == "test" else args.train_size
+    chosen_indices = np.random.choice(indices_to_choose_from, size, replace=False)
+
+    archs = [get_features(api.arch(int(i)), i, args.connected_feature, args.arch_index_feature, args.edge_features_onehot) for i in chosen_indices]
+    features = np.array(archs)
+
+    labels = [api.get_more_info(int(i), args.dataset, hp="200", is_random=False)['test-accuracy'] for i in chosen_indices]
+    labels = np.array(labels)
+
+    return chosen_indices, features, labels
+
+
 def main(args: argparse.Namespace, api: nats_bench.NATStopology):
     # set random seed
     np.random.seed(args.seed)
 
     change_logdir_if_default(args)
 
-    train_and_test_size = args.train_size + args.test_size
-    all_indices = np.random.choice(15625, train_and_test_size, replace=False)
-    assert isinstance(all_indices, np.ndarray), "all_indices is not a numpy array"
-
-    # get features and labels
-    archs = [get_features(api.arch(int(i)), i, args.connected_feature, args.arch_index_feature, args.edge_features_onehot) for i in all_indices]
-    features = np.array(archs)
-
-    labels = [api.get_more_info(int(i), args.dataset, hp="200", is_random=False)['test-accuracy'] for i in all_indices]
-    labels = np.array(labels)
-
-    # split into train and test
-    train_features = features[:args.train_size]
-    test_features = features[args.train_size:]
-    train_labels = labels[:args.train_size]
-    test_labels = labels[args.train_size:]
+    chosen_indices, test_features, test_labels = create_dataset(np.arange(0, 15625), args, test_or_train="test")
+    remaining_indices = np.setdiff1d(np.arange(0, 15625), chosen_indices)
+    _, train_features, train_labels = create_dataset(remaining_indices, args, test_or_train="train")
     
     if args.verbose:
         print(f"Train features shape: {train_features.shape}")
