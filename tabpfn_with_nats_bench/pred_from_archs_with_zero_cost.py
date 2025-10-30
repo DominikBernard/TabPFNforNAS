@@ -16,12 +16,12 @@ parser.add_argument('--train_size', type=int, default=1_000, help='Number of tra
 parser.add_argument('--test_size', type=int, default=200, help='Number of test samples to use')
 parser.add_argument('--seed', type=int, default=42, help='Random seed for sampling')
 parser.add_argument('--dataset', type=str, default='cifar10', choices=['cifar10', 'cifar100', 'ImageNet16-120'], help='Dataset to use')
-parser.add_argument('--connected_feature', action='store_true', default=True, help='Add a feature indicating if the architecture is connected')
+parser.add_argument('--connected_feature', action='store_true', default=False, help='Add a feature indicating if the architecture is connected')
 parser.add_argument('--arch_index_feature', action='store_true', default=False, help='Add the architecture index as a feature')
 parser.add_argument('--edge_features_onehot', action='store_true', default=False, help='Use one-hot encoding for edge features')
 parser.add_argument('--zero_cost_features',
                     nargs="*", choices=['f', 'g_n', 'g', 'j_c', 'p', 's', 'sy', 'sy_bn'],
-                    default=['f', 'g_n', 'g', 'j_c', 'p', 's', 'sy', 'sy_bn'],
+                    default=[],
                     help='Zero-cost features to include, choose from: f (fisher), g_n (grad_norm), g (grasp), j_c (jacob_cov), p (plain), s (snip), sy (synflow), sy_bn (synflow_bn)') 
 parser.add_argument('--datafile', type=str, default='data.json', help='Path to the JSON file containing architecture data')
 parser.add_argument('--verbose', action='store_true', default=True, help='Enable verbose output')
