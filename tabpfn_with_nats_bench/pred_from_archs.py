@@ -1,5 +1,5 @@
 import nats_bench
-from arch_to_list import arch_to_list, is_arch_connected
+from arch_features import get_features
 import argparse
 import numpy as np
 import tabpfn
@@ -20,25 +20,6 @@ parser.add_argument('--arch_index_feature', action='store_true', default=False, 
 parser.add_argument('--edge_features_onehot', action='store_true', default=False, help='Use one-hot encoding for edge features')
 parser.add_argument('--verbose', action='store_true', default=False, help='Enable verbose output')
 parser.add_argument('--logdir', type=str, default='logs', help='Directory to save logs and plots, if default, a timestamped directory will be created')
-
-def get_features(arch_str: str, arch_index: int, connected_feature: bool, arch_index_feature: bool, edge_features_onehot: bool) -> list[int]:
-    """Get features from architecture string."""
-    features = []
-    if arch_index_feature:
-        features.append(arch_index / 15624)  # normalize index to [0, 1]
-    edges = arch_to_list(arch_str)
-    if edge_features_onehot:
-        one_hot_edges = []
-        for edge in edges:
-            one_hot = [0] * 5
-            one_hot[edge] = 1
-            one_hot_edges.extend(one_hot)
-        features.extend(one_hot_edges)
-    else:
-        features.extend(edges)
-    if connected_feature:
-        features.append(int(is_arch_connected(arch_str)))
-    return features
 
 def change_logdir_if_default(main_args: argparse.Namespace):
     """Change logdir if it is the default value."""
