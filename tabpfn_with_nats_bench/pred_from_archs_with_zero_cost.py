@@ -1,14 +1,12 @@
-import nats_bench
-from arch_features import get_features_and_label
 import argparse
 import numpy as np
 import tabpfn
 import matplotlib.pyplot as plt
 import os
-import datetime
-import regex as re
-from typing import Literal
 import json
+
+from change_logdir import change_logdir_if_default
+from dataloader import create_dataset_from_data, skip_unconnected_archs_using_data
 
 parser = argparse.ArgumentParser(description='Get predictions from tabpfn')
 
@@ -23,46 +21,10 @@ parser.add_argument('--zero_cost_features',
                     nargs="*", choices=['f', 'g_n', 'g', 'j_c', 'p', 's', 'sy', 'sy_bn'],
                     default=[],
                     help='Zero-cost features to include, choose from: f (fisher), g_n (grad_norm), g (grasp), j_c (jacob_cov), p (plain), s (snip), sy (synflow), sy_bn (synflow_bn)') 
+parser.add_argument('--skip_unconnected', action='store_true', default=False, help='Skip unconnected architectures')
 parser.add_argument('--datafile', type=str, default='data.json', help='Path to the JSON file containing architecture data')
 parser.add_argument('--verbose', action='store_true', default=True, help='Enable verbose output')
 parser.add_argument('--logdir', type=str, default='logs', help='Directory to save logs and plots, if default, a timestamped directory will be created')
-
-
-def change_logdir_if_default(main_args: argparse.Namespace):
-    """Change logdir if it is the default value."""
-    # check if logdir is default
-    if main_args.logdir == 'logs':
-        # Create logdir name.
-        main_args.logdir = os.path.join("logs", "{}-{}-{}".format(
-            os.path.basename(globals().get("__file__", "notebook")),
-            datetime.datetime.now().strftime("%Y-%m-%d_%H%M%S"),
-            ",".join(("{}={}".format(re.sub("(.)[^_]*_?", r"\1", k), v) for k, v in sorted(vars(main_args).items())))
-        ))
-    os.makedirs(main_args.logdir, exist_ok=True)
-
-def create_dataset(indices_to_choose_from: np.ndarray, args: argparse.Namespace, data: list[dict], test_or_train: Literal["test", "train"] = "train") -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """
-    Create dataset of features and labels.
-    Args:
-        indices_to_choose_from: Indices to choose architectures from.
-        args: Command line arguments.
-        test_or_train: Whether to create test or train dataset.
-
-    Returns:
-        chosen_indices: Indices of chosen architectures.
-        features: Features of chosen architectures.
-        labels: Labels of chosen architectures.
-    """
-    size = args.test_size if test_or_train == "test" else args.train_size
-    chosen_indices = np.random.choice(indices_to_choose_from, size, replace=False)
-
-    features_and_labels = [get_features_and_label(data, i, args.connected_feature, args.arch_index_feature, args.edge_features_onehot, args.zero_cost_features) for i in chosen_indices]
-    features, labels = zip(*features_and_labels)
-
-    features = np.array(features)
-    labels = np.array(labels)
-
-    return chosen_indices, features, labels
 
 def verbose_meta_info(args: argparse.Namespace):
     """Print verbose meta information about the experiment."""
@@ -96,7 +58,7 @@ def verbose_meta_info(args: argparse.Namespace):
         print()
 
 
-def main(args: argparse.Namespace, api: nats_bench.NATStopology):
+def main(args: argparse.Namespace):
     # set random seed
     np.random.seed(args.seed)
 
@@ -105,9 +67,17 @@ def main(args: argparse.Namespace, api: nats_bench.NATStopology):
     with open(args.datafile, 'r') as f:
         data = json.load(f)
 
-    chosen_indices, test_features, test_labels = create_dataset(np.arange(0, 15625), args, data, test_or_train="test")
-    remaining_indices = np.setdiff1d(np.arange(0, 15625), chosen_indices)
-    _, train_features, train_labels = create_dataset(remaining_indices, args, data, test_or_train="train")
+    if args.skip_unconnected:
+        all_indices = np.arange(0, 15625)
+        indices = skip_unconnected_archs_using_data(data, all_indices)
+        if args.verbose:
+            print(f"Filtered unconnected architectures: {len(all_indices) - len(indices)} removed, {len(indices)} remaining.")
+    else:
+        indices = np.arange(0, 15625)
+
+    chosen_test_indices, test_features, test_labels = create_dataset_from_data(indices, args, data, test_or_train="test")
+    remaining_indices = np.setdiff1d(indices, chosen_test_indices)
+    _, train_features, train_labels = create_dataset_from_data(remaining_indices, args, data, test_or_train="train")
 
     if args.verbose:
         verbose_meta_info(args)
@@ -157,9 +127,5 @@ def main(args: argparse.Namespace, api: nats_bench.NATStopology):
 if __name__ == "__main__":
     main_args = parser.parse_args([] if "__file__" not in globals() else None)
 
-    api = nats_bench.create(None, 'tss', fast_mode=True, verbose=False)
-
-    assert isinstance(api, nats_bench.NATStopology), "API is not of type NATStopology" # assert api is tss type
-
-    main(main_args, api)
+    main(main_args)
 
