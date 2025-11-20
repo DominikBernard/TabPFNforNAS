@@ -1,13 +1,12 @@
 import nats_bench
-from arch_features import get_features
 import argparse
 import numpy as np
 import tabpfn
 import matplotlib.pyplot as plt
 import os
-import datetime
-import regex as re
-from typing import Literal
+
+from change_logdir import change_logdir_if_default
+from dataloader import create_dataset_from_api
 
 parser = argparse.ArgumentParser(description='Get predictions from tabpfn')
 
@@ -21,52 +20,15 @@ parser.add_argument('--edge_features_onehot', action='store_true', default=False
 parser.add_argument('--verbose', action='store_true', default=False, help='Enable verbose output')
 parser.add_argument('--logdir', type=str, default='logs', help='Directory to save logs and plots, if default, a timestamped directory will be created')
 
-def change_logdir_if_default(main_args: argparse.Namespace):
-    """Change logdir if it is the default value."""
-    # check if logdir is default
-    if main_args.logdir == 'logs':
-        # Create logdir name.
-        main_args.logdir = os.path.join("logs", "{}-{}-{}".format(
-            os.path.basename(globals().get("__file__", "notebook")),
-            datetime.datetime.now().strftime("%Y-%m-%d_%H%M%S"),
-            ",".join(("{}={}".format(re.sub("(.)[^_]*_?", r"\1", k), v) for k, v in sorted(vars(main_args).items())))
-        ))
-    os.makedirs(main_args.logdir, exist_ok=True)
-
-def create_dataset(indices_to_choose_from: np.ndarray, args: argparse.Namespace, test_or_train: Literal["test", "train"] = "train") -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """
-    Create dataset of features and labels.
-    Args:
-        indices_to_choose_from: Indices to choose architectures from.
-        args: Command line arguments.
-        test_or_train: Whether to create test or train dataset.
-
-    Returns:
-        chosen_indices: Indices of chosen architectures.
-        features: Features of chosen architectures.
-        labels: Labels of chosen architectures.
-    """
-    size = args.test_size if test_or_train == "test" else args.train_size
-    chosen_indices = np.random.choice(indices_to_choose_from, size, replace=False)
-
-    archs = [get_features(api.arch(int(i)), i, args.connected_feature, args.arch_index_feature, args.edge_features_onehot) for i in chosen_indices]
-    features = np.array(archs)
-
-    labels = [api.get_more_info(int(i), args.dataset, hp="200", is_random=False)['test-accuracy'] for i in chosen_indices]
-    labels = np.array(labels)
-
-    return chosen_indices, features, labels
-
-
 def main(args: argparse.Namespace, api: nats_bench.NATStopology):
     # set random seed
     np.random.seed(args.seed)
 
     change_logdir_if_default(args)
 
-    chosen_indices, test_features, test_labels = create_dataset(np.arange(0, 15625), args, test_or_train="test")
+    chosen_indices, test_features, test_labels = create_dataset_from_api(np.arange(0, 15625), args, api, test_or_train="test")
     remaining_indices = np.setdiff1d(np.arange(0, 15625), chosen_indices)
-    _, train_features, train_labels = create_dataset(remaining_indices, args, test_or_train="train")
+    _, train_features, train_labels = create_dataset_from_api(remaining_indices, args, api, test_or_train="train")
     
     if args.verbose:
         print(f"Train features shape: {train_features.shape}")
