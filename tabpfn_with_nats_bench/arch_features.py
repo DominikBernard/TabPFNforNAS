@@ -1,6 +1,6 @@
 import numpy as np
 import regex as re
-from nats_bench import create
+import nats_bench
 
 def arch_to_list(arch_str: str) -> list[int]:
     """Convert architecture string to a list of integers representing edges using regex."""
@@ -36,7 +36,13 @@ def log_scale_synflow(synflow_value: float) -> float:
     """Log scale the synflow value."""
     return np.log10(synflow_value + 1e-12)
 
-def get_features_and_label(data: list[dict], arch_index: int, connected_feature: bool, arch_index_feature: bool, edge_features_onehot: bool, zero_cost_features: list[str]) -> tuple[list[int], float]:
+def get_first_n_train_accuracies_from_data(arch_index: int, data: list[dict], n: int = 10) -> list[float]:
+    train_accuracies = []
+    for i in range(n):
+        train_accuracies.append(data[arch_index]["accuracies"][str(i)]['train_accuracy'])
+    return train_accuracies 
+
+def get_features_and_label(data: list[dict], arch_index: int, connected_feature: bool = False, arch_index_feature: bool = False, edge_features_onehot: bool = False, zero_cost_features: tuple = (), first_n_epochs_features: int = 0) -> tuple[list[int], float]:
     """Get features and label from architecture data."""
     features = []
     if arch_index_feature:
@@ -53,7 +59,7 @@ def get_features_and_label(data: list[dict], arch_index: int, connected_feature:
         features.extend(edges)
     if connected_feature:
         features.append(int(is_arch_connected(data[arch_index]["arch"])))
-    if zero_cost_features is not []:
+    if len(zero_cost_features) > 0:
         zero_costs = data[arch_index]["logmeasures"]
         if "f" in zero_cost_features:
             features.append(zero_costs["fisher"])
@@ -71,6 +77,9 @@ def get_features_and_label(data: list[dict], arch_index: int, connected_feature:
             features.append(log_scale_synflow(zero_costs["synflow"]))
         if "sy_bn" in zero_cost_features:
             features.append(zero_costs["synflow_bn"])
+
+    if first_n_epochs_features > 0:
+        features.extend(get_first_n_train_accuracies_from_data(arch_index, data=data, n=first_n_epochs_features))
 
     label = data[arch_index]["testacc"]
     return features, label
@@ -95,8 +104,8 @@ def get_features(arch_str: str, arch_index: int, connected_feature: bool, arch_i
     return features
 
 if __name__ == "__main__":
-    api = create(None, 'tss', fast_mode=True, verbose=True)
-    architecture_index = 5
+    api = nats_bench.create(None, 'tss', fast_mode=True, verbose=True)
+    architecture_index = 13514
     arch_str = api.arch(architecture_index)
     print(arch_str)
     edges = arch_to_list(arch_str)
