@@ -22,7 +22,7 @@ def create_dataset_from_data(indices_to_choose_from: np.ndarray, args: argparse.
     size = args.test_size if test_or_train == "test" else args.train_size
     chosen_indices = np.random.choice(indices_to_choose_from, size, replace=False)
 
-    features_and_labels = [get_features_and_label(data, i, args.connected_feature, args.arch_index_feature, args.edge_features_onehot, args.zero_cost_features) for i in chosen_indices]
+    features_and_labels = [get_features_and_label(data, int(i), args.connected_feature, args.arch_index_feature, args.edge_features_onehot, args.zero_cost_features, args.epochs_n_features) for i in chosen_indices]
     features, labels = zip(*features_and_labels)
 
     features = np.array(features)
