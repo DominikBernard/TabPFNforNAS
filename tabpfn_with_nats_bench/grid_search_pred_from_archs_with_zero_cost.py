@@ -13,14 +13,17 @@ connected_feature = [True, False]
 arch_index_feature = [True, False]
 edge_features_onehot = [True, False]
 zero_cost_features = [['f', 'g_n', 'g', 'j_c', 'p', 's', 'sy', 'sy_bn'], []]
+skip_unconnected = [True, False]
+epochs_n_features = [0, 10]
 
-script = "pred_from_archs_with_zero_cost.py"
+
+script = "pred_from_archs_with_zero_cost_and_train_acc.py"
 
 # path to the current Python (from venv if activated)
 python_exec = sys.executable
 
 # iterate over all combinations
-for ts, cf, aif, efo, zcf in itertools.product(train_sizes, connected_feature, arch_index_feature, edge_features_onehot, zero_cost_features):
+for ts, cf, aif, efo, zcf, su, enf in itertools.product(train_sizes, connected_feature, arch_index_feature, edge_features_onehot, zero_cost_features, skip_unconnected, epochs_n_features):
     cmd = [python_exec, script, f"--train_size={ts}"]
     if cf:
         cmd.append("--connected_feature")
@@ -31,15 +34,20 @@ for ts, cf, aif, efo, zcf in itertools.product(train_sizes, connected_feature, a
     if zcf:
         cmd.append(f"--zero_cost_features")
         cmd.extend(zcf)
+    if su:
+        cmd.append("--skip_unconnected")
+    if enf > 0:
+        cmd.append(f"--epochs_n_features={enf}")
         
     zcf_bool = "withZC" if zcf else "noZC"
+    su_bool = "skipUnconnected" if su else "noSkipUnconnected"
 
-    cmd.append(f"--logdir=logs/train{ts}_cf{cf}_aif{aif}_efo{efo}_{zcf_bool}")
+    cmd.append(f"--logdir=logs/train{ts}_cf{cf}_aif{aif}_efo{efo}_{zcf_bool}_{su_bool}_enf{enf}")
     cmd.append("--verbose")
 
     print("Running:", " ".join(cmd))
 
-    logname = f"logs/train{ts}_cf{cf}_aif{aif}_efo{efo}_{zcf_bool}/logs.txt"
+    logname = f"logs/train{ts}_cf{cf}_aif{aif}_efo{efo}_{zcf_bool}_{su_bool}_enf{enf}/logs.txt"
     os.makedirs(os.path.dirname(logname), exist_ok=True)
     with open(logname, "w") as f:
         subprocess.run(cmd, stdout=f, stderr=subprocess.STDOUT, check=False)
