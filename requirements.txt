@@ -1,0 +1,15 @@
+--extra-index-url https://download.pytorch.org/whl/cu124
+
+gymnasium==1.2.1
+matplotlib==3.10.3
+nats-bench==1.8
+numpy==2.2.4
+openml==0.15.1
+pandas==2.2.3
+regex==2025.9.18
+scikit-learn==1.6.1
+scipy==1.15.2
+seaborn==0.13.2
+torch==2.6.0+cu124
+tqdm==4.67.1
+tabpfn==6.3.1
