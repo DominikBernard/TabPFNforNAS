@@ -3,6 +3,7 @@ import numpy as np
 import tabpfn
 import matplotlib.pyplot as plt
 import os
+import gdown
 import json
 
 from change_logdir import change_logdir_if_default
@@ -64,6 +65,14 @@ def main(args: argparse.Namespace):
     np.random.seed(args.seed)
 
     change_logdir_if_default(args)
+
+    # check if datafile exists
+    if not os.path.exists(args.datafile):
+        print(f"Data file {args.datafile} does not exist.")
+        # download them from google drive
+        # Your File ID from the link
+        url = 'https://drive.google.com/uc?id=1htCa-ztKlkkYyje6K98q8n-CioPUA_Pk'
+        gdown.download(url, args.datafile, quiet=False)
 
     with open(args.datafile, 'r') as f:
         data = json.load(f)

@@ -13,3 +13,4 @@ seaborn==0.13.2
 torch==2.6.0+cu124
 tqdm==4.67.1
 tabpfn==2.1.0
+gdown==5.2.1
