@@ -2,3 +2,4 @@
 tabpfn_with_nats_bench/merged_data.json
 /*/logs/
 .vscode/
+tabpfn_with_nats_bench/slurm*
