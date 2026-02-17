@@ -46,12 +46,12 @@ for ts, cf, aif, ef, zcf, su, enf in itertools.product(train_sizes, connected_fe
     zcf_bool = "withZC" if zcf else "noZC"
     su_bool = "skipUnconnected" if su else "noSkipUnconnected"
 
-    cmd.append(f"--logdir=logs/train{ts}_cf{cf}_aif{aif}_ef{ef}_{zcf_bool}_{su_bool}_enf{enf}")
+    cmd.append(f"--logdir=logs/train-{ts}_cf-{cf}_aif-{aif}_ef-{ef}_{zcf_bool}_{su_bool}_enf-{enf}")
     cmd.append("--verbose")
 
     print("Running:", " ".join(cmd))
 
-    logname = f"logs/train{ts}_cf{cf}_aif{aif}_ef{ef}_{zcf_bool}_{su_bool}_enf{enf}/logs.txt"
+    logname = f"logs/train-{ts}_cf-{cf}_aif-{aif}_ef-{ef}_{zcf_bool}_{su_bool}_enf-{enf}/logs.txt"
     os.makedirs(os.path.dirname(logname), exist_ok=True)
     with open(logname, "w") as f:
         subprocess.run(cmd, stdout=f, stderr=subprocess.STDOUT, check=False)
