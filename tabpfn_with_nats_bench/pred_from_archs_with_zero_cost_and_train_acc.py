@@ -17,7 +17,7 @@ parser.add_argument('--seed', type=int, default=42, help='Random seed for sampli
 parser.add_argument('--dataset', type=str, default='cifar10', choices=['cifar10', 'cifar100', 'ImageNet16-120'], help='Dataset to use')
 parser.add_argument('--connected_feature', action='store_true', default=False, help='Add a feature indicating if the architecture is connected')
 parser.add_argument('--arch_index_feature', action='store_true', default=False, help='Add the architecture index as a feature')
-parser.add_argument('--edge_features_onehot', action='store_true', default=False, help='Use one-hot encoding for edge features')
+parser.add_argument('--edge_features', choices=['onehot', 'raw', 'none'], default='raw', help='How to include edge features: onehot, raw, or none')
 parser.add_argument('--zero_cost_features',
                     nargs="*", choices=['f', 'g_n', 'g', 'j_c', 'p', 's', 'sy', 'sy_bn'],
                     default=[],

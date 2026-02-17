@@ -1,6 +1,7 @@
 import numpy as np
 import regex as re
 import nats_bench
+from typing import Literal
 
 def arch_to_list(arch_str: str) -> list[int]:
     """Convert architecture string to a list of integers representing edges using regex."""
@@ -42,20 +43,20 @@ def get_first_n_train_accuracies_from_data(arch_index: int, data: list[dict], n:
         train_accuracies.append(data[arch_index]["accuracies"][str(i)]['train_accuracy'])
     return train_accuracies 
 
-def get_features_and_label(data: list[dict], arch_index: int, connected_feature: bool = False, arch_index_feature: bool = False, edge_features_onehot: bool = False, zero_cost_features: tuple = (), first_n_epochs_features: int = 0) -> tuple[list[int], float]:
+def get_features_and_label(data: list[dict], arch_index: int, connected_feature: bool = False, arch_index_feature: bool = False, edge_features: Literal["onehot", "raw", "none"] = "none", zero_cost_features: tuple = (), first_n_epochs_features: int = 0) -> tuple[list[int], float]:
     """Get features and label from architecture data."""
     features = []
     if arch_index_feature:
         features.append(arch_index / 15624)  # normalize index to [0, 1]
     edges = arch_to_list(data[arch_index]["arch"])
-    if edge_features_onehot:
+    if edge_features == "onehot":
         one_hot_edges = []
         for edge in edges:
             one_hot = [0] * 5
             one_hot[edge] = 1
             one_hot_edges.extend(one_hot)
         features.extend(one_hot_edges)
-    else:
+    elif edge_features == "raw":
         features.extend(edges)
     if connected_feature:
         features.append(int(is_arch_connected(data[arch_index]["arch"])))
