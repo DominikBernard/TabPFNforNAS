@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import os
 import gdown
 import json
+import scipy.stats as stats
 
 from change_logdir import change_logdir_if_default
 from dataloader import create_dataset_from_data, skip_unconnected_archs_using_data
@@ -115,6 +116,20 @@ def main(args: argparse.Namespace):
     # evaluate
     mse = np.mean((preds - test_labels) ** 2)
     print(f"Mean Squared Error: {mse}")
+
+    # compute Spearman's rank correlation coefficient
+    spearman_corr, _ = stats.spearmanr(preds, test_labels)
+    print(f"Spearman's Rank Correlation Coefficient: {spearman_corr}")
+
+    # compute kendall's tau (rank correlation coefficient)
+    kendall_corr, _ = stats.kendalltau(preds, test_labels)
+    print(f"Kendall's Tau (rank correlation coefficient): {kendall_corr}")
+
+    # store predictions in the text file
+    with open(os.path.join(args.logdir, "predictions.txt"), "w") as f:
+        f.write("Arch index, Prediction\n")
+        for idx, pred in zip(chosen_test_indices, preds):
+            f.write(f"{idx}, {pred}\n")
 
     # plot the results
     plt.figure(figsize=(7, 7))
