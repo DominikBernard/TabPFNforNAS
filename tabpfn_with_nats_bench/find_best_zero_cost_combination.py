@@ -1,8 +1,9 @@
 import numpy as np
 import os
 import regex as re
+import get_important_lines as gil
 
-root_dir = "logs/zero_cost_combination"
+root_dir = "logs/zero_cost_combination/seed_42_su"
 
 zero_cost_features = ['f', 'g_n', 'g', 'j_c', 'p', 's', 'sy', 'sy_bn']
 zero_cost_features_names = {
@@ -17,6 +18,8 @@ zero_cost_features_names = {
 }
 
 mse_table = np.zeros([2 for _ in range(len(zero_cost_features))])
+spearman_table = np.zeros([2 for _ in range(len(zero_cost_features))])
+kendall_table = np.zeros([2 for _ in range(len(zero_cost_features))])
 
 for subdir in os.listdir(root_dir):
     folder_path = os.path.join(root_dir, subdir)
@@ -29,33 +32,43 @@ for subdir in os.listdir(root_dir):
         log_content = f.read()
 
     # find used zero-cost features
-    zcf_match = re.search(r"included zero-cost features:\n((?:\s+- .+\n)+)", log_content)
-    if zcf_match:
-        zcf_lines = zcf_match.group(1).strip().split("\n")
-        zcf_list = [line.split(":")[0].strip().lstrip("- ").strip() for line in zcf_lines]
-        mse_table_idx = tuple(1 if feat in zcf_list else 0 for feat in zero_cost_features)
-    else:
-        mse_table_idx = tuple(0 for _ in zero_cost_features)
+    zcf_list = gil.find_zero_cost_features(log_content)
+    mse_table_idx = tuple(1 if feat in zcf_list else 0 for feat in zero_cost_features)
 
-    # find line containing "Mean Squared Error:"
-    mse_match = re.search(r"Mean Squared Error:\s*([0-9.]+)", log_content)
-    if mse_match:
-        mse_value = float(mse_match.group(1))
-        mse_table[mse_table_idx] = mse_value
+    # find mean squared error
+    mse_value = gil.find_mse(log_content)
+    mse_table[mse_table_idx] = mse_value
+
+    # find spearman's rank correlation coefficient
+    spearman_value = gil.find_spearman(log_content)
+    spearman_table[mse_table_idx] = spearman_value
+
+    # find kendall's tau
+    kendall_value = gil.find_kendall(log_content)
+    kendall_table[mse_table_idx] = kendall_value
     
+def sort_and_print_results(metric_table, metric_name, sort_ascending=True):
+    sorted_results = []
+    for idx in np.ndindex(metric_table.shape):
+        zcf_included = [zero_cost_features[i] for i in range(len(zero_cost_features)) if idx[i] == 1]
+        name = ", ".join([zero_cost_features_names[feat] for feat in zcf_included]) if zcf_included else "No Zero-Cost Features"
+        metric_value = metric_table[idx]
+        sorted_results.append((name, metric_value))
+    sorted_results.sort(key=lambda x: x[1], reverse=not sort_ascending)
+
+    print(f"\n=== {metric_name} Comparison ===")
+    for name, value in sorted_results:
+        print(f"{name}: {value:.6f}")
+
+    best = sorted_results[0]
+    print(f"\nBest {metric_name}: {best[0]} ({best[1]:.6f})")
+    print()
 
 # sort by MSE
-sorted_results = []
-for idx in np.ndindex(mse_table.shape):
-    zcf_included = [zero_cost_features[i] for i in range(len(zero_cost_features)) if idx[i] == 1]
-    name = ", ".join([zero_cost_features_names[feat] for feat in zcf_included]) if zcf_included else "No Zero-Cost Features"
-    mse_value = mse_table[idx]
-    sorted_results.append((name, mse_value))
-sorted_results.sort(key=lambda x: x[1])
+sort_and_print_results(mse_table, "Mean Squared Error")
 
-print("\n=== MSE Comparison ===")
-for name, mse in sorted_results:
-    print(f"{name}: {mse:.6f}")
+# sort by Spearman's Rank Correlation Coefficient
+sort_and_print_results(spearman_table, "Spearman's Rank Correlation Coefficient", sort_ascending=False)
 
-best = sorted_results[0]
-print(f"\nLowest MSE: {best[0]} ({best[1]:.6f})")
+# sort by Kendall's Tau
+sort_and_print_results(kendall_table, "Kendall's Tau (rank correlation coefficient)", sort_ascending=False)
