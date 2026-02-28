@@ -3,3 +3,5 @@ tabpfn_with_nats_bench/merged_data.json
 /*/logs/
 .vscode/
 tabpfn_with_nats_bench/slurm*
+tabpfn_with_nats_bench/pokusy.py
+tabpfn_with_nats_bench/rank_correlations_computation_from_log_files.py
