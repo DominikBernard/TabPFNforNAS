@@ -1,5 +1,5 @@
 /*/__pycache__/
-tabpfn_with_nats_bench/merged_data.json
+tabpfn_with_nats_bench/data/
 /*/logs/
 .vscode/
 tabpfn_with_nats_bench/slurm*

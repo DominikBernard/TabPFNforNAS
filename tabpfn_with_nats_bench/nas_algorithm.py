@@ -21,7 +21,7 @@ parser.add_argument('--zero_cost_features',
                     help='Zero-cost features to include, choose from: f (fisher), g_n (grad_norm), g (grasp), j_c (jacob_cov), p (plain), s (snip), sy (synflow), sy_bn (synflow_bn)') 
 parser.add_argument('--epochs_n_features', type=int, default=0, help='Include first n training accuracies as features')
 parser.add_argument('--skip_unconnected', action='store_true', default=True, help='Skip unconnected architectures')
-parser.add_argument('--datafile', type=str, default='merged_data.json', help='Path to the JSON file containing architecture data')
+parser.add_argument('--datafile', type=str, default='data/merged_data.json', help='Path to the JSON file containing architecture data')
 parser.add_argument('--verbose', action='store_true', default=True, help='Enable verbose output')
 
 
