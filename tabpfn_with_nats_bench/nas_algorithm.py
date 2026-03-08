@@ -5,6 +5,7 @@ import json
 
 from dataloader import skip_unconnected_archs_using_data
 from arch_features import get_features_and_label
+from results_utils import verbose_meta_info, plot_predictions_vs_true
 
 parser = argparse.ArgumentParser(description='Get predictions from tabpfn')
 
@@ -22,37 +23,6 @@ parser.add_argument('--epochs_n_features', type=int, default=0, help='Include fi
 parser.add_argument('--skip_unconnected', action='store_true', default=True, help='Skip unconnected architectures')
 parser.add_argument('--datafile', type=str, default='merged_data.json', help='Path to the JSON file containing architecture data')
 parser.add_argument('--verbose', action='store_true', default=True, help='Enable verbose output')
-
-def verbose_meta_info(args: argparse.Namespace):
-    """Print verbose meta information about the experiment."""
-    if args.verbose:
-        print("Experiment Meta Information:")
-        for arg, value in vars(args).items():
-            if arg != "logdir":
-                if arg == "zero_cost_features":
-                    if value != []:
-                        print("  included zero-cost features:")
-                        if "f" in value:
-                            print("    - f: Fisher Information")
-                        if "g_n" in value:
-                            print("    - g_n: Gradient Norm")
-                        if "g" in value:
-                            print("    - g: Grasp")
-                        if "j_c" in value:
-                            print("    - j_c: Jacobian Covariance")
-                        if "p" in value:
-                            print("    - p: Plain")
-                        if "s" in value:
-                            print("    - s: SNIP")
-                        if "sy" in value:
-                            print("    - sy: Synflow (log scaled)")
-                        if "sy_bn" in value:
-                            print("    - sy_bn: Synflow BN")
-                    else:
-                        print("  included zero-cost features: None")
-                else:
-                    print(f"  {arg}: {value}")
-        print()
 
 
 def main(args: argparse.Namespace):
@@ -105,6 +75,9 @@ def main(args: argparse.Namespace):
         # evaluate
         mse = np.mean((preds - test_labels) ** 2)
         print(f"Mean Squared Error: {mse}")
+
+        # plot predictions vs true labels
+        plot_predictions_vs_true(test_labels, preds)
 
         # take the 10 highest predictions
         top_10_pred_indices = np.argsort(preds)[-10:]

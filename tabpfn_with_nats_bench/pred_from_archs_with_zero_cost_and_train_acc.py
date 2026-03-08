@@ -1,13 +1,12 @@
 import argparse
 import numpy as np
 import tabpfn
-import matplotlib.pyplot as plt
 import os
 import gdown
 import json
 import scipy.stats as stats
 
-from change_logdir import change_logdir_if_default
+from results_utils import change_logdir_if_default, plot_predictions_vs_true, verbose_meta_info
 from dataloader import create_dataset_from_data, skip_unconnected_archs_using_data
 
 parser = argparse.ArgumentParser(description='Get predictions from tabpfn')
@@ -28,37 +27,6 @@ parser.add_argument('--skip_unconnected', action='store_true', default=False, he
 parser.add_argument('--datafile', type=str, default='merged_data.json', help='Path to the JSON file containing architecture data')
 parser.add_argument('--verbose', action='store_true', default=True, help='Enable verbose output')
 parser.add_argument('--logdir', type=str, default='logs', help='Directory to save logs and plots, if default, a timestamped directory will be created')
-
-def verbose_meta_info(args: argparse.Namespace):
-    """Print verbose meta information about the experiment."""
-    if args.verbose:
-        print("Experiment Meta Information:")
-        for arg, value in vars(args).items():
-            if arg != "logdir":
-                if arg == "zero_cost_features":
-                    if value != []:
-                        print("  included zero-cost features:")
-                        if "f" in value:
-                            print("    - f: Fisher Information")
-                        if "g_n" in value:
-                            print("    - g_n: Gradient Norm")
-                        if "g" in value:
-                            print("    - g: Grasp")
-                        if "j_c" in value:
-                            print("    - j_c: Jacobian Covariance")
-                        if "p" in value:
-                            print("    - p: Plain")
-                        if "s" in value:
-                            print("    - s: SNIP")
-                        if "sy" in value:
-                            print("    - sy: Synflow (log scaled)")
-                        if "sy_bn" in value:
-                            print("    - sy_bn: Synflow BN")
-                    else:
-                        print("  included zero-cost features: None")
-                else:
-                    print(f"  {arg}: {value}")
-        print()
 
 
 def main(args: argparse.Namespace):
@@ -98,10 +66,10 @@ def main(args: argparse.Namespace):
         print(f"Test labels shape: {test_labels.shape}")
 
     # assert no value in features and labels is nan
-    assert not np.isnan(train_features).any(), "Train features contain NaN values"
-    assert not np.isnan(test_features).any(), "Test features contain NaN values"
-    assert not np.isnan(train_labels).any(), "Train labels contain NaN values"
-    assert not np.isnan(test_labels).any(), "Test labels contain NaN values"
+    assert not np.isnan(train_features).any(), "Train features contain NaN values, check your data preprocessing, it is necessary to replace them with some value, e.g. 0, before training the model"
+    assert not np.isnan(test_features).any(), "Test features contain NaN values, check your data preprocessing, it is necessary to replace them with some value, e.g. 0, before training the model"
+    assert not np.isnan(train_labels).any(), "Train labels contain NaN values, check your data preprocessing, it is necessary to replace them with some value, e.g. 0, before training the model"
+    assert not np.isnan(test_labels).any(), "Test labels contain NaN values, check your data preprocessing, it is necessary to replace them with some value, e.g. 0, before training the model"
 
 
     # load tabpfn regression model
@@ -132,22 +100,7 @@ def main(args: argparse.Namespace):
             f.write(f"{idx}, {pred}\n")
 
     # plot the results
-    plt.figure(figsize=(7, 7))
-    plt.scatter(test_labels, preds, alpha=0.5)
-
-    # set x and y limits to 0-100
-    plt.xlim(0, 100)
-    plt.ylim(0, 100)
-    # add the y=x line
-    plt.plot([0, 100], [0, 100], 'r--')
-
-    plt.xlabel("True Labels")
-    plt.ylabel("Predictions")
-    plt.title("True Labels vs Predictions")
-    
-    # save the figure
-    plt.savefig(os.path.join(args.logdir, "true_vs_pred.png"))
-    # plt.show()
+    plot_predictions_vs_true(test_labels, preds, args.logdir)
 
 if __name__ == "__main__":
     main_args = parser.parse_args([] if "__file__" not in globals() else None)
