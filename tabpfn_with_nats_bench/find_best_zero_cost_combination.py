@@ -1,7 +1,6 @@
 import numpy as np
 import os
-import regex as re
-import get_important_lines as gil
+import utils.get_important_lines as gil
 
 root_dir = "logs/zero_cost_combination/seed_42_su"
 

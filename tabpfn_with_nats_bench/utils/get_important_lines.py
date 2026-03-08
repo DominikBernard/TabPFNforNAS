@@ -1,5 +1,4 @@
 import regex as re
-import numpy as np
 
 
 # find used zero-cost features
