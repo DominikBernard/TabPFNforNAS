@@ -6,8 +6,8 @@ import gdown
 import json
 import scipy.stats as stats
 
-from results_utils import change_logdir_if_default, plot_predictions_vs_true, verbose_meta_info
-from dataloader import create_dataset_from_data, skip_unconnected_archs_using_data
+from utils.results_utils import change_logdir_if_default, plot_predictions_vs_true, verbose_meta_info
+from utils.dataloader import create_dataset_from_data, skip_unconnected_archs_using_data
 
 parser = argparse.ArgumentParser(description='Get predictions from tabpfn')
 

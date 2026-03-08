@@ -3,9 +3,9 @@ import numpy as np
 import tabpfn
 import json
 
-from dataloader import skip_unconnected_archs_using_data
-from arch_features import get_features_and_label
-from results_utils import verbose_meta_info, plot_predictions_vs_true
+from utils.dataloader import skip_unconnected_archs_using_data
+from utils.arch_features import get_features_and_label
+from utils.results_utils import verbose_meta_info, plot_predictions_vs_true
 
 parser = argparse.ArgumentParser(description='Get predictions from tabpfn')
 
