@@ -37,7 +37,12 @@ def main(args: argparse.Namespace):
 
     # check if datafile exists
     if not os.path.exists(args.datafile):
-        print(f"Data file {args.datafile} does not exist.")
+        print(f"Data file {args.datafile} does not exist, downloading it from google drive...")
+
+        # create the directory if it does not exist
+        if not os.path.exists(os.path.dirname(args.datafile)):
+            os.makedirs(os.path.dirname(args.datafile), exist_ok=True)
+
         # download them from google drive
         # Your File ID from the link
         url = 'https://drive.google.com/uc?id=1htCa-ztKlkkYyje6K98q8n-CioPUA_Pk'
