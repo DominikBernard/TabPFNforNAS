@@ -2,7 +2,7 @@ import numpy as np
 import os
 import utils.get_important_lines as gil
 
-root_dir = "logs/epochs_n_features/"
+root_dir = "tabpfn_with_nats_bench/logs/epochs_n_features/"
 
 epochs_n_features = [0, 1, 2, 5, 10, 15, 20, 25, 30, 40]
 

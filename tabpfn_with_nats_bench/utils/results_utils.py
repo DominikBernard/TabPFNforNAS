@@ -10,9 +10,9 @@ import matplotlib.pyplot as plt
 def change_logdir_if_default(main_args: argparse.Namespace):
     """Change logdir if it is the default value."""
     # check if logdir is default
-    if main_args.logdir == 'logs':
+    if main_args.logdir == 'tabpfn_with_nats_bench/logs':
         # Create logdir name.
-        main_args.logdir = os.path.join("logs", "{}-{}-{}".format(
+        main_args.logdir = os.path.join("tabpfn_with_nats_bench/logs", "{}-{}-{}".format(
             os.path.basename(__main__.__file__),
             datetime.datetime.now().strftime("%Y-%m-%d_%H%M%S"),
             ",".join(("{}={}".format(re.sub("(.)[^_]*_?", r"\1", k), v) for k, v in sorted(vars(main_args).items())))

@@ -2,7 +2,7 @@ import numpy as np
 import os
 import utils.get_important_lines as gil
 
-root_dir = "logs/zero_cost_combination/seed_42_su"
+root_dir = "tabpfn_with_nats_bench/logs/zero_cost_combination/seed_42_su"
 
 zero_cost_features = ['f', 'g_n', 'g', 'j_c', 'p', 's', 'sy', 'sy_bn']
 zero_cost_features_names = {
