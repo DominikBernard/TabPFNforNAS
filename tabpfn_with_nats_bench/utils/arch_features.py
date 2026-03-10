@@ -85,8 +85,12 @@ def get_features_and_label(data: list[dict], arch_index: int, connected_feature:
     label = data[arch_index]["testacc"]
     return features, label
 
-def get_features(arch_str: str, arch_index: int, connected_feature: bool, arch_index_feature: bool, edge_features_onehot: bool) -> list[int]:
-    """Get features from architecture string."""
+def get_basic_features(arch_str: str, arch_index: int, connected_feature: bool, arch_index_feature: bool, edge_features_onehot: bool) -> list[int]:
+    """
+    Get basic features from architecture string.
+
+    This is used when creating dataset directly from the API, since we don't have access to zero-cost features and train accuracies in that case.
+    """
     features = []
     if arch_index_feature:
         features.append(arch_index / 15624)  # normalize index to [0, 1]

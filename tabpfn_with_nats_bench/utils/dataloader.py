@@ -3,7 +3,7 @@ import argparse
 from typing import Literal
 import nats_bench
 
-from utils.arch_features import get_features_and_label, get_features, is_arch_connected
+from utils.arch_features import get_features_and_label, get_basic_features, is_arch_connected
 
 
 def create_dataset_from_data(indices_to_choose_from: np.ndarray, args: argparse.Namespace, data: list[dict], test_or_train: Literal["test", "train"] = "train") -> tuple[np.ndarray, np.ndarray, np.ndarray]:
@@ -46,7 +46,7 @@ def create_dataset_from_api(indices_to_choose_from: np.ndarray, args: argparse.N
     size = args.test_size if test_or_train == "test" else args.train_size
     chosen_indices = np.random.choice(indices_to_choose_from, size, replace=False)
 
-    archs = [get_features(api.arch(int(i)), i, args.connected_feature, args.arch_index_feature, args.edge_features_onehot) for i in chosen_indices]
+    archs = [get_basic_features(api.arch(int(i)), i, args.connected_feature, args.arch_index_feature, args.edge_features_onehot) for i in chosen_indices]
     features = np.array(archs)
 
     labels = [api.get_more_info(int(i), args.dataset, hp="200", is_random=False)['test-accuracy'] for i in chosen_indices]
