@@ -108,6 +108,29 @@ def get_basic_features(arch_str: str, arch_index: int, connected_feature: bool, 
         features.append(int(is_arch_connected(arch_str)))
     return features
 
+def arch_list_to_str(edges: list[int]) -> str:
+    """Convert a list of edges back to the architecture string format."""
+    # arch example: |avg_pool_3x3~0|+|nor_conv_1x1~0|skip_connect~1|+|nor_conv_1x1~0|skip_connect~1|skip_connect~2|
+    edge_mapping = {
+        0: 'none',
+        1: 'skip_connect',
+        2: 'nor_conv_1x1',
+        3: 'nor_conv_3x3',
+        4: 'avg_pool_3x3'
+    }
+    in_between_symbols = ["~0|+|", "~0|", "~1|+|", "~0|", "~1|", "~2|"]
+    arch_str = "|"
+    for i in range(6):
+        edge_type = edge_mapping[edges[i]]
+        arch_str += f"{edge_type}{in_between_symbols[i]}"
+    return arch_str
+
+def get_arch_index_from_edges(edges: list[int], arch_str_to_index: dict[str, int]) -> int:
+    """Get architecture index from a list of edges."""
+    arch_str = arch_list_to_str(edges)
+    return arch_str_to_index.get(arch_str, -1)
+
+
 if __name__ == "__main__":
     api = nats_bench.create(None, 'tss', fast_mode=True, verbose=True)
     architecture_index = 13514
