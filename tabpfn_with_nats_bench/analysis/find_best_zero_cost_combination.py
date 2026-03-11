@@ -1,6 +1,6 @@
 import numpy as np
 import os
-import utils.get_important_lines as gil
+import tabpfn_with_nats_bench.utils.get_important_lines as gil
 
 root_dir = "tabpfn_with_nats_bench/logs/zero_cost_combination/seed_42_su"
 

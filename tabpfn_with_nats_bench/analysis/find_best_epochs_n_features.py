@@ -1,30 +1,17 @@
 import numpy as np
 import os
-from collections import defaultdict
+import tabpfn_with_nats_bench.utils.get_important_lines as gil
 
-import utils.get_important_lines as gil
+root_dir = "tabpfn_with_nats_bench/logs/epochs_n_features/"
 
-
-root_dir = "tabpfn_with_nats_bench/logs/zero_cost_combination/"
-
-zero_cost_features = ['f', 'g_n', 'g', 'j_c', 'p', 's', 'sy', 'sy_bn']
-zero_cost_features_names = {
-    'f': 'Fisher',
-    'g_n': 'GradNorm',
-    'g': 'Grasp',
-    'j_c': 'JacobCov',
-    'p': 'Plain',
-    's': 'SNIP',
-    'sy': 'Synflow',
-    'sy_bn': 'SynflowBN'
-}
+epochs_n_features = [0, 1, 2, 5, 10, 15, 20, 25, 30, 40]
 
 paths_to_experiments = os.listdir(root_dir)
-paths_to_experiments = [p for p in paths_to_experiments if p.endswith("_su")] # remove dirs that does not end with _su
+paths_to_experiments = [p for p in paths_to_experiments if p.endswith("_su_zcf")] # remove dirs that does not end with _su_zcf
 
-mse_table = defaultdict(list)
-spearman_table = defaultdict(list)
-kendall_table = defaultdict(list)
+mse_table = np.zeros([len(paths_to_experiments), len(epochs_n_features)])
+spearman_table = np.zeros([len(paths_to_experiments), len(epochs_n_features)])
+kendall_table = np.zeros([len(paths_to_experiments), len(epochs_n_features)])
 
 for run_idx, exp_dir in enumerate(paths_to_experiments):
     path_to_exp_dir = os.path.join(root_dir, exp_dir)
@@ -38,37 +25,34 @@ for run_idx, exp_dir in enumerate(paths_to_experiments):
         with open(log_path, "r", encoding="utf-8") as f:
             log_content = f.read()
 
-        # find used zero-cost features
-        zcf_list = gil.find_zero_cost_features(log_content)
-        
+        # find used epochs_n_features
+        enf_value = gil.find_epochs_n_features(log_content)
+
         # find mean squared error
         mse_value = gil.find_mse(log_content)
-        mse_table[tuple(sorted(zcf_list))].append(mse_value)
+        mse_table[run_idx, epochs_n_features.index(enf_value)] = mse_value
 
         # find spearman's rank correlation coefficient
         spearman_value = gil.find_spearman(log_content)
-        spearman_table[tuple(sorted(zcf_list))].append(spearman_value)
+        spearman_table[run_idx, epochs_n_features.index(enf_value)] = spearman_value
 
         # find kendall's tau
         kendall_value = gil.find_kendall(log_content)
-        kendall_table[tuple(sorted(zcf_list))].append(kendall_value)
+        kendall_table[run_idx, epochs_n_features.index(enf_value)] = kendall_value
 
 def sort_and_print_results(metric_table, metric_name, sort_ascending=True):
     sorted_results = []
-    for zcf_tuple, metric_values in metric_table.items():
-        name = ", ".join([zero_cost_features_names[feat] for feat in zcf_tuple]) if zcf_tuple else "No Zero-Cost Features"
+    for idx in range(metric_table.shape[1]):
+        metric_values = metric_table[:, idx]
+        name = f"{epochs_n_features[idx]} Epochs as Features"
         metric_mean_value = np.mean(metric_values)
         metric_variance_value = np.var(metric_values)
         sorted_results.append((name, metric_mean_value, metric_variance_value))
     sorted_results.sort(key=lambda x: x[1], reverse=not sort_ascending)
 
     print(f"\n=== {metric_name} Comparison ===")
-    for name, value, var in sorted_results:
-        print(f"{name}: {value:.6f} (Variance: {var:.6f})")
-
-    best = sorted_results[0]
-    print(f"\nBest {metric_name}: {best[0]} ({best[1]:.6f})")
-    
+    for name, mean_value, var_value in sorted_results:
+        print(f"{name}: {mean_value:.6f} (Variance: {var_value:.6f})")
 
 # sort by MSE
 sort_and_print_results(mse_table, "Mean Squared Error")
@@ -78,4 +62,3 @@ sort_and_print_results(spearman_table, "Spearman's Rank Correlation Coefficient"
 
 # sort by Kendall's Tau
 sort_and_print_results(kendall_table, "Kendall's Tau (rank correlation coefficient)", sort_ascending=False)
-
