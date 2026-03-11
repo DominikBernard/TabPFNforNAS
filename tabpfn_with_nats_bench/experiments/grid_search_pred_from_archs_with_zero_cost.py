@@ -1,5 +1,5 @@
 # run multiple experiments with different hyperparameters
-# using pred_from_archs_with_zero_cost.py runned with different arguments
+# using pred_from_archs_with_zero_cost_and_train_acc.py runned with different arguments
 
 import itertools
 import subprocess
@@ -17,7 +17,7 @@ skip_unconnected = [True, False]
 epochs_n_features = [0, 10]
 
 
-script = "pred_from_archs_with_zero_cost_and_train_acc.py"
+script = "tabpfn_with_nats_bench/pred_from_archs_with_zero_cost_and_train_acc.py"
 
 # path to the current Python (from venv if activated)
 python_exec = sys.executable
@@ -46,12 +46,12 @@ for ts, cf, aif, ef, zcf, su, enf in itertools.product(train_sizes, connected_fe
     zcf_bool = "withZC" if zcf else "noZC"
     su_bool = "skipUnconnected" if su else "noSkipUnconnected"
 
-    cmd.append(f"--logdir=logs/train-{ts}_cf-{cf}_aif-{aif}_ef-{ef}_{zcf_bool}_{su_bool}_enf-{enf}")
+    cmd.append(f"--logdir=tabpfn_with_nats_bench/logs/grid_search_results/train-{ts}_cf-{cf}_aif-{aif}_ef-{ef}_{zcf_bool}_{su_bool}_enf-{enf}")
     cmd.append("--verbose")
 
     print("Running:", " ".join(cmd))
 
-    logname = f"logs/train-{ts}_cf-{cf}_aif-{aif}_ef-{ef}_{zcf_bool}_{su_bool}_enf-{enf}/logs.txt"
+    logname = f"tabpfn_with_nats_bench/logs/grid_search_results/train-{ts}_cf-{cf}_aif-{aif}_ef-{ef}_{zcf_bool}_{su_bool}_enf-{enf}/logs.txt"
     os.makedirs(os.path.dirname(logname), exist_ok=True)
     with open(logname, "w") as f:
         subprocess.run(cmd, stdout=f, stderr=subprocess.STDOUT, check=False)
