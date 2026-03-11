@@ -6,7 +6,7 @@ import argparse
 import warnings
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 
-import utils.arch_features as arch_features
+import tabpfn_with_nats_bench.utils.arch_features as arch_features
 
 parser = argparse.ArgumentParser(description='Parser parsing arguments for the evolutionary NAS algorithm')
 parser.add_argument('--seed', type=int, default=42, help='Random seed for sampling')

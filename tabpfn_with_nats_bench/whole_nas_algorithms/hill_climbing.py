@@ -3,9 +3,9 @@ import numpy as np
 import tabpfn
 import json
 
-from utils.dataloader import skip_unconnected_archs_using_data
-from utils.arch_features import get_features_and_label
-from utils.results_utils import verbose_meta_info, plot_predictions_vs_true
+from tabpfn_with_nats_bench.utils.dataloader import skip_unconnected_archs_using_data
+from tabpfn_with_nats_bench.utils.arch_features import get_features_and_label
+from tabpfn_with_nats_bench.utils.results_utils import verbose_meta_info, plot_predictions_vs_true
 
 parser = argparse.ArgumentParser(description='Get predictions from tabpfn')
 
