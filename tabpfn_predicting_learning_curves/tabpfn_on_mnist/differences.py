@@ -1,29 +1,30 @@
+# in this code, we will compute differences betweeen each point in the learning curve and the previous one
+# this will give us the improvement or deterioration at each epoch
+# we will then use these differences as the target values for the TabPFNRegressor
+
+
 import numpy as np
 import matplotlib.pyplot as plt
 
 from tabpfn import TabPFNRegressor
 
-from tensor_extractor import extract_epoch_dev_accuracy
+from tabpfn_predicting_learning_curves.utils.tensor_extractor import extract_epoch_dev_accuracy
 
 splitting_epoch = 20  # Define the epoch at which to split training and testing data
-sin_divisor = 3  # Define the divisor for the sine and cosine transformation
 
 # Extract learning curve data from log file
-log_file_path = "logs/run1.txt"
+log_file_path = "tabpfn_predicting_learning_curves/logs/run1.txt"
 learning_curve_data = extract_epoch_dev_accuracy(log_file_path)
 
 # Prepare dataset
-X = learning_curve_data[:, 0].reshape(-1, 1)  # Epoch numbers as features
-y = learning_curve_data[:, 1]  # Dev accuracy as target values
-
-# multiply the y by sine of the epoch number
-y = y * np.sin(X[:, 0] / sin_divisor)
+X = learning_curve_data[1:, 0].reshape(-1, 1)  # Epoch numbers as features
+y = np.diff(learning_curve_data[:, 1]) # Differences in accuracy as target values
 
 # # add sine and cosine features to X
 # X = np.hstack((X, np.sin(X[:, 0])[:, np.newaxis]))
 # X = np.hstack((X, np.cos(X[:, 0])[:, np.newaxis]))
-X = np.hstack((X, np.sin(X[:, 0] / sin_divisor)[:, np.newaxis]))
-X = np.hstack((X, np.cos(X[:, 0] / sin_divisor)[:, np.newaxis]))
+# X = np.hstack((X, np.sin(X[:, 0] * np.pi / 200)[:, np.newaxis]))
+# X = np.hstack((X, np.cos(X[:, 0] * np.pi / 200)[:, np.newaxis]))
 
 # # add 1-1/x feature to X
 # X = np.hstack((X, (0.9 - 1 / (X[:, 0] + 1))[:, np.newaxis]))
@@ -63,10 +64,6 @@ y_pred = regressor.predict(X_test)
 mse = np.mean((y_pred - y_test) ** 2)
 print(f"Mean Squared Error: {mse}")
 
-# transform y, y_pred back by dividing by sine of the epoch number
-y = y / np.sin(X[:, 0] / sin_divisor)
-y_pred = y_pred / np.sin(X_test[:, 0] / sin_divisor)
-
 # Plot the results for visualization
 # with a straight line splitting training and testing data
 plt.figure(figsize=(10, 6))
@@ -84,3 +81,4 @@ plt.axvline(x=splitting_epoch, color='red', linestyle='--', label='Train/Test Sp
 plt.legend()
 plt.grid()
 plt.show()
+

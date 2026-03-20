@@ -3,23 +3,28 @@ import matplotlib.pyplot as plt
 
 from tabpfn import TabPFNRegressor
 
-from tensor_extractor import extract_epoch_dev_accuracy
+from tabpfn_predicting_learning_curves.utils.tensor_extractor import extract_epoch_dev_accuracy
 
 splitting_epoch = 20  # Define the epoch at which to split training and testing data
+sin_divisor = 3  # Define the divisor for the sine and cosine transformation
 
 # Extract learning curve data from log file
-log_file_path = "logs/run1.txt"
+log_file_path = "tabpfn_predicting_learning_curves/logs/run1.txt"
 learning_curve_data = extract_epoch_dev_accuracy(log_file_path)
 
 # Prepare dataset
 X = learning_curve_data[:, 0].reshape(-1, 1)  # Epoch numbers as features
 y = learning_curve_data[:, 1]  # Dev accuracy as target values
 
+# multiply the y by sine of the epoch number
+y = y + np.sin(X[:, 0] / sin_divisor)
+
 # # add sine and cosine features to X
 # X = np.hstack((X, np.sin(X[:, 0])[:, np.newaxis]))
 # X = np.hstack((X, np.cos(X[:, 0])[:, np.newaxis]))
-# X = np.hstack((X, np.sin(X[:, 0] * np.pi / 200)[:, np.newaxis]))
-# X = np.hstack((X, np.cos(X[:, 0] * np.pi / 200)[:, np.newaxis]))
+X = np.hstack((X, (np.sin(X[:, 0] / sin_divisor))[:, np.newaxis]))
+
+# X = np.hstack((X, np.cos(X[:, 0] / sin_divisor)[:, np.newaxis]))
 
 # # add 1-1/x feature to X
 # X = np.hstack((X, (0.9 - 1 / (X[:, 0] + 1))[:, np.newaxis]))
@@ -48,9 +53,6 @@ y = learning_curve_data[:, 1]  # Dev accuracy as target values
 X_train, X_test = X[:splitting_epoch], X[splitting_epoch:]
 y_train, y_test = y[:splitting_epoch], y[splitting_epoch:]
 
-y_test = y_test[-splitting_epoch:]
-X_test = X_test[-splitting_epoch:]
-
 
 # Initialize a regressor
 regressor = TabPFNRegressor()
@@ -61,6 +63,10 @@ y_pred = regressor.predict(X_test)
 # measure the mean squared error
 mse = np.mean((y_pred - y_test) ** 2)
 print(f"Mean Squared Error: {mse}")
+
+# # transform y, y_pred back by dividing by sine of the epoch number
+# y = y - np.sin(X[:, 0] / sin_divisor)
+# y_pred = y_pred - np.sin(X_test[:, 0] / sin_divisor)
 
 # Plot the results for visualization
 # with a straight line splitting training and testing data

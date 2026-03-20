@@ -1,22 +1,20 @@
 import numpy as np
-import numpy as np
 import matplotlib.pyplot as plt
-import os
 
 from tabpfn import TabPFNRegressor
 
-from log_runs_to_tensors import extract_logs_from_subdirectories, create_tensors_from_logs
+from tabpfn_predicting_learning_curves.utils.tensor_extractor import extract_epoch_dev_accuracy
 
-splitting_epoch = 20 # Define the epoch at which to split training and testing data
-rotation = 0 # Define how many times to rotate the list of runs
+splitting_epoch = 20  # Define the epoch at which to split training and testing data
+differences = False  # Whether to use differences in accuracy as target values
 
-# get the data from the log files with current directory as root
-# current derictory is path to this file without the filename
-learning_curve_data_list = create_tensors_from_logs(extract_logs_from_subdirectories(os.path.dirname(__file__)))
+# Extract learning curve data from log files
+log_file_paths = [
+    "tabpfn_predicting_learning_curves/logs/run1.txt",
+    "tabpfn_predicting_learning_curves/logs/run2.txt"
+]
 
-# rotate the data
-for _ in range(rotation):
-    learning_curve_data_list.append(learning_curve_data_list.pop(0))
+learning_curve_data_list = [extract_epoch_dev_accuracy(path) for path in log_file_paths]
 
 # Prepare dataset
 X_list = []
@@ -24,7 +22,10 @@ y_list = []
 for i in range(len(learning_curve_data_list)):
     learning_curve_data = learning_curve_data_list[i]
     X_i = learning_curve_data[:, 0].reshape(-1, 1) # Epoch numbers as features
-    y_i = learning_curve_data[:, 1] # Dev accuracy as target values
+    if differences:
+        y_i = np.diff(learning_curve_data[:, 1], prepend=0) # Differences in accuracy as target values
+    else:
+        y_i = learning_curve_data[:, 1] # Dev accuracy as target values
 
     # add i as a first feature to distinguish runs
     X_i = np.hstack((np.full((X_i.shape[0], 1), i), X_i))
@@ -63,7 +64,14 @@ for i in range(len(learning_curve_data_list) - 1):
 # plot test run
 plt.plot(learning_curve_data_list[-1][:, 0], learning_curve_data_list[-1][:, 1], 'g--', label=f'Run {len(learning_curve_data_list)} (Test)')
 
-plt.plot(X_test[:, 1], y_pred, 'r.-', label='Predicted Dev Accuracy (Test)')
+if not differences:
+    plt.plot(X_test[:, 1], y_pred, 'r.-', label='Predicted Dev Accuracy (Test)')
+else:
+    # convert predicted differences back to accuracy
+    last_train_accuracy = learning_curve_data_list[-1][splitting_epoch - 1, 1]
+    y_pred_cumsum = np.cumsum(y_pred) + last_train_accuracy
+    plt.plot(X_test[:, 1], y_pred_cumsum, 'r.-', label='Predicted Dev Accuracy (Test)')
+
 plt.axvline(x=splitting_epoch, color='k', linestyle='--', label='Train/Test Split')
 plt.xlabel('Epoch')
 plt.ylabel('Dev Accuracy')
@@ -72,6 +80,5 @@ plt.legend()
 
 plt.grid()
 plt.show()
-# plt.savefig(f"plots/mnist_mlp_multiple_runs_tabpfn_example{rotation}.png")
+# plt.savefig("plots/mnist_mlp_2_runs_tabpfn_example2.png")
 plt.close()
-

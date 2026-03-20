@@ -1,24 +1,19 @@
-# in this code, we will compute differences betweeen each point in the learning curve and the previous one
-# this will give us the improvement or deterioration at each epoch
-# we will then use these differences as the target values for the TabPFNRegressor
-
-
 import numpy as np
 import matplotlib.pyplot as plt
 
 from tabpfn import TabPFNRegressor
 
-from tensor_extractor import extract_epoch_dev_accuracy
+from tabpfn_predicting_learning_curves.utils.tensor_extractor import extract_epoch_dev_accuracy
 
 splitting_epoch = 20  # Define the epoch at which to split training and testing data
 
 # Extract learning curve data from log file
-log_file_path = "logs/run1.txt"
+log_file_path = "tabpfn_predicting_learning_curves/logs/run1.txt"
 learning_curve_data = extract_epoch_dev_accuracy(log_file_path)
 
 # Prepare dataset
-X = learning_curve_data[1:, 0].reshape(-1, 1)  # Epoch numbers as features
-y = np.diff(learning_curve_data[:, 1]) # Differences in accuracy as target values
+X = learning_curve_data[:, 0].reshape(-1, 1)  # Epoch numbers as features
+y = learning_curve_data[:, 1]  # Dev accuracy as target values
 
 # # add sine and cosine features to X
 # X = np.hstack((X, np.sin(X[:, 0])[:, np.newaxis]))
@@ -53,6 +48,9 @@ y = np.diff(learning_curve_data[:, 1]) # Differences in accuracy as target value
 X_train, X_test = X[:splitting_epoch], X[splitting_epoch:]
 y_train, y_test = y[:splitting_epoch], y[splitting_epoch:]
 
+y_test = y_test[-splitting_epoch:]
+X_test = X_test[-splitting_epoch:]
+
 
 # Initialize a regressor
 regressor = TabPFNRegressor()
@@ -81,4 +79,3 @@ plt.axvline(x=splitting_epoch, color='red', linestyle='--', label='Train/Test Sp
 plt.legend()
 plt.grid()
 plt.show()
-
