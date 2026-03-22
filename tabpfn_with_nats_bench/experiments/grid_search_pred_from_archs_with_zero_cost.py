@@ -8,7 +8,8 @@ import sys
 
 # hyperparameter grids
 
-train_sizes = [1_000, 10_000]
+seeds = [100, 200, 300, 400, 500, 600, 700, 800, 900]
+train_sizes = [10, 100, 1000, 10_000]
 connected_feature = [True, False]
 arch_index_feature = [True, False]
 edge_features = ["none", "raw", "onehot"]
@@ -23,13 +24,13 @@ script = "tabpfn_with_nats_bench/pred_from_archs_with_zero_cost_and_train_acc.py
 python_exec = sys.executable
 
 # iterate over all combinations
-for ts, cf, aif, ef, zcf, su, enf in itertools.product(train_sizes, connected_feature, arch_index_feature, edge_features, zero_cost_features, skip_unconnected, epochs_n_features):
+for s, ts, cf, aif, ef, zcf, su, enf in itertools.product(seeds, train_sizes, connected_feature, arch_index_feature, edge_features, zero_cost_features, skip_unconnected, epochs_n_features):
     # skip the combination where no features are included
     if cf == False and aif == False and ef == "none" and zcf == [] and enf == 0:
         continue
 
     # build the command
-    cmd = [python_exec, script, f"--train_size={ts}"]
+    cmd = [python_exec, script, f"--train_size={ts}", f"--seed={s}"]
     if cf:
         cmd.append("--connected_feature")
     if aif:
@@ -46,12 +47,12 @@ for ts, cf, aif, ef, zcf, su, enf in itertools.product(train_sizes, connected_fe
     zcf_bool = "withZC" if zcf else "noZC"
     su_bool = "skipUnconnected" if su else "noSkipUnconnected"
 
-    cmd.append(f"--logdir=tabpfn_with_nats_bench/logs/grid_search_results/train-{ts}_cf-{cf}_aif-{aif}_ef-{ef}_{zcf_bool}_{su_bool}_enf-{enf}")
+    cmd.append(f"--logdir=tabpfn_with_nats_bench/logs/grid_search_results/seed_{s}/train-{ts}_cf-{cf}_aif-{aif}_ef-{ef}_{zcf_bool}_{su_bool}_enf-{enf}")
     cmd.append("--verbose")
 
     print("Running:", " ".join(cmd))
 
-    logname = f"tabpfn_with_nats_bench/logs/grid_search_results/train-{ts}_cf-{cf}_aif-{aif}_ef-{ef}_{zcf_bool}_{su_bool}_enf-{enf}/logs.txt"
+    logname = f"tabpfn_with_nats_bench/logs/grid_search_results/seed_{s}/train-{ts}_cf-{cf}_aif-{aif}_ef-{ef}_{zcf_bool}_{su_bool}_enf-{enf}/logs.txt"
     os.makedirs(os.path.dirname(logname), exist_ok=True)
     with open(logname, "w") as f:
         subprocess.run(cmd, stdout=f, stderr=subprocess.STDOUT, check=False)
