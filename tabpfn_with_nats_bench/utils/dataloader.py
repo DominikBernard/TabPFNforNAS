@@ -2,6 +2,8 @@ import numpy as np
 import argparse
 from typing import Literal
 import nats_bench
+import gdown
+import os
 
 from tabpfn_with_nats_bench.utils.arch_features import get_features_and_label, get_basic_features, is_arch_connected
 
@@ -62,4 +64,17 @@ def skip_unconnected_archs_using_data(data: list[dict], indices: np.ndarray) -> 
         if is_arch_connected(arch):
             connected_indices.append(i)
     return np.array(connected_indices)
+
+def download_data_if_not_exists(datafile: str, url: str = 'https://drive.google.com/uc?id=1htCa-ztKlkkYyje6K98q8n-CioPUA_Pk'):
+    """Download data from the given URL if the data file does not exist."""
+    if not os.path.exists(datafile):
+        print(f"Data file {datafile} does not exist, downloading it from {url}...")
+
+        # create the directory if it does not exist
+        if not os.path.exists(os.path.dirname(datafile)):
+            os.makedirs(os.path.dirname(datafile), exist_ok=True)
+
+        # download them from google drive
+        gdown.download(url, datafile, quiet=False)
+
 

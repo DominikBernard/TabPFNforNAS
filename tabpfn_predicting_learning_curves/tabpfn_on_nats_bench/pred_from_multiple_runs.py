@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 from typing import Optional
 import os
 
+from tabpfn_with_nats_bench.utils.dataloader import download_data_if_not_exists
+
 parser = argparse.ArgumentParser(description="Predict learning curves using TabPFN on NATS-Bench data.")
 parser.add_argument("--train_size", type=int, default=10, help="Number of training examples.")
 parser.add_argument("--test_size", type=int, default=200, help="Number of test examples.")
@@ -145,6 +147,9 @@ if __name__ == "__main__":
 
     # fix random seed
     np.random.seed(args.seed)
+
+    # download data if it does not exist
+    download_data_if_not_exists(args.datapath)
 
     data = load_data(args.datapath)
 

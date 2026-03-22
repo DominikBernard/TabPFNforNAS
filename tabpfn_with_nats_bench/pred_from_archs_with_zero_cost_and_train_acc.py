@@ -2,12 +2,11 @@ import argparse
 import numpy as np
 import tabpfn
 import os
-import gdown
 import json
 import scipy.stats as stats
 
 from utils.results_utils import change_logdir_if_default, plot_predictions_vs_true, verbose_meta_info
-from utils.dataloader import create_dataset_from_data, skip_unconnected_archs_using_data
+from utils.dataloader import create_dataset_from_data, skip_unconnected_archs_using_data, download_data_if_not_exists
 
 parser = argparse.ArgumentParser(description='Get predictions from tabpfn')
 
@@ -36,17 +35,7 @@ def main(args: argparse.Namespace):
     change_logdir_if_default(args)
 
     # check if datafile exists
-    if not os.path.exists(args.datafile):
-        print(f"Data file {args.datafile} does not exist, downloading it from google drive...")
-
-        # create the directory if it does not exist
-        if not os.path.exists(os.path.dirname(args.datafile)):
-            os.makedirs(os.path.dirname(args.datafile), exist_ok=True)
-
-        # download them from google drive
-        # Your File ID from the link
-        url = 'https://drive.google.com/uc?id=1htCa-ztKlkkYyje6K98q8n-CioPUA_Pk'
-        gdown.download(url, args.datafile, quiet=False)
+    download_data_if_not_exists(args.datafile)
 
     with open(args.datafile, 'r') as f:
         data = json.load(f)
