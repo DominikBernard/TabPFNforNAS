@@ -3,7 +3,7 @@
 tabpfn_with_nats_bench/data/
 /*/logs/
 .vscode/
-tabpfn_with_nats_bench/slurm*
+slurm*
 tabpfn_with_nats_bench/pokusy.py
 tabpfn_with_nats_bench/rank_correlations_computation_from_log_files.py
 tabpfn_for_nas.egg-info/
