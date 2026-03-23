@@ -128,7 +128,7 @@ def plot_results(data: dict, train_indices: np.ndarray, test_indices: np.ndarray
         plt.plot(range(test_splitting_epoch, test_splitting_epoch + len(predicted_accuracies)), predicted_accuracies, 'r-', label=f'Predicted arch {test_indices[pred_index]} (Test)')
         
         # plot the splitting epoch
-        plt.axvline(x=test_splitting_epoch, color='r', linestyle='--', label='Train/Test Split')
+        plt.axvline(x=test_splitting_epoch, color='black', linestyle='--', label='Train/Test Split')
 
         plt.xlabel('Epoch')
         plt.ylabel('Test Accuracy')
@@ -137,6 +137,8 @@ def plot_results(data: dict, train_indices: np.ndarray, test_indices: np.ndarray
 
         if path_to_save:
             plt.savefig(os.path.join(path_to_save, f'learning_curve_arch_{test_indices[pred_index]}.png'))
+            # Close the plot to avoid more and more plots being opened in memory
+            plt.close()
         else:
             plt.show()
             break  # Show only the first plot when not saving
