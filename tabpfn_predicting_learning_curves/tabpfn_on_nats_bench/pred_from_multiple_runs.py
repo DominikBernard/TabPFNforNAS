@@ -188,6 +188,10 @@ if __name__ == "__main__":
     # Train and evaluate the model
     predictions, mse, mse_per_arch, mse_for_last_epoch = train_and_evaluate(X_train, y_train, X_test, y_test, test_labels_implicit_shape)
 
+    # create directory to save results if it does not exist
+    if args.path_to_dir_to_save_results and not os.path.exists(args.path_to_dir_to_save_results):
+        os.makedirs(args.path_to_dir_to_save_results)
+
     plot_results(data, train_indices, test_indices, predictions, args.test_splitting_epoch, path_to_save=args.path_to_dir_to_save_results)
     store_results(test_indices, predictions, mse, mse_per_arch, mse_for_last_epoch, path_to_save=args.path_to_dir_to_save_results)
 
