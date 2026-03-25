@@ -174,10 +174,7 @@ def store_results(test_indices: np.ndarray, predictions: np.ndarray, mse: float,
     else:
         print(result_str)
 
-
-
-if __name__ == "__main__":
-    args = parser.parse_args()
+def main(args: argparse.Namespace):
 
     # fix random seed
     np.random.seed(args.seed)
@@ -197,4 +194,8 @@ if __name__ == "__main__":
     plot_results(data, train_indices, test_indices, predictions, args.test_splitting_epoch, path_to_save=args.path_to_dir_to_save_results)
     store_results(test_indices, predictions, mse, mse_per_arch, mse_for_last_epoch, path_to_save=args.path_to_dir_to_save_results)
 
+
+if __name__ == "__main__":
+    args = parser.parse_args()
+    main(args)
 
