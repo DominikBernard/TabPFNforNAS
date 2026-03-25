@@ -8,3 +8,5 @@ tabpfn_with_nats_bench/pokusy.py
 tabpfn_with_nats_bench/rank_correlations_computation_from_log_files.py
 tabpfn_for_nas.egg-info/
 tarkill_out/
+tabpfn_with_nats_bench/pred_split_test_experiment.py
+tabpfn_predicting_learning_curves/tabpfn_on_nats_bench/pred_one_from_multiple.py
