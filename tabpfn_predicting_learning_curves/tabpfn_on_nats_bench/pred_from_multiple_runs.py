@@ -32,11 +32,11 @@ def train_and_evaluate(X_train: np.ndarray, y_train: np.ndarray, test_archs_test
     X_test = []
     y_test = []
     for arch_idx in test_archs_train:
-        X_train_added.append(test_archs_train[arch_idx][0])
-        y_train_added.append(test_archs_train[arch_idx][1])
+        X_train_added.extend(test_archs_train[arch_idx][0])
+        y_train_added.extend(test_archs_train[arch_idx][1])
 
-        X_test.append(test_archs_test[arch_idx][0])
-        y_test.append(test_archs_test[arch_idx][1])
+        X_test.extend(test_archs_test[arch_idx][0])
+        y_test.extend(test_archs_test[arch_idx][1])
 
     X_train = np.vstack((X_train, np.array(X_train_added)))
     y_train = np.hstack((y_train, np.array(y_train_added)))

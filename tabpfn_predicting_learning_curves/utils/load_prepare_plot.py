@@ -73,8 +73,6 @@ def prepare_dataset(data: dict, train_examples: int = 10, test_examples: int = 2
 def calc_results(predictions, y_test, implicit_test_labels_shape):
     whole_mse = np.mean((np.array(predictions) - np.array(y_test)) ** 2)
 
-    assert np.array(predictions).shape == implicit_test_labels_shape, f"Predictions shape {np.array(predictions).shape} does not match the implicit test labels shape {implicit_test_labels_shape}"
-
     y_test_reshaped = np.array(y_test).reshape(implicit_test_labels_shape)
     predictions_reshaped = np.array(predictions).reshape(implicit_test_labels_shape)
 
