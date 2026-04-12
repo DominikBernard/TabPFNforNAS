@@ -2,12 +2,14 @@ import re
 import numpy as np
 
 
-def extract_epoch_dev_accuracy(file_path: str) -> np.ndarray:
+def extract_epoch_dev_accuracy(file_path: str, acc_in_percent: bool = False) -> np.ndarray:
     """
     Extracts epoch numbers and dev_accuracy values from a log file and returns them as a NumPy array.
 
     Args:
         file_path (str): Path to the log file.
+        acc_in_percent (bool): Whether to convert accuracy to percentage.
+
     Returns:
         np.ndarray: A 2D array where the first column is epoch numbers and the second column is dev_accuracy values.
     """
@@ -30,6 +32,8 @@ def extract_epoch_dev_accuracy(file_path: str) -> np.ndarray:
 
     # Create the tensor (NumPy array)
     tensor = np.column_stack((epochs, dev_accuracies))
+    if acc_in_percent:
+        tensor[:, 1] *= 100  # Convert accuracy to percentage if specified
     return tensor
 
 
