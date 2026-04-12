@@ -9,12 +9,11 @@ splitting_epoch = 20  # Define the epoch at which to split training and testing 
 
 # Extract learning curve data from log file
 log_file_path = "tabpfn_predicting_learning_curves/logs/run1.txt"
-learning_curve_data = extract_epoch_dev_accuracy(log_file_path)
+learning_curve_data = extract_epoch_dev_accuracy(log_file_path, acc_in_percent=True)
 
 # Prepare dataset
 X = learning_curve_data[:, 0].reshape(-1, 1)  # Epoch numbers as features
 y = learning_curve_data[:, 1]  # Dev accuracy as target values
-y *= 100  # Scale accuracy to percentage
 
 # # add sine and cosine features to X
 # X = np.hstack((X, 100 * np.sin(X[:, 0])[:, np.newaxis]))

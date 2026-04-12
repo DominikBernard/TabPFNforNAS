@@ -12,7 +12,7 @@ rotation = 0 # Define how many times to rotate the list of runs
 
 # get the data from the log files
 path_to_logs = "tabpfn_predicting_learning_curves/logs"
-learning_curve_data_list = create_tensors_from_logs(extract_logs_from_subdirectories(path_to_logs))
+learning_curve_data_list = create_tensors_from_logs(extract_logs_from_subdirectories(path_to_logs), acc_in_percent=True)
 
 # rotate the data
 for _ in range(rotation):

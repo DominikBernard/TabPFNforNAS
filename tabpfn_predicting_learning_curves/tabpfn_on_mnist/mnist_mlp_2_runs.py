@@ -14,7 +14,7 @@ log_file_paths = [
     "tabpfn_predicting_learning_curves/logs/run2.txt"
 ]
 
-learning_curve_data_list = [extract_epoch_dev_accuracy(path) for path in log_file_paths]
+learning_curve_data_list = [extract_epoch_dev_accuracy(path, acc_in_percent=True) for path in log_file_paths]
 
 # Prepare dataset
 X_list = []
