@@ -38,6 +38,6 @@ def extract_epoch_dev_accuracy(file_path: str, acc_in_percent: bool = False) -> 
 
 
 if __name__ == "__main__":
-    file_path = "logs/run1.txt"
+    file_path = "tabpfn_predicting_learning_curves/MNIST_example_runs/run1.txt"
     tensor = extract_epoch_dev_accuracy(file_path)
     print(tensor)

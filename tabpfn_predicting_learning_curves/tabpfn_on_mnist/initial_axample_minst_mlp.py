@@ -8,7 +8,7 @@ from tabpfn_predicting_learning_curves.utils.tensor_extractor import extract_epo
 splitting_epoch = 20  # Define the epoch at which to split training and testing data
 
 # Extract learning curve data from log file
-log_file_path = "tabpfn_predicting_learning_curves/logs/run1.txt"
+log_file_path = "tabpfn_predicting_learning_curves/MNIST_example_runs/run1.txt"
 learning_curve_data = extract_epoch_dev_accuracy(log_file_path, acc_in_percent=True)
 
 # Prepare dataset

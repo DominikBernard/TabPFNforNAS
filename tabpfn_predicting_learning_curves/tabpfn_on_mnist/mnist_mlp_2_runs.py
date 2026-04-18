@@ -9,9 +9,10 @@ splitting_epoch = 20  # Define the epoch at which to split training and testing 
 differences = False  # Whether to use differences in accuracy as target values
 
 # Extract learning curve data from log files
+# The last run is used as the test run, and the others are used as training runs
 log_file_paths = [
-    "tabpfn_predicting_learning_curves/logs/run1.txt",
-    "tabpfn_predicting_learning_curves/logs/run2.txt"
+    "tabpfn_predicting_learning_curves/MNIST_example_runs/run2.txt",
+    "tabpfn_predicting_learning_curves/MNIST_example_runs/run1.txt"
 ]
 
 learning_curve_data_list = [extract_epoch_dev_accuracy(path, acc_in_percent=True) for path in log_file_paths]
