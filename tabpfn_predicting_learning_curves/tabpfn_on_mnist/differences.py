@@ -13,36 +13,17 @@ from tabpfn_predicting_learning_curves.utils.tensor_extractor import extract_epo
 splitting_epoch = 20  # Define the epoch at which to split training and testing data
 
 # Extract learning curve data from log file
-log_file_path = "tabpfn_predicting_learning_curves/logs/run1.txt"
-learning_curve_data = extract_epoch_dev_accuracy(log_file_path)
+log_file_path = "tabpfn_predicting_learning_curves/MNIST_example_runs/run1.txt"
+learning_curve_data = extract_epoch_dev_accuracy(log_file_path, acc_in_percent=True)
 
 # Prepare dataset
-X = learning_curve_data[1:, 0].reshape(-1, 1)  # Epoch numbers as features
-y = np.diff(learning_curve_data[:, 1]) # Differences in accuracy as target values
+X = learning_curve_data[:, 0].reshape(-1, 1)  # Epoch numbers as features
+y = np.diff(np.hstack([0, learning_curve_data[:, 1]]))  # Differences in accuracy as target values
 
-# # add sine and cosine features to X
-# X = np.hstack((X, np.sin(X[:, 0])[:, np.newaxis]))
-# X = np.hstack((X, np.cos(X[:, 0])[:, np.newaxis]))
-# X = np.hstack((X, np.sin(X[:, 0] * np.pi / 200)[:, np.newaxis]))
-# X = np.hstack((X, np.cos(X[:, 0] * np.pi / 200)[:, np.newaxis]))
+# # add 10/x as a feature
+# X = np.hstack((X, 10 / X))
 
-# # add 1-1/x feature to X
-# X = np.hstack((X, (0.9 - 1 / (X[:, 0] + 1))[:, np.newaxis]))
-
-# # add log feature to X
-# X = np.hstack((X, ((np.log(X[:, 0] + 1))/3)[:, np.newaxis]))
-
-# # add square feature to X
-# X = np.hstack((X, (X[:, 0] ** 2 / 10_000)[:, np.newaxis]))
-
-# # add ultimate feature
-# X = np.hstack((X, (np.sin(X[:, 0] * np.pi / 200) + 2 * (1 - 3 / (X[:, 0] + 1)) / 3)[:, np.newaxis]))
-
-# add ulitimate feature number 2
-# it is a combination feature 4 until step 9 and feature 3 after step 10
-# X = np.hstack((X, (np.where(X[:, 0] < 10, ((np.log(X[:, 0] + 1))/3), (0.9 - 1 / (X[:, 0] + 1))))[:, np.newaxis]))
-
-# add ultimate feature number 3
+# add ultimate feature
 # it is a target feature, with some noise
 # X = np.hstack((X, (y + np.random.normal(0, 0.005, size=y.shape))[:, np.newaxis]))
 
@@ -63,6 +44,12 @@ y_pred = regressor.predict(X_test)
 # measure the mean squared error
 mse = np.mean((y_pred - y_test) ** 2)
 print(f"Mean Squared Error: {mse}")
+
+# # convert differences back to actual values for plotting
+# y = np.cumsum(y)  # Cumulative sum to get actual accuracy values
+# y_pred = np.cumsum(y_pred) + y[splitting_epoch] # Cumulative sum of predictions
+# mse_after_cumsum = np.mean((y_pred - y_test) ** 2)
+# print(f"Mean Squared Error after cumulative sum: {mse_after_cumsum}")
 
 # Plot the results for visualization
 # with a straight line splitting training and testing data
