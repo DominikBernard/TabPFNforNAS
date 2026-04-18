@@ -9,7 +9,7 @@ splitting_epoch = 20  # Define the epoch at which to split training and testing 
 sin_divisor = 3  # Define the divisor for the sine and cosine transformation
 
 # Extract learning curve data from log file
-log_file_path = "tabpfn_predicting_learning_curves/logs/run1.txt"
+log_file_path = "tabpfn_predicting_learning_curves/MNIST_example_runs/run1.txt"
 learning_curve_data = extract_epoch_dev_accuracy(log_file_path, acc_in_percent=True)
 
 # Prepare dataset
@@ -23,7 +23,7 @@ y = y * np.sin(X[:, 0] / sin_divisor)
 # X = np.hstack((X, np.sin(X[:, 0])[:, np.newaxis]))
 # X = np.hstack((X, np.cos(X[:, 0])[:, np.newaxis]))
 X = np.hstack((X, 100 * np.sin(X[:, 0] / sin_divisor)[:, np.newaxis]))
-X = np.hstack((X, 100 * np.cos(X[:, 0] / sin_divisor)[:, np.newaxis]))
+# X = np.hstack((X, 100 * np.cos(X[:, 0] / sin_divisor)[:, np.newaxis]))
 
 # split the data into training and testing sets
 X_train, X_test = X[:splitting_epoch], X[splitting_epoch:]
@@ -43,6 +43,10 @@ print(f"Mean Squared Error: {mse}")
 # transform y, y_pred back by dividing by sine of the epoch number
 # y = y / np.sin(X[:, 0] / sin_divisor)
 # y_pred = y_pred / np.sin(X_test[:, 0] / sin_divisor)
+
+# mse_after_transform = np.mean((y_pred - y[splitting_epoch:]) ** 2)
+# print(f"Mean Squared Error after transforming back: {mse_after_transform}")
+# mse_after_transform should not be the same as mse, since the transformation is scaling
 
 # Plot the results for visualization
 # with a straight line splitting training and testing data

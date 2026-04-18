@@ -9,14 +9,14 @@ splitting_epoch = 20  # Define the epoch at which to split training and testing 
 sin_divisor = 3  # Define the divisor for the sine and cosine transformation
 
 # Extract learning curve data from log file
-log_file_path = "tabpfn_predicting_learning_curves/logs/run1.txt"
+log_file_path = "tabpfn_predicting_learning_curves/MNIST_example_runs/run1.txt"
 learning_curve_data = extract_epoch_dev_accuracy(log_file_path, acc_in_percent=True)
 
 # Prepare dataset
 X = learning_curve_data[:, 0].reshape(-1, 1)  # Epoch numbers as features
 y = learning_curve_data[:, 1]  # Dev accuracy as target values
 
-# multiply the y by sine of the epoch number
+# add properly scaled sine to y
 y = y + 100 * np.sin(X[:, 0] / sin_divisor)
 
 # # add sine feature to X
@@ -40,6 +40,10 @@ print(f"Mean Squared Error: {mse}")
 # # transform y, y_pred back by dividing by sine of the epoch number
 # y = y - 100 * np.sin(X[:, 0] / sin_divisor)
 # y_pred = y_pred - 100 * np.sin(X_test[:, 0] / sin_divisor)
+
+# mse_after_transform = np.mean((y_pred - y[splitting_epoch:]) ** 2)
+# # print(f"Mean Squared Error after transforming back: {mse_after_transform}")
+# assert mse_after_transform == mse, "MSE should be the same after transforming back, since the transformation is just shift"
 
 # Plot the results for visualization
 # with a straight line splitting training and testing data
