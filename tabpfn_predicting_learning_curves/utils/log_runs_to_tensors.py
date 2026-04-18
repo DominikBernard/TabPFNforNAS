@@ -11,11 +11,12 @@ def extract_logs_from_subdirectories(directory: str) -> list[str]:
         list[str]: List of paths to logs.txt files.
     """
 
-    log_files = []
+    log_files = [""] * 10
     for root, _, files in os.walk(directory):
         for filename in files:
             if filename == "logs.txt":
-                log_files.append(os.path.join(root, filename))
+                index = int(root[-1]) # assuming the last character of the directory name is the run index
+                log_files[index] = os.path.join(root, filename)
     return log_files
 
 def create_tensors_from_logs(log_files: list[str], acc_in_percent: bool = False) -> list[np.ndarray]:
