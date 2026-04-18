@@ -7,16 +7,15 @@ from tabpfn import TabPFNRegressor
 
 from tabpfn_predicting_learning_curves.utils.log_runs_to_tensors import extract_logs_from_subdirectories, create_tensors_from_logs
 
-splitting_epoch = 20 # Define the epoch at which to split training and testing data
-rotation = 0 # Define how many times to rotate the list of runs
+splitting_epoch = 10 # Define the epoch at which to split training and testing data
+test_run = 0 # Define which run to use as the test run (0-indexed)
 
 # get the data from the log files
-path_to_logs = "tabpfn_predicting_learning_curves/logs"
+path_to_logs = "tabpfn_predicting_learning_curves/MNIST_example_runs"
 learning_curve_data_list = create_tensors_from_logs(extract_logs_from_subdirectories(path_to_logs), acc_in_percent=True)
-
-# rotate the data
-for _ in range(rotation):
-    learning_curve_data_list.append(learning_curve_data_list.pop(0))
+# create indices that would sort the learning curve data by their 10th element (key=lambda x: x[9, 1])
+indices = np.argsort(np.argsort([learning_curve_data[9, 1] for learning_curve_data in learning_curve_data_list]))
+# learning_curve_data_list.sort(key=lambda x: x[9, 1])
 
 # Prepare dataset
 X_list = []
@@ -26,19 +25,19 @@ for i in range(len(learning_curve_data_list)):
     X_i = learning_curve_data[:, 0].reshape(-1, 1) # Epoch numbers as features
     y_i = learning_curve_data[:, 1] # Dev accuracy as target values
 
-    # add i as a first feature to distinguish runs
-    X_i = np.hstack((np.full((X_i.shape[0], 1), i), X_i))
+    # add index as a first feature to distinguish runs
+    X_i = np.hstack((np.full((X_i.shape[0], 1), indices[i]), X_i))
 
     X_list.append(X_i)
     y_list.append(y_i)
 
 # split the data into training and testing sets
-# last run is split into train and test
-X_train = np.vstack(X_list[:-1] + [X_list[-1][:splitting_epoch]])
-X_test = X_list[-1][splitting_epoch:]
+# the test run is split into train and test
+X_train = np.vstack(X_list[:test_run] + X_list[test_run + 1:] + [X_list[test_run][:splitting_epoch]])
+X_test = X_list[test_run][splitting_epoch:]
 
-y_train = np.hstack(y_list[:-1] + [y_list[-1][:splitting_epoch]])
-y_test = y_list[-1][splitting_epoch:]
+y_train = np.hstack(y_list[:test_run] + y_list[test_run + 1:] + [y_list[test_run][:splitting_epoch]])
+y_test = y_list[test_run][splitting_epoch:]
 
 print(f"X_train shape: {X_train.shape}, y_train shape: {y_train.shape}")
 print(f"X_test shape: {X_test.shape}, y_test shape: {y_test.shape}")
@@ -57,11 +56,12 @@ print(f"Mean Squared Error: {mse}")
 # Plot the results for visualization
 plt.figure(figsize=(10, 6))
 # plot training runs
-for i in range(len(learning_curve_data_list) - 1):
-    plt.plot(learning_curve_data_list[i][:, 0], learning_curve_data_list[i][:, 1], '--', label=f'Run {i+1} (Train)', alpha=0.5)
+for i in range(len(learning_curve_data_list)):
+    if i != test_run:
+        plt.plot(learning_curve_data_list[i][:, 0], learning_curve_data_list[i][:, 1], '--', label=f'Run {i+1} (Train)', alpha=0.5)
 
 # plot test run
-plt.plot(learning_curve_data_list[-1][:, 0], learning_curve_data_list[-1][:, 1], 'g--', label=f'Run {len(learning_curve_data_list)} (Test)')
+plt.plot(learning_curve_data_list[test_run][:, 0], learning_curve_data_list[test_run][:, 1], 'g--', label=f'Run {test_run + 1} (Test)')
 
 plt.plot(X_test[:, 1], y_pred, 'r.-', label='Predicted Dev Accuracy (Test)')
 plt.axvline(x=splitting_epoch, color='k', linestyle='--', label='Train/Test Split')
@@ -72,6 +72,6 @@ plt.legend()
 
 plt.grid()
 plt.show()
-# plt.savefig(f"plots/mnist_mlp_multiple_runs_tabpfn_example{rotation}.png")
+# plt.savefig(f"tabpfn_predicting_learning_curves/logs/plots/mnist_multiple_runs/test_run_{test_run + 1}.png")
 plt.close()
 
