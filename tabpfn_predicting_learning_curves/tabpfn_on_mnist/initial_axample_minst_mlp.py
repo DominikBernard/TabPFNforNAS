@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from tabpfn import TabPFNRegressor
 
 from tabpfn_predicting_learning_curves.utils.tensor_extractor import extract_epoch_dev_accuracy
+from tabpfn_predicting_learning_curves.utils.top_k_seasonalities import extract_top_k_seasonalities, build_fourier_features
 
 splitting_epoch = 20  # Define the epoch at which to split training and testing data
 
@@ -40,6 +41,14 @@ y = learning_curve_data[:, 1]  # Dev accuracy as target values
 # # add ultimate feature number 3
 # # it is a target feature, with some noise
 # X = np.hstack((X, (y + np.random.normal(0, 0.5, size=y.shape))[:, np.newaxis]))
+
+# # add seasonality features to X
+# k = 5
+# L = 10
+# periods, freqs = extract_top_k_seasonalities(y[:splitting_epoch], k, L)
+# print(f"Detected periods: {periods}, frequencies: {freqs}")
+# seasonality_features = build_fourier_features(X, freqs)
+# X = np.hstack((X, seasonality_features))
 
 # # add target as a feature
 # X = np.hstack((X, y[:, np.newaxis]))
