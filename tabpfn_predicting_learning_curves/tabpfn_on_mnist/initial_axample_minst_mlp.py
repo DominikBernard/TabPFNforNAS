@@ -5,6 +5,7 @@ from tabpfn import TabPFNRegressor
 
 from tabpfn_predicting_learning_curves.utils.tensor_extractor import extract_epoch_dev_accuracy
 from tabpfn_predicting_learning_curves.utils.top_k_seasonalities import extract_top_k_seasonalities, build_fourier_features
+from tabpfn_predicting_learning_curves.utils.find_function_opt_params import inverse_model, log_model, fit_and_evaluate
 
 splitting_epoch = 20  # Define the epoch at which to split training and testing data
 
@@ -25,8 +26,16 @@ y = learning_curve_data[:, 1]  # Dev accuracy as target values
 # # add 1-1/x feature to X
 # X = np.hstack((X, 100 * (0.9 - 1 / (X[:, 0] + 1))[:, np.newaxis]))
 
+# # add a-b/x feature with optimal a and b parameters to X
+# params, _ = fit_and_evaluate(inverse_model, X[:, 0], y)
+# X = np.hstack((X, inverse_model(X[:, 0], *params)[:, np.newaxis]))
+
 # # add log feature to X
-# X = np.hstack((X, 100 * ((np.log(X[:, 0] + 1))/3)[:, np.newaxis]))
+# X = np.hstack((X, (10 * (np.log(100*X[:, 0] - 90)))[:, np.newaxis]))
+
+# # add a * log(bx + c) + d feature with optimal parameters to X
+# params, _ = fit_and_evaluate(log_model, X[:, 0], y, p0=[1, 1, 1, 1])
+# X = np.hstack((X, log_model(X[:, 0], *params)[:, np.newaxis]))
 
 # # add square feature to X
 # X = np.hstack((X, 100 * (X[:, 0] ** 2 / 10_000)[:, np.newaxis]))
