@@ -11,3 +11,4 @@ tarkill_out/
 tabpfn_with_nats_bench/pred_split_test_experiment.py
 tabpfn_predicting_learning_curves/tabpfn_on_nats_bench/pred_one_from_multiple.py
 tabpfn_predicting_learning_curves/MNIST_example_runs/
+tabpfn_predicting_learning_curves/plots/

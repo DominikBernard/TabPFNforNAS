@@ -56,7 +56,7 @@ def add_target_as_feature(X, y):
     f = y[:, np.newaxis]
     return np.hstack((X, f))
 
-def plot_learning_curve(epochs, y, X_test, y_pred, splitting_epoch):
+def plot_learning_curve(epochs, y, X_test, y_pred, splitting_epoch, mse=None, path_to_save=None):
     """
     Utility function to plot the learning curve along with any engineered features and predictions.
 
@@ -68,25 +68,36 @@ def plot_learning_curve(epochs, y, X_test, y_pred, splitting_epoch):
         X_test (np.ndarray): Test features used for prediction.
         y_pred (np.ndarray): Predicted dev accuracy values.
         splitting_epoch (int): Epoch at which the train/test split occurs.
+        mse (float, optional): Mean squared error for the predictions.
+        path_to_save (str, optional): Path to save the plot.
 
     """
     # plot everything
     plt.figure(figsize=(10, 6))
-    plt.plot(epochs, y, 'o-', label='Actual Dev Accuracy')
+    plt.plot(epochs, y, 'o-', label="Skutečná přesnost")
 
     # plot any engineered features we added
     if X.shape[1] > 1:
         for i in range(1, X.shape[1]):
-            plt.plot(epochs, X[:, i], 'x--', label=f'Feature {i}', alpha=0.5)
+            plt.plot(epochs, X[:, i], 'x--', label=f'Příznak {i}', alpha=0.5)
 
-    plt.plot(X_test[:, 0], y_pred, 'o--', label='Predicted Dev Accuracy', color='orange')
-    plt.xlabel('Epoch')
-    plt.ylabel('Dev Accuracy')
-    plt.title('Learning Curve')
-    plt.axvline(x=splitting_epoch, color='red', linestyle='--', label='Train/Test Split')
+    plt.plot(X_test[:, 0], y_pred, 'o--', label='Předpovězená přesnost', color='orange')
+    plt.xlabel('Epocha')
+    plt.ylabel('Přesnost (%)')
+    plt.title('Učící křivka')
+    plt.axvline(x=splitting_epoch, color='red', linestyle='--', label=f'Dělící epocha: {splitting_epoch}')
     plt.legend()
     plt.grid()
-    plt.show()
+    plt.tight_layout(rect=[0, 0.05, 1, 1])
+
+    if mse is not None:
+        # display mse under the plot
+        plt.figtext(0.5, 0.03, f'Střední čtvercová chyba: {mse:.4f}', ha='center', fontsize=10)
+
+    if path_to_save:
+        plt.savefig(path_to_save, dpi=300)
+    else:
+        plt.show()
 
 
 
@@ -100,7 +111,7 @@ if __name__ == "__main__":
     # set up the base dataset and extract epochs once
     epochs = learning_curve_data[:, 0]
     X = epochs.reshape(-1, 1) 
-    y = learning_curve_data[:, 1]                 
+    y = learning_curve_data[:, 1]
 
     # mix and match features here
     # X = add_trig_features(X, epochs)
@@ -127,5 +138,5 @@ if __name__ == "__main__":
     print(f"Mean Squared Error: {mse}")
 
     # plot results
-    plot_learning_curve(epochs, y, X_test, y_pred, splitting_epoch)
+    plot_learning_curve(epochs, y, X_test, y_pred, splitting_epoch, mse=mse, path_to_save=f"tabpfn_predicting_learning_curves/plots/mnist_mlp_learning_curve_no_features_split_{splitting_epoch}.pdf")
 
