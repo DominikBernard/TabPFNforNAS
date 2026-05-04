@@ -80,10 +80,10 @@ def build_fourier_features(t, top_k_freqs):
     t = np.asarray(t)
     features = []
     
-    # Construct the alternating cos/sin array for each frequency
+    # Construct the alternating sin/cos array for each frequency
     for f in top_k_freqs:
-        features.append(np.cos(2 * np.pi * f * t))
         features.append(np.sin(2 * np.pi * f * t))
+        features.append(np.cos(2 * np.pi * f * t))
         
     # If t is a single scalar, return a 1D vector (length 2k). 
     # If t is an array, return a 2D matrix of shape (len(t), 2k)
