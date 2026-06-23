@@ -1,71 +1,41 @@
-# in this code, we will compute differences betweeen each point in the learning curve and the previous one
-# this will give us the improvement or deterioration at each epoch
-# we will then use these differences as the target values for the TabPFNRegressor
-
-
+import argparse
 import numpy as np
-import matplotlib.pyplot as plt
 
-from tabpfn import TabPFNRegressor
+from tabpfn_predicting_learning_curves.utils.mnist_pipeline import load_learning_curve_data, split_data_compute_predictions_and_metrics, plot_dual_learning_curves
 
-from tabpfn_predicting_learning_curves.utils.tensor_extractor import extract_epoch_dev_accuracy
-
-splitting_epoch = 20  # Define the epoch at which to split training and testing data
-
-# Extract learning curve data from log file
-log_file_path = "tabpfn_predicting_learning_curves/MNIST_example_runs/run1.txt"
-learning_curve_data = extract_epoch_dev_accuracy(log_file_path, acc_in_percent=True)
-
-# Prepare dataset
-X = learning_curve_data[:, 0].reshape(-1, 1)  # Epoch numbers as features
-y = np.diff(np.hstack([0, learning_curve_data[:, 1]]))  # Differences in accuracy as target values
-
-# # add 10/x as a feature
-# X = np.hstack((X, 10 / X))
-
-# add ultimate feature
-# it is a target feature, with some noise
-# X = np.hstack((X, (y + np.random.normal(0, 0.005, size=y.shape))[:, np.newaxis]))
-
-# add target as a feature
-# X = np.hstack((X, y[:, np.newaxis]))
-
-# split the data into training and testing sets
-X_train, X_test = X[:splitting_epoch], X[splitting_epoch:]
-y_train, y_test = y[:splitting_epoch], y[splitting_epoch:]
+parser = argparse.ArgumentParser(description="Run a single experiment for predicting learning curves with difference method using TabPFNRegressor.")
+parser.add_argument("--log_file_path", type=str, default="tabpfn_predicting_learning_curves/MNIST_example_runs/run2.txt", help="Path to the log file containing learning curve data.")
+parser.add_argument("--splitting_epoch", type=int, default=20, help="Epoch at which to split the data into training and testing sets.")
+parser.add_argument("--path_to_save", type=str, default="tabpfn_predicting_learning_curves/plots/curve_modification/run2/differences.pdf", help="Path to save the plot.")
 
 
-# Initialize a regressor
-regressor = TabPFNRegressor()
-regressor.fit(X_train, y_train)
-# Make predictions
-y_pred = regressor.predict(X_test)
+if __name__ == "__main__":
+    print("Running the experiment with differences as target values.")
 
-# measure the mean squared error
-mse = np.mean((y_pred - y_test) ** 2)
-print(f"Mean Squared Error: {mse}")
+    args = parser.parse_args()
+    splitting_epoch = args.splitting_epoch
 
-# # convert differences back to actual values for plotting
-# y = np.cumsum(y)  # Cumulative sum to get actual accuracy values
-# y_pred = np.cumsum(y_pred) + y[splitting_epoch] # Cumulative sum of predictions
-# mse_after_cumsum = np.mean((y_pred - y_test) ** 2)
-# print(f"Mean Squared Error after cumulative sum: {mse_after_cumsum}")
+    # Load learning curve data
+    X, y = load_learning_curve_data(args.log_file_path)
 
-# Plot the results for visualization
-# with a straight line splitting training and testing data
-plt.figure(figsize=(10, 6))
-plt.plot(X[:, 0], y, 'o-', label='Actual Dev Accuracy')
+    # Compute differences in accuracy as target values
+    y_diff = np.diff(np.hstack([0, y]))
 
-if X.shape[1] > 1:
-    for i in range(1, X.shape[1]):
-        plt.plot(X[:, 0], X[:, i], 'x--', label=f'Feature {i}', alpha=0.5)
+    # Compute predictions and metrics
+    y_diff_pred, mse, last_pred_squared_error = split_data_compute_predictions_and_metrics(X, y_diff, splitting_epoch)
 
-plt.plot(X_test[:, 0], y_pred, 'o--', label='Predicted Dev Accuracy', color='orange')
-plt.xlabel('Epoch')
-plt.ylabel('Dev Accuracy')
-plt.title('Learning Curve')
-plt.axvline(x=splitting_epoch, color='red', linestyle='--', label='Train/Test Split')
-plt.legend()
-plt.grid()
-plt.show()
+    print(f"Mean Squared Error (before transformation): {mse}")
+    print(f"Squared Error of Last Prediction (before transformation): {last_pred_squared_error}")
+
+    # convert differences back to actual values
+    y_orig = np.cumsum(y_diff)  # Cumulative sum to get actual accuracy values
+    y_pred = np.cumsum(y_diff_pred) + y_orig[splitting_epoch] # Cumulative sum of predictions
+
+    mse_after_cumsum = np.mean((y_pred - y_orig[splitting_epoch:]) ** 2)
+    print(f"Mean Squared Error after cumulative sum: {mse_after_cumsum}")
+    print(f"Squared Error of Last Prediction after cumulative sum: {(y_pred[-1] - y_orig[-1]) ** 2}")
+
+    # plot the results for visualization
+    plot_dual_learning_curves(X[:, 0], X, y_diff, y_diff_pred, X, y_orig, y_pred, splitting_epoch, feature_names=None, path_to_save=args.path_to_save)
+    
 
