@@ -9,10 +9,11 @@ import tabpfn_predicting_learning_curves.utils.load_prepare_plot as lpp
 parser = argparse.ArgumentParser(description="Predict learning curves using TabPFN on NATS-Bench data.")
 parser.add_argument("--train_size", type=int, default=10, help="Number of training examples.")
 parser.add_argument("--test_size", type=int, default=200, help="Number of test examples.")
-parser.add_argument("--test_splitting_epoch", type=int, default=10, help="Epoch at which to split the target data into train and test sets.")
+parser.add_argument("--test_splitting_epoch", type=int, default=20, help="Epoch at which to split the target data into train and test sets.")
 parser.add_argument("--seed", type=int, default=42, help="Random seed for reproducibility.")
 parser.add_argument("--datapath", type=str, default="tabpfn_with_nats_bench/data/merged_data.json", help="Path to the JSON file containing the data.")
-parser.add_argument("--path_to_dir_to_save_results", type=str, default="tabpfn_predicting_learning_curves/logs/results_one_by_one/", help="Path to save the results. If not provided, the results will be displayed.")
+parser.add_argument("--path_to_dir_to_save_results", type=str, default="tabpfn_predicting_learning_curves/logs/results_one_by_one_sorted/", help="Path to save the results. If not provided, the results will be displayed.")
+parser.add_argument("--sort_indices", default=True, action='store_true', help="Whether to sort the indices based on the test accuracy at the splitting epoch.")
 
 def train_and_evaluate(X_train: np.ndarray, y_train: np.ndarray, test_archs_test: dict[int, tuple[list[list[int]], list[int]]], test_archs_train: dict[int, tuple[list[list[int]], list[int]]], implicit_test_labels_shape: tuple[int, int]) -> tuple[np.ndarray, float, np.ndarray, float]:
     """
@@ -54,7 +55,7 @@ def main(args: argparse.Namespace):
     data = lpp.load_data(args.datapath)
 
     # Prepare dataset
-    X_train, y_train, test_archs_test, test_archs_train, train_indices, test_indices, test_labels_implicit_shape = lpp.prepare_dataset(data, train_examples=args.train_size, test_examples=args.test_size, test_splitting_epoch=args.test_splitting_epoch)
+    X_train, y_train, test_archs_test, test_archs_train, train_indices, test_indices, test_labels_implicit_shape = lpp.prepare_dataset(data, train_examples=args.train_size, test_examples=args.test_size, test_splitting_epoch=args.test_splitting_epoch, sort_indices=args.sort_indices)
 
     # Train and evaluate the model
     predictions, mse, mse_per_arch, mse_for_last_epoch = train_and_evaluate(X_train, y_train, test_archs_test, test_archs_train, test_labels_implicit_shape)

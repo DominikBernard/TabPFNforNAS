@@ -22,13 +22,14 @@ def load_data(path_to_json: str = "tabpfn_with_nats_bench/data/merged_data.json"
         data = json.load(file)
     return data
 
-def prepare_dataset(data: dict, train_examples: int = 10, test_examples: int = 200, test_splitting_epoch: int = 10) -> tuple[np.ndarray, np.ndarray, dict[int, tuple[list[list[int]], list[int]]], dict[int, tuple[list[list[int]], list[int]]], np.ndarray, np.ndarray, tuple[int, int]]:
+def prepare_dataset(data: dict, train_examples: int = 10, test_examples: int = 200, test_splitting_epoch: int = 10, sort_indices: bool = False) -> tuple[np.ndarray, np.ndarray, dict[int, tuple[list[list[int]], list[int]]], dict[int, tuple[list[list[int]], list[int]]], np.ndarray, np.ndarray, tuple[int, int]]:
     """Prepare the dataset for training and testing.
     Args:
         data (dict): The loaded data containing architectures and their accuracies.
         train_examples (int): Number of training examples to sample.
         test_examples (int): Number of test examples to sample.
         test_splitting_epoch (int): Epoch at which to split the target data into train and test sets.
+        sort_indices (bool): Whether to sort the indices.
     Returns:
         tuple: A tuple containing training features, training labels, 2 dictionaries of test architectures (test and train), training indices, test indices, and the implicit shape of the test labels.
     """
@@ -37,12 +38,16 @@ def prepare_dataset(data: dict, train_examples: int = 10, test_examples: int = 2
     remaining_indices = np.setdiff1d(np.arange(len(data)), test_indices)
     train_indices = np.random.choice(remaining_indices, train_examples, replace=False)
 
+    if sort_indices:
+        all_indices = np.concatenate((train_indices, test_indices))
+        sorted_indices = np.argsort(np.argsort([data[idx]["accuracies"][str(test_splitting_epoch - 1)]["test_accuracy"] for idx in all_indices]))
+
     train_features = []
     train_labels = []
 
     for i, arch_idx in enumerate(train_indices):
         for epoch in range(len(data[arch_idx]["accuracies"])):
-            features = [i, epoch]
+            features = [i if not sort_indices else sorted_indices[i], epoch]
             label = data[arch_idx]["accuracies"][str(epoch)]["test_accuracy"]
             train_features.append(features)
             train_labels.append(label)
@@ -51,7 +56,7 @@ def prepare_dataset(data: dict, train_examples: int = 10, test_examples: int = 2
     test_archs_train: dict[int, tuple[list[list[int]], list[int]]] = dict()
 
     for i, arch_idx in enumerate(test_indices):
-        index_feature = i + len(train_indices)  # Ensure test indices are distinct from train indices
+        index_feature = i + len(train_indices) if not sort_indices else sorted_indices[i + len(train_indices)]  # Ensure test indices are distinct from train indices
         for epoch in range(len(data[arch_idx]["accuracies"])):
             features = [index_feature, epoch]
             label = data[arch_idx]["accuracies"][str(epoch)]["test_accuracy"]
