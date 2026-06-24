@@ -14,7 +14,7 @@ parser.add_argument("--datapath", type=str, default="tabpfn_with_nats_bench/data
 parser.add_argument("--path_to_dir_to_save_results", type=str, default="tabpfn_predicting_learning_curves/logs/results/", help="Path to save the results. If not provided, the results will be displayed.")
 parser.add_argument("--sort_indices", default=True, action='store_true', help="Whether to sort the indices based on the test accuracy at the splitting epoch.")
 
-def train_and_evaluate(X_train: np.ndarray, y_train: np.ndarray, test_archs_test: dict[int, tuple[list[list[int]], list[int]]], test_archs_train: dict[int, tuple[list[list[int]], list[int]]], implicit_test_labels_shape: tuple[int, int]) -> tuple[np.ndarray, float, np.ndarray, float]:
+def train_and_evaluate(X_train: np.ndarray, y_train: np.ndarray, test_archs_test: dict[int, tuple[list[list[int]], list[int]]], test_archs_train: dict[int, tuple[list[list[int]], list[int]]], implicit_test_labels_shape: tuple[int, int]) -> tuple[np.ndarray, float, np.ndarray, float, float, float]:
     """
     Train the TabPFNRegressor and evaluate its performance.
     Args:
@@ -25,7 +25,7 @@ def train_and_evaluate(X_train: np.ndarray, y_train: np.ndarray, test_archs_test
         implicit_test_labels_shape (tuple[int, int]): The implicit shape of the test labels for reshaping predictions.
 
     Returns:
-        tuple: A tuple containing the predictions, the mean squared error on the test set, the mean squared error per architecture, and the mean squared error for the last epoch.
+        tuple: A tuple containing the predictions, the mean squared error on the test set, the mean squared error per architecture, the mean squared error for the last epoch, the variance of the whole mean squared error, and the variance for the last epoch.
     """
     X_train_added = []
     y_train_added = []
@@ -49,9 +49,9 @@ def train_and_evaluate(X_train: np.ndarray, y_train: np.ndarray, test_archs_test
     model.fit(X_train, y_train)
     predictions = model.predict(X_test)
     
-    predictions_reshaped, whole_mse, mse_per_arch, mse_for_last_epoch = lpp.calc_results(predictions, y_test, implicit_test_labels_shape)
+    predictions_reshaped, whole_mse, mse_per_arch, mse_for_last_epoch, variance_of_whole_mse, variance_for_last_epoch = lpp.calc_results(predictions, y_test, implicit_test_labels_shape)
 
-    return predictions_reshaped, whole_mse, mse_per_arch, mse_for_last_epoch
+    return predictions_reshaped, whole_mse, mse_per_arch, mse_for_last_epoch, variance_of_whole_mse, variance_for_last_epoch
 
 def main(args: argparse.Namespace):
 
@@ -64,14 +64,14 @@ def main(args: argparse.Namespace):
     X_train, y_train, test_archs_test, test_archs_train, train_indices, test_indices, test_labels_implicit_shape = lpp.prepare_dataset(data, train_examples=args.train_size, test_examples=args.test_size, test_splitting_epoch=args.test_splitting_epoch, sort_indices=args.sort_indices)
 
     # Train and evaluate the model
-    predictions, mse, mse_per_arch, mse_for_last_epoch = train_and_evaluate(X_train, y_train, test_archs_test, test_archs_train, test_labels_implicit_shape)
+    predictions, mse, mse_per_arch, mse_for_last_epoch, variance_of_whole_mse, variance_for_last_epoch = train_and_evaluate(X_train, y_train, test_archs_test, test_archs_train, test_labels_implicit_shape)
 
     # create directory to save results if it does not exist
     if args.path_to_dir_to_save_results and not os.path.exists(args.path_to_dir_to_save_results):
         os.makedirs(args.path_to_dir_to_save_results)
 
     lpp.plot_results(data, train_indices, test_indices, predictions, args.test_splitting_epoch, path_to_save=args.path_to_dir_to_save_results)
-    lpp.store_results(test_indices, predictions, mse, mse_per_arch, mse_for_last_epoch, path_to_save=args.path_to_dir_to_save_results)
+    lpp.store_results(test_indices, predictions, mse, mse_per_arch, mse_for_last_epoch, variance_of_whole_mse, variance_for_last_epoch, path_to_save=args.path_to_dir_to_save_results)
 
 
 if __name__ == "__main__":

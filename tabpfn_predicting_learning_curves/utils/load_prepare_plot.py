@@ -83,9 +83,13 @@ def calc_results(predictions, y_test, implicit_test_labels_shape):
 
     mse_per_arch = np.mean((predictions_reshaped - y_test_reshaped) ** 2, axis=1)
 
+    variance_of_whole_mse = np.var(mse_per_arch, ddof=1)
+
     mse_for_last_epoch = np.mean((predictions_reshaped[:, -1] - y_test_reshaped[:, -1]) ** 2)
 
-    return predictions_reshaped, whole_mse, mse_per_arch, mse_for_last_epoch
+    variance_for_last_epoch = np.var((predictions_reshaped[:, -1] - y_test_reshaped[:, -1]) ** 2, ddof=1)
+
+    return predictions_reshaped, whole_mse, mse_per_arch, mse_for_last_epoch, variance_of_whole_mse, variance_for_last_epoch
 
 
 
@@ -104,18 +108,18 @@ def plot_results(data: dict, train_indices: np.ndarray, test_indices: np.ndarray
     for pred_index in tqdm.tqdm(range(len(predictions)), desc="Plotting results"):
         plt.figure(figsize=(10, 6))
         
+        accuracies = [data[test_indices[pred_index]]["accuracies"][str(epoch)]["test_accuracy"] for epoch in range(len(data[test_indices[pred_index]]["accuracies"]))]
+        plt.plot(accuracies, '-', zorder=3,label=f'Arch {test_indices[pred_index]} (Test)')
+
+        predicted_accuracies = predictions[pred_index]
+        plt.plot(range(test_splitting_epoch, test_splitting_epoch + len(predicted_accuracies)), predicted_accuracies, '-', zorder=3, label=f'Predicted arch {test_indices[pred_index]} (Test)')
+        
         for i in train_indices:
             accuracies = [data[i]["accuracies"][str(epoch)]["test_accuracy"] for epoch in range(len(data[i]["accuracies"]))]
             plt.plot(accuracies, '--', label=f'Arch {i} (Train)', alpha=0.5)
-
-        accuracies = [data[test_indices[pred_index]]["accuracies"][str(epoch)]["test_accuracy"] for epoch in range(len(data[test_indices[pred_index]]["accuracies"]))]
-        plt.plot(accuracies, 'g--', label=f'Arch {test_indices[pred_index]} (Test)')
-
-        predicted_accuracies = predictions[pred_index]
-        plt.plot(range(test_splitting_epoch, test_splitting_epoch + len(predicted_accuracies)), predicted_accuracies, 'r-', label=f'Predicted arch {test_indices[pred_index]} (Test)')
         
         # plot the splitting epoch
-        plt.axvline(x=test_splitting_epoch, color='black', linestyle='--', label='Train/Test Split')
+        plt.axvline(x=test_splitting_epoch, color='red', linestyle='--', label='Train/Test Split')
 
         plt.xlabel('Epoch')
         plt.ylabel('Test Accuracy')
@@ -130,7 +134,7 @@ def plot_results(data: dict, train_indices: np.ndarray, test_indices: np.ndarray
             plt.show()
             break  # Show only the first plot when not saving
 
-def store_results(test_indices: np.ndarray, predictions: np.ndarray, mse: float, mse_per_arch: np.ndarray, mse_for_last_epoch: float, path_to_save: Optional[str] = None):
+def store_results(test_indices: np.ndarray, predictions: np.ndarray, mse: float, mse_per_arch: np.ndarray, mse_for_last_epoch: float, variance_of_whole_mse: float, variance_for_last_epoch: float, path_to_save: Optional[str] = None):
     """
     Store the results in a txt file if a path is provided, otherwise print the results.
 
@@ -140,15 +144,19 @@ def store_results(test_indices: np.ndarray, predictions: np.ndarray, mse: float,
         mse (float): Mean squared error on the test set.
         mse_per_arch (np.ndarray): Mean squared error per architecture.
         mse_for_last_epoch (float): Mean squared error for the last epoch.
+        variance_of_whole_mse (float): Variance of the whole mean squared error.
+        variance_for_last_epoch (float): Variance for the last epoch.
         path_to_save (Optional[str]): Path to save the results. If None, the results will be printed.
     """
 
     result_str = "Results:\n"
     result_str += f"Whole Mean Squared Error: {mse}\n"
+    result_str += f"Variance of Whole Mean Squared Error: {variance_of_whole_mse}\n"
     result_str += f"Mean Squared Error per Architecture:\n"
     for idx, arch_mse in zip(test_indices, mse_per_arch):
         result_str += f"  Arch {idx}: {arch_mse}\n"
     result_str += f"Mean Squared Error for Last Epoch: {mse_for_last_epoch}\n"
+    result_str += f"Variance for Last Epoch: {variance_for_last_epoch}\n"
 
     if path_to_save:
         with open(os.path.join(path_to_save, "results.txt"), 'w') as file:
