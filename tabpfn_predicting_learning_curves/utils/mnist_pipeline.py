@@ -267,7 +267,7 @@ def plot_multi_run_learning_curves_side_by_side(learning_curve_data_list, y_pred
     for i in range(num_runs):
         plot_multi_run_learning_curves(learning_curve_data_list, y_pred_lists[i], splitting_epoch, test_run_index=i, ax=axs[i])
         axs[i].set_title(f'Testovaná architektura {"MLP" if i < 5 else "CNN"} (č. {i + 1})')
-        if i == 0:
+        if i % 2 == 0:
             axs[i].set_ylabel('Přesnost (%)')
         else:
             axs[i].set_ylabel('')
