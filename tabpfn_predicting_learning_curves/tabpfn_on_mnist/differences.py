@@ -4,7 +4,7 @@ import numpy as np
 from tabpfn_predicting_learning_curves.utils.mnist_pipeline import load_learning_curve_data, split_data_compute_predictions_and_metrics, plot_dual_learning_curves
 
 parser = argparse.ArgumentParser(description="Run a single experiment for predicting learning curves with difference method using TabPFNRegressor.")
-parser.add_argument("--log_file_path", type=str, default="tabpfn_predicting_learning_curves/MNIST_example_runs/mnist_training_diploma.py-2026-04-17_130608-at=cnn,bs=1024,cs=conv3x3-BN-relu-conv3x3-BN-relu-linear,d=linear,e=100,hls=32,lr=0.0005,lrf=1e-05,m=0.005,o=SGD,r=False,s=42,t=1,i=9/logs.txt", help="Path to the log file containing learning curve data.")
+parser.add_argument("--log_file_path", type=str, default="tabpfn_predicting_learning_curves/MNIST_example_runs/at=cnn,bs=1024,cs=conv3x3-BN-relu-conv3x3-BN-relu-linear,d=linear,e=100,hls=32,lr=0.0005,lrf=1e-05,m=0.005,o=SGD,s=42,i=9/logs.txt", help="Path to the log file containing learning curve data.")
 parser.add_argument("--splitting_epoch", type=int, default=20, help="Epoch at which to split the data into training and testing sets.")
 parser.add_argument("--path_to_save", type=str, default="tabpfn_predicting_learning_curves/plots/curve_modification/run2/differences.pdf", help="Path to save the plot.")
 

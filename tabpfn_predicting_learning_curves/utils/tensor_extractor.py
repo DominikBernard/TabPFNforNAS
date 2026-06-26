@@ -38,6 +38,6 @@ def extract_epoch_dev_accuracy(file_path: str, acc_in_percent: bool = False) -> 
 
 
 if __name__ == "__main__":
-    file_path = "tabpfn_predicting_learning_curves/MNIST_example_runs/mnist_training_diploma.py-2026-04-17_130608-at=mlp,bs=256,cs=,d=cosine,e=100,hls=32,lr=0.001,lrf=0.0005,m=0.005,o=SGD,r=False,s=42,t=1,i=2/logs.txt"
+    file_path = "tabpfn_predicting_learning_curves/MNIST_example_runs/at=mlp,bs=256,cs=,d=cosine,e=100,hls=32,lr=0.001,lrf=0.0005,m=0.005,o=SGD,s=42,i=2/logs.txt"
     tensor = extract_epoch_dev_accuracy(file_path)
     print(tensor)

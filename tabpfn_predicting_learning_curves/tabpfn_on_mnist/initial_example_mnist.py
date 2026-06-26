@@ -9,7 +9,7 @@ from tabpfn_predicting_learning_curves.utils.find_function_opt_params import inv
 
 parser = argparse.ArgumentParser(description="Predict learning curves using TabPFN")
 parser.add_argument('--splitting_epoch', type=int, default=20, help='Epoch at which to split train and test data')
-parser.add_argument('--log_file_path', type=str, default="tabpfn_predicting_learning_curves/MNIST_example_runs/mnist_training_diploma.py-2026-04-17_130608-at=mlp,bs=256,cs=,d=cosine,e=100,hls=32,lr=0.001,lrf=0.0005,m=0.005,o=SGD,r=False,s=42,t=1,i=2/logs.txt", help='Path to the log file containing learning curve data')
+parser.add_argument('--log_file_path', type=str, default="tabpfn_predicting_learning_curves/MNIST_example_runs/at=mlp,bs=256,cs=,d=cosine,e=100,hls=32,lr=0.001,lrf=0.0005,m=0.005,o=SGD,s=42,i=2/logs.txt", help='Path to the log file containing learning curve data')
 parser.add_argument('--path_to_save_plot', type=str, default=None, help='Path to save the plot of the learning curve, if not provided, the plot will be shown instead')
 parser.add_argument('--add_trig_features', nargs="*", choices=['sin_2pi', 'cos_2pi', 'sin_400', 'cos_400'], default=[], help='Whether to add trigonometric features based on the epoch number, choose from: sin_2pi, cos_2pi, sin_400, cos_400')
 parser.add_argument('--add_inverse_feature', default=False, action='store_true', help='Whether to add the inverse feature 1 - 1/epoch')

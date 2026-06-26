@@ -9,8 +9,8 @@ from tabpfn_predicting_learning_curves.utils.log_runs_to_tensors import extract_
 parser = argparse.ArgumentParser(description="Run an experiment on multiple learning curves with TabPFNRegressor.")
 parser.add_argument("--log_dir", type=str, default="tabpfn_predicting_learning_curves/MNIST_example_runs", help="Directory containing the log files. If not provided, --log_paths will be used (default is 'tabpfn_predicting_learning_curves/MNIST_example_runs').")
 parser.add_argument("--log_paths", type=str, nargs='+',
-                    default=["tabpfn_predicting_learning_curves/MNIST_example_runs/mnist_training_diploma.py-2026-04-17_130608-at=mlp,bs=256,cs=,d=cosine,e=100,hls=32,lr=0.001,lrf=0.0005,m=0.005,o=SGD,r=False,s=42,t=1,i=2/logs.txt",
-                             "tabpfn_predicting_learning_curves/MNIST_example_runs/mnist_training_diploma.py-2026-04-17_130608-at=cnn,bs=1024,cs=conv3x3-BN-relu-conv3x3-BN-relu-linear,d=linear,e=100,hls=32,lr=0.0005,lrf=1e-05,m=0.005,o=SGD,r=False,s=42,t=1,i=9/logs.txt"],
+                    default=["tabpfn_predicting_learning_curves/MNIST_example_runs/at=mlp,bs=256,cs=,d=cosine,e=100,hls=32,lr=0.001,lrf=0.0005,m=0.005,o=SGD,s=42,i=2/logs.txt",
+                             "tabpfn_predicting_learning_curves/MNIST_example_runs/at=cnn,bs=1024,cs=conv3x3-BN-relu-conv3x3-BN-relu-linear,d=linear,e=100,hls=32,lr=0.0005,lrf=1e-05,m=0.005,o=SGD,s=42,i=9/logs.txt"],
                     help="Paths to the log files containing learning curve data for multiple runs. ")
 parser.add_argument("--splitting_epoch", type=int, default=20, help="Epoch at which to split the data into training and testing sets.")
 parser.add_argument("--path_to_save_plot", type=str, default="tabpfn_predicting_learning_curves/plots/mnist_multiple_runs/all_runs.pdf", help="Path to save the plot. If not provided, the plot will be displayed.")
