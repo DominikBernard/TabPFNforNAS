@@ -45,8 +45,7 @@ def run_multiple_splitting_epochs(path_to_save_plot=None):
         "ytick.labelsize": 12,
     })
 
-    # example of how to run the same code for multiple splitting epochs and cumulate the plots
-    log_file_path = "tabpfn_predicting_learning_curves/MNIST_example_runs/run2.txt"
+    log_file_path = "tabpfn_predicting_learning_curves/MNIST_example_runs/mnist_training_diploma.py-2026-04-17_130608-at=cnn,bs=1024,cs=conv3x3-BN-relu-conv3x3-BN-relu-linear,d=linear,e=100,hls=32,lr=0.0005,lrf=1e-05,m=0.005,o=SGD,r=False,s=42,t=1,i=9/logs.txt"
     learning_curve_data = extract_epoch_dev_accuracy(log_file_path, acc_in_percent=True)
     epochs = learning_curve_data[:, 0]
     y = learning_curve_data[:, 1]

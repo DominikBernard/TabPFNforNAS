@@ -9,7 +9,7 @@ from tabpfn_predicting_learning_curves.utils.find_function_opt_params import inv
 
 parser = argparse.ArgumentParser(description="Predict learning curves using TabPFN")
 parser.add_argument('--splitting_epoch', type=int, default=20, help='Epoch at which to split train and test data')
-parser.add_argument('--log_file_path', type=str, default="tabpfn_predicting_learning_curves/MNIST_example_runs/run1.txt", help='Path to the log file containing learning curve data')
+parser.add_argument('--log_file_path', type=str, default="tabpfn_predicting_learning_curves/MNIST_example_runs/mnist_training_diploma.py-2026-04-17_130608-at=mlp,bs=256,cs=,d=cosine,e=100,hls=32,lr=0.001,lrf=0.0005,m=0.005,o=SGD,r=False,s=42,t=1,i=2/logs.txt", help='Path to the log file containing learning curve data')
 parser.add_argument('--path_to_save_plot', type=str, default=None, help='Path to save the plot of the learning curve, if not provided, the plot will be shown instead')
 parser.add_argument('--add_trig_features', nargs="*", choices=['sin_2pi', 'cos_2pi', 'sin_400', 'cos_400'], default=[], help='Whether to add trigonometric features based on the epoch number, choose from: sin_2pi, cos_2pi, sin_400, cos_400')
 parser.add_argument('--add_inverse_feature', default=False, action='store_true', help='Whether to add the inverse feature 1 - 1/epoch')
@@ -18,9 +18,9 @@ parser.add_argument('--add_log_feature', default=False, action='store_true', hel
 parser.add_argument('--add_optimal_log_feature', default=False, action='store_true', help='Whether to add an optimally parameterized logarithmic function as a feature')
 parser.add_argument('--add_square_feature', default=False, action='store_true', help='Whether to add the square of the epoch as a feature')
 parser.add_argument('--add_seasonality_features', type=int, default=0, help='Whether to add seasonality features based on top k detected seasonalities in the training data (provide k)')
-parser.add_argument('--add_target_noise_feature', default=True, action='store_true', help='Whether to add a feature that is the target value with some noise added')
-parser.add_argument('--add_target_as_feature', default=True, action='store_true', help='Whether to add the target value itself as a feature')
-parser.add_argument('--run_multiple_added_features', default=True, action='store_true', help='Whether to run multiple experiments with different combinations of added features and cumulate the plots')
+parser.add_argument('--add_target_noise_feature', default=False, action='store_true', help='Whether to add a feature that is the target value with some noise added')
+parser.add_argument('--add_target_as_feature', default=False, action='store_true', help='Whether to add the target value itself as a feature')
+parser.add_argument('--run_multiple_added_features', default=False, action='store_true', help='Whether to run multiple experiments with different combinations of added features and cumulate the plots')
 parser.add_argument('--output_text_file', type=str, default=None, help='Path to save the textual output of the experiment results (MSE values), if not provided, results will be printed to console')
 
 # feature engineering functions
