@@ -77,4 +77,23 @@ def download_data_if_not_exists(datafile: str, url: str = 'https://drive.google.
         # download them from google drive
         gdown.download(url, datafile, quiet=False)
 
+def load_predictions_file(file_path):
+    """Load a file and return its contents as two numpy arrays (vectors -- indices and predictions)."""
 
+    # check if the file exists
+    if not os.path.isfile(file_path):
+        raise ValueError(f"File does not exist: {file_path}")
+    # load the file and return the contents as two numpy arrays
+    data = np.loadtxt(file_path, delimiter=",", skiprows=1)
+    indices = data[:, 0].astype(np.int64)
+    predictions = data[:, 1]
+    return indices, predictions
+
+def get_true_labels(indices, data):
+    """Get the true labels for the given indices from the data."""
+    true_labels = []
+    for i in indices:
+        arch_data = data[int(i)]
+        true_label = arch_data["testacc"]
+        true_labels.append(true_label)
+    return np.array(true_labels)

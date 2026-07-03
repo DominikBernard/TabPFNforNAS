@@ -51,24 +51,55 @@ def verbose_meta_info(args: argparse.Namespace):
                     print(f"  {arg}: {value}")
         print()
 
+def plot_one_scatter_plot(x, y, xlabel, ylabel, title, ax=None, output_file=None):
+    """Plot a scatter plot of x vs y."""
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(7, 7))
+    ax.scatter(x, y, alpha=0.5)
+    ax.set_xlim(0, 100)
+    ax.set_ylim(0, 100)
+    ax.plot([0, 100], [0, 100], 'r--')
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    ax.set_title(title)
+
+    if output_file is not None:
+        plt.savefig(output_file)
+
 
 def plot_predictions_vs_true(test_labels, preds, logdir = None):
+
+    output_file = os.path.join(logdir, "true_vs_pred.png") if logdir is not None else None
     # plot the results
-    plt.figure(figsize=(7, 7))
-    plt.scatter(test_labels, preds, alpha=0.5)
-
-    # set x and y limits to 0-100
-    plt.xlim(0, 100)
-    plt.ylim(0, 100)
-    # add the y=x line
-    plt.plot([0, 100], [0, 100], 'r--')
-
-    plt.xlabel("True Labels")
-    plt.ylabel("Predictions")
-    plt.title("True Labels vs Predictions")
+    plot_one_scatter_plot(test_labels, preds, xlabel="True Labels", ylabel="Predictions", title="True Labels vs Predictions", output_file=output_file)
     
-    # save the figure or show it
-    if logdir is not None:
-        plt.savefig(os.path.join(logdir, "true_vs_pred.png"))
+    # show the figure if not saved to file
+    if logdir is None:
+        plt.show()
+
+
+def plot_two_predictions_vs_true(test_labels_1, test_labels_2, preds1, preds2, title1="Predikce 1", title2="Predikce 2", path_to_save=None):
+    # plot the results next to each other
+    fig, axs = plt.subplots(1, 2, figsize=(10, 5))
+
+    plot_one_scatter_plot(test_labels_1, preds1, xlabel="Skutečné hodnoty", ylabel="Predikce", title=title1, ax=axs[0])
+
+    plot_one_scatter_plot(test_labels_2, preds2, xlabel="Skutečné hodnoty", ylabel="Predikce", title=title2, ax=axs[1])
+    axs[1].set_ylabel("")
+
+    # set number of ticks on x and y axis to 10
+    axs[0].set_xticks(range(0, 101, 10))
+    axs[0].set_yticks(range(0, 101, 10))
+    axs[1].set_xticks(range(0, 101, 10))
+    axs[1].set_yticks(range(0, 101, 10))
+
+    plt.tight_layout()
+
+    if path_to_save is not None:
+        plt.savefig(path_to_save)
     else:
         plt.show()
+
+
+
+
