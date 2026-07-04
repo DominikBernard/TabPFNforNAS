@@ -1,73 +1,64 @@
-import numpy as np
 import os
+from collections import defaultdict
+import argparse
+
 import tabpfn_with_nats_bench.utils.get_important_lines as gil
+from tabpfn_with_nats_bench.utils.results_utils import plot_bar_plot, sort_and_print_results, format_zero_cost_combination_name, fill_metric_tables_from_logs
 
-root_dir = "tabpfn_with_nats_bench/logs/zero_cost_combination/seed_42_su"
+parser = argparse.ArgumentParser(description="Analyze results from multiple runs of zero-cost combination experiments.")
+parser.add_argument("--root_dir", type=str, default="tabpfn_with_nats_bench/logs/zero_cost_combination/skipUnconnected/seed_42", help="Root directory containing experiment logs.")
+parser.add_argument("--plot", action="store_true", default=False, help="Whether to plot the results.")
+parser.add_argument("--multiple_seeds", action="store_true", default=False,
+                    help="Whether the root_dir contains multiple seeds (subdirectories). If not, it is assumed that the root_dir contains folders with each combination of zero-cost features directly.")
 
-zero_cost_features = ['f', 'g_n', 'g', 'j_c', 'p', 's', 'sy', 'sy_bn']
-zero_cost_features_names = {
-    'f': 'Fisher',
-    'g_n': 'GradNorm',
-    'g': 'Grasp',
-    'j_c': 'JacobCov',
-    'p': 'Plain',
-    's': 'SNIP',
-    'sy': 'Synflow',
-    'sy_bn': 'SynflowBN'
-}
 
-mse_table = np.zeros([2 for _ in range(len(zero_cost_features))])
-spearman_table = np.zeros([2 for _ in range(len(zero_cost_features))])
-kendall_table = np.zeros([2 for _ in range(len(zero_cost_features))])
-
-for subdir in os.listdir(root_dir):
-    folder_path = os.path.join(root_dir, subdir)
-    log_path = os.path.join(folder_path, "logs.txt")
-
-    if not os.path.isdir(folder_path) or not os.path.isfile(log_path):
-        raise ValueError(f"Expected directory with logs.txt: {folder_path}")
-
-    with open(log_path, "r", encoding="utf-8") as f:
-        log_content = f.read()
-
-    # find used zero-cost features
+def zcf_key_extractor_func(log_content):
+    """Extract the zero-cost combination key from the log content."""
     zcf_list = gil.find_zero_cost_features(log_content)
-    mse_table_idx = tuple(1 if feat in zcf_list else 0 for feat in zero_cost_features)
+    return tuple(sorted(zcf_list))  # Sort to ensure consistent ordering
 
-    # find mean squared error
-    mse_value = gil.find_mse(log_content)
-    mse_table[mse_table_idx] = mse_value
+def single_seed_paths(root_dir):
+    """Get all log paths from a single seed directory."""
+    log_paths = []
+    for subdir in os.listdir(root_dir):
+        folder_path = os.path.join(root_dir, subdir)
+        if os.path.isdir(folder_path):
+            log_path = os.path.join(folder_path, "logs.txt")
+            if os.path.isfile(log_path):
+                log_paths.append(log_path)
+    return log_paths
 
-    # find spearman's rank correlation coefficient
-    spearman_value = gil.find_spearman(log_content)
-    spearman_table[mse_table_idx] = spearman_value
+def multiple_seed_paths(root_dir):
+    """Get all log paths from multiple seed directories."""
+    log_paths = []
+    for seed_dir in os.listdir(root_dir):
+        seed_path = os.path.join(root_dir, seed_dir)
+        if os.path.isdir(seed_path):
+            log_paths.extend(single_seed_paths(seed_path))
+    return log_paths
 
-    # find kendall's tau
-    kendall_value = gil.find_kendall(log_content)
-    kendall_table[mse_table_idx] = kendall_value
-    
-def sort_and_print_results(metric_table, metric_name, sort_ascending=True):
-    sorted_results = []
-    for idx in np.ndindex(metric_table.shape):
-        zcf_included = [zero_cost_features[i] for i in range(len(zero_cost_features)) if idx[i] == 1]
-        name = ", ".join([zero_cost_features_names[feat] for feat in zcf_included]) if zcf_included else "No Zero-Cost Features"
-        metric_value = metric_table[idx]
-        sorted_results.append((name, metric_value))
-    sorted_results.sort(key=lambda x: x[1], reverse=not sort_ascending)
+if __name__ == "__main__":
+    args = parser.parse_args()
+    root_dir = args.root_dir
 
-    print(f"\n=== {metric_name} Comparison ===")
-    for name, value in sorted_results:
-        print(f"{name}: {value:.6f}")
+    # Collect all log paths from the root directory
+    if args.multiple_seeds:
+        log_paths = multiple_seed_paths(root_dir)
+    else:
+        log_paths = single_seed_paths(root_dir)
 
-    best = sorted_results[0]
-    print(f"\nBest {metric_name}: {best[0]} ({best[1]:.6f})")
-    print()
+    # Fill metric tables from logs
+    mse_table, spearman_table, kendall_table = fill_metric_tables_from_logs(log_paths, zcf_key_extractor_func)
 
-# sort by MSE
-sort_and_print_results(mse_table, "Mean Squared Error")
+    metrics_to_analyze = [
+        ("Mean Squared Error", mse_table, True),
+        ("Spearman's Rank Correlation Coefficient", spearman_table, False),
+        ("Kendall's Tau (rank correlation coefficient)", kendall_table, False)
+    ]
 
-# sort by Spearman's Rank Correlation Coefficient
-sort_and_print_results(spearman_table, "Spearman's Rank Correlation Coefficient", sort_ascending=False)
+    for metric_name, metric_table, sort_ascending in metrics_to_analyze:
+        # sort by the current metric
+        sort_and_print_results(metric_table, metric_name, name_format_func=format_zero_cost_combination_name, sort_ascending=sort_ascending)
+        if args.plot:
+            plot_bar_plot(metric_table, metric_name)
 
-# sort by Kendall's Tau
-sort_and_print_results(kendall_table, "Kendall's Tau (rank correlation coefficient)", sort_ascending=False)
