@@ -117,6 +117,26 @@ def plot_two_predictions_vs_true(test_labels_1, test_labels_2, preds1, preds2, t
         plt.show()
 
 
+def get_single_seed_paths_to_logs(root_dir):
+    """Get all log paths from a single seed directory."""
+    log_paths = []
+    for subdir in os.listdir(root_dir):
+        folder_path = os.path.join(root_dir, subdir)
+        if os.path.isdir(folder_path):
+            log_path = os.path.join(folder_path, "logs.txt")
+            if os.path.isfile(log_path):
+                log_paths.append(log_path)
+    return log_paths
+
+def get_multiple_seed_paths_to_logs(root_dir):
+    """Get all log paths from multiple seed directories."""
+    log_paths = []
+    for seed_dir in os.listdir(root_dir):
+        seed_path = os.path.join(root_dir, seed_dir)
+        if os.path.isdir(seed_path):
+            log_paths.extend(get_single_seed_paths_to_logs(seed_path))
+    return log_paths
+
 def extract_key_and_metrics_from_log(log_path: str, key_extractor_func: callable):
     """Extract metrics from a log file using a key extractor function."""
     if not os.path.isfile(log_path):

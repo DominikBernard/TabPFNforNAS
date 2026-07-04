@@ -3,7 +3,7 @@ from collections import defaultdict
 import argparse
 
 import tabpfn_with_nats_bench.utils.get_important_lines as gil
-from tabpfn_with_nats_bench.utils.results_utils import plot_bar_plot, sort_and_print_results, format_zero_cost_combination_name, fill_metric_tables_from_logs
+from tabpfn_with_nats_bench.utils.results_utils import plot_bar_plot, sort_and_print_results, format_zero_cost_combination_name, fill_metric_tables_from_logs, get_single_seed_paths_to_logs, get_multiple_seed_paths_to_logs
 
 parser = argparse.ArgumentParser(description="Analyze results from multiple runs of zero-cost combination experiments.")
 parser.add_argument("--root_dir", type=str, default="tabpfn_with_nats_bench/logs/zero_cost_combination/skipUnconnected/seed_42", help="Root directory containing experiment logs.")
@@ -17,35 +17,15 @@ def zcf_key_extractor_func(log_content):
     zcf_list = gil.find_zero_cost_features(log_content)
     return tuple(sorted(zcf_list))  # Sort to ensure consistent ordering
 
-def single_seed_paths(root_dir):
-    """Get all log paths from a single seed directory."""
-    log_paths = []
-    for subdir in os.listdir(root_dir):
-        folder_path = os.path.join(root_dir, subdir)
-        if os.path.isdir(folder_path):
-            log_path = os.path.join(folder_path, "logs.txt")
-            if os.path.isfile(log_path):
-                log_paths.append(log_path)
-    return log_paths
-
-def multiple_seed_paths(root_dir):
-    """Get all log paths from multiple seed directories."""
-    log_paths = []
-    for seed_dir in os.listdir(root_dir):
-        seed_path = os.path.join(root_dir, seed_dir)
-        if os.path.isdir(seed_path):
-            log_paths.extend(single_seed_paths(seed_path))
-    return log_paths
-
 if __name__ == "__main__":
     args = parser.parse_args()
     root_dir = args.root_dir
 
     # Collect all log paths from the root directory
     if args.multiple_seeds:
-        log_paths = multiple_seed_paths(root_dir)
+        log_paths = get_multiple_seed_paths_to_logs(root_dir)
     else:
-        log_paths = single_seed_paths(root_dir)
+        log_paths = get_single_seed_paths_to_logs(root_dir)
 
     # Fill metric tables from logs
     mse_table, spearman_table, kendall_table = fill_metric_tables_from_logs(log_paths, zcf_key_extractor_func)
