@@ -1,9 +1,11 @@
 import argparse
 import os
 import datetime
+import numpy as np
 import regex as re
 import __main__
 import matplotlib.pyplot as plt
+from scipy.special import comb
 
 
 
@@ -100,6 +102,52 @@ def plot_two_predictions_vs_true(test_labels_1, test_labels_2, preds1, preds2, t
     else:
         plt.show()
 
+def plot_binomial_groups(data, color='royalblue', title="Bars Grouped by Binomial Coefficients"):
+    """
+    Plots a dense bar chart grouped by n-choose-k combinations.
+    Automatically detects 'n' based on the length of the data (len(data) must be a power of 2).
+    """
+    data = np.asarray(data)
 
+    # Dynamically find 'n'. For 256 data points, n will be 8.
+    n = int(np.log2(len(data)))
 
+    # Safety check to ensure the data length is exactly 2^n
+    if len(data) != 2**n:
+        raise ValueError(f"Data length must be a power of 2. You provided {len(data)} items.")
+    
+    # Setup the plot
+    fig, ax = plt.subplots(figsize=(15, 4))
+    x = np.arange(len(data))
 
+    # Plot the bars
+    ax.bar(x, data, width=1.0, edgecolor='none', color=color, alpha=0.8)
+
+    # Calculate segment lengths using scipy instead of math
+    k_values = np.arange(n + 1)
+    segment_lengths = [comb(n, k, exact=True) for k in k_values]
+
+    # Calculate exact boundaries and centers
+    edges = np.insert(np.cumsum(segment_lengths), 0, 0) - 0.5
+    tick_positions = []
+    for i in range(len(segment_lengths)):
+        center = edges[i] + (segment_lengths[i] / 2.0)
+        tick_positions.append(center)
+
+    # Apply ticks and labels
+    ax.set_xticks(tick_positions)
+    ax.set_xticklabels([str(k) for k in k_values])
+
+    # Draw vertical dividing lines
+    for edge in edges[1:-1]:
+        ax.axvline(x=edge, color='black', linestyle=':', alpha=0.4)
+
+    # Clean up aesthetics
+    ax.set_xlim(-0.5, len(data) - 0.5)
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+
+    plt.title(title, pad=15)
+    plt.tight_layout()
+
+    return fig, ax
