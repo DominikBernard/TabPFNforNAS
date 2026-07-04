@@ -11,3 +11,5 @@ tarkill_out/
 tabpfn_with_nats_bench/pred_split_test_experiment.py
 tabpfn_predicting_learning_curves/tabpfn_on_nats_bench/pred_one_from_multiple.py
 tabpfn_predicting_learning_curves/plots/
+tabpfn_with_nats_bench/analysis/analise_grid_specific_cf_with_skipped_unconnected_after_pred.py
+tabpfn_with_nats_bench/plots/
