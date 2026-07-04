@@ -1,44 +1,34 @@
 import itertools
-import subprocess
-import os
-import sys
+import tqdm
+import argparse
 
-# hyperparameter grids
+from tabpfn_with_nats_bench.utils.experiment_utils import run_experiment
 
-train_size = 1000
-seed = 42
-skip_unconnected = True
-zero_cost_features = ['f', 'g_n', 'g', 'j_c', 'p', 's', 'sy', 'sy_bn']
+parser = argparse.ArgumentParser(description="Run experiments with different combinations of zero-cost features.")
+parser.add_argument("--train_size", type=int, default=1000, help="Number of training samples.")
+parser.add_argument("--seeds", type=int, nargs='+', default=[42, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300], help="List of random seeds.")
+parser.add_argument("--skip_unconnected", default=True, action='store_true', help="Whether to skip unconnected architectures.")
+parser.add_argument("--zero_cost_features", type=str, nargs='+', default=['f', 'g_n', 'g', 'j_c', 'p', 's', 'sy', 'sy_bn'], help="List of zero-cost features to consider.")
 
-script = "tabpfn_with_nats_bench/pred_from_archs_with_zero_cost_and_train_acc.py"
+if __name__ == "__main__":
+    args = parser.parse_args()
 
-# path to the current Python (from venv if activated)
-python_exec = sys.executable
+    feature_sets = []
+    for r in range(len(args.zero_cost_features) + 1):
+        for combo in itertools.combinations(args.zero_cost_features, r):
+            feature_sets.append(list(combo))
 
-# generate all combinations of zero_cost_features
-feature_sets = []
-for r in range(len(zero_cost_features) + 1):
-    for combo in itertools.combinations(zero_cost_features, r):
-        feature_sets.append(list(combo))
+    su_path = "skipUnconnected" if args.skip_unconnected else "NoSkipUnconnected"
 
-# iterate over all combinations
-for zcf in feature_sets:
-    cmd = [python_exec, script, f"--train_size={train_size}"]
-    cmd.append(f"--seed={seed}")
-    _su = ""
-    if skip_unconnected:
-        cmd.append(f"--skip_unconnected")
-        _su = "_su"
-    cmd.append(f"--zero_cost_features")
-    cmd.extend(zcf)
-
-    cmd.append(f"--logdir=tabpfn_with_nats_bench/logs/zero_cost_combination/seed_{seed}{_su}/{'-'.join(zcf) if zcf else 'noZC'}")
-    cmd.append("--verbose")
-
-    print("Running:", " ".join(cmd))
-
-    logname = f"tabpfn_with_nats_bench/logs/zero_cost_combination/seed_{seed}{_su}/{'-'.join(zcf) if zcf else 'noZC'}/logs.txt"
-    os.makedirs(os.path.dirname(logname), exist_ok=True)
-    with open(logname, "w") as f:
-        subprocess.run(cmd, stdout=f, stderr=subprocess.STDOUT, check=False)
+    for seed in args.seeds:
+        print(f"Running for seed {seed}...")
+        for zcf in tqdm.tqdm(feature_sets):
+            logdir = f"tabpfn_with_nats_bench/logs/zero_cost_combination/{su_path}/seed_{seed}/{'-'.join(zcf) if zcf else 'noZC'}"
+            run_experiment(
+                logdir=logdir,
+                train_size=args.train_size,
+                seed=seed,
+                skip_unconnected=args.skip_unconnected,
+                zero_cost_features=zcf
+            )
 
