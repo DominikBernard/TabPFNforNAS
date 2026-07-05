@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 
 
-from tabpfn_predicting_learning_curves.utils.log_runs_to_tensors import extract_logs_from_subdirectories, create_tensors_from_logs
+from tabpfn_learning_curves.utils.log_runs_to_tensors import extract_logs_from_subdirectories, create_tensors_from_logs
 
 sorted_strings = [
     "at=mlp,bs=64",
@@ -17,7 +17,7 @@ sorted_strings = [
 ]
 
 # get the data from the log files
-path_to_logs = "tabpfn_predicting_learning_curves/MNIST_example_runs"
+path_to_logs = "tabpfn_learning_curves/MNIST_example_runs"
 log_names = extract_logs_from_subdirectories(path_to_logs)
 
 # sort the subdirectories according to the string contained in sorted_strings
@@ -40,6 +40,6 @@ plt.grid()
 plt.tight_layout()
 
 plt.show()
-# plt.savefig(f"tabpfn_predicting_learning_curves/plots/mnist_multiple_runs/ucici_krivky.pdf", dpi=300)
+# plt.savefig(f"tabpfn_learning_curves/plots/mnist_multiple_runs/ucici_krivky.pdf", dpi=300)
 plt.close()
 

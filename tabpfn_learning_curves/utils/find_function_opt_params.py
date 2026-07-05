@@ -50,9 +50,9 @@ if __name__ == "__main__":
 
     # data
 
-    from tabpfn_predicting_learning_curves.utils.tensor_extractor import extract_epoch_dev_accuracy
+    from tabpfn_learning_curves.utils.tensor_extractor import extract_epoch_dev_accuracy
     # Extract learning curve data from log file
-    log_file_path = "tabpfn_predicting_learning_curves/MNIST_example_runs/at=cnn,bs=1024,cs=conv3x3-BN-relu-conv3x3-BN-relu-linear,d=linear,e=100,hls=32,lr=0.0005,lrf=1e-05,m=0.005,o=SGD,s=42,i=9/logs.txt"
+    log_file_path = "tabpfn_learning_curves/MNIST_example_runs/at=cnn,bs=1024,cs=conv3x3-BN-relu-conv3x3-BN-relu-linear,d=linear,e=100,hls=32,lr=0.0005,lrf=1e-05,m=0.005,o=SGD,s=42,i=9/logs.txt"
     learning_curve_data = extract_epoch_dev_accuracy(log_file_path, acc_in_percent=True)
     epochs = learning_curve_data[:, 0]
     scores = learning_curve_data[:, 1]

@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from tabpfn import TabPFNRegressor
 
-from tabpfn_predicting_learning_curves.utils.tensor_extractor import extract_epoch_dev_accuracy
+from tabpfn_learning_curves.utils.tensor_extractor import extract_epoch_dev_accuracy
 
 def cumulate_plots_for_different_splitting_epochs(epochs, y, y_pred, splitting_epoch, path_to_save=None):
     height = 3
@@ -45,7 +45,7 @@ def run_multiple_splitting_epochs(path_to_save_plot=None):
         "ytick.labelsize": 12,
     })
 
-    log_file_path = "tabpfn_predicting_learning_curves/MNIST_example_runs/at=cnn,bs=1024,cs=conv3x3-BN-relu-conv3x3-BN-relu-linear,d=linear,e=100,hls=32,lr=0.0005,lrf=1e-05,m=0.005,o=SGD,s=42,i=9/logs.txt"
+    log_file_path = "tabpfn_learning_curves/MNIST_example_runs/at=cnn,bs=1024,cs=conv3x3-BN-relu-conv3x3-BN-relu-linear,d=linear,e=100,hls=32,lr=0.0005,lrf=1e-05,m=0.005,o=SGD,s=42,i=9/logs.txt"
     learning_curve_data = extract_epoch_dev_accuracy(log_file_path, acc_in_percent=True)
     epochs = learning_curve_data[:, 0]
     y = learning_curve_data[:, 1]
@@ -65,6 +65,6 @@ def run_multiple_splitting_epochs(path_to_save_plot=None):
     cumulate_plots_for_different_splitting_epochs(epochs, y, y_preds, splitting_epochs, path_to_save=path_to_save_plot)
 
 if __name__ == "__main__":
-    run_multiple_splitting_epochs(path_to_save_plot="tabpfn_predicting_learning_curves/plots/no_features/multiple_splitting_epochs2.pdf")
+    run_multiple_splitting_epochs(path_to_save_plot="tabpfn_learning_curves/plots/no_features/multiple_splitting_epochs2.pdf")
 
 

@@ -1,5 +1,5 @@
 import numpy as np
-from tabpfn_predicting_learning_curves.utils.tensor_extractor import extract_epoch_dev_accuracy
+from tabpfn_learning_curves.utils.tensor_extractor import extract_epoch_dev_accuracy
 import os
 
 def extract_logs_from_subdirectories(directory: str) -> list[str]:
@@ -37,7 +37,7 @@ def create_tensors_from_logs(log_files: list[str], acc_in_percent: bool = False)
     return tensors
 
 if __name__ == "__main__":
-    main_directory = "tabpfn_predicting_learning_curves/MNIST_example_runs"
+    main_directory = "tabpfn_learning_curves/MNIST_example_runs"
     log_files = extract_logs_from_subdirectories(main_directory)
     tensors = create_tensors_from_logs(log_files)
     

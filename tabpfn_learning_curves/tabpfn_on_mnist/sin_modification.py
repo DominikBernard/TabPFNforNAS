@@ -1,10 +1,10 @@
 import argparse
 import numpy as np
 
-from tabpfn_predicting_learning_curves.utils.mnist_pipeline import load_learning_curve_data, split_data_compute_predictions_and_metrics, plot_dual_learning_curves, SCALING_FACTOR
+from tabpfn_learning_curves.utils.mnist_pipeline import load_learning_curve_data, split_data_compute_predictions_and_metrics, plot_dual_learning_curves, SCALING_FACTOR
 
 parser = argparse.ArgumentParser(description="Run a single experiment for predicting learning curves with sin modification method using TabPFNRegressor.")
-parser.add_argument("--log_file_path", type=str, default="tabpfn_predicting_learning_curves/MNIST_example_runs/at=mlp,bs=256,cs=,d=cosine,e=100,hls=32,lr=0.001,lrf=0.0005,m=0.005,o=SGD,s=42,i=2/logs.txt", help="Path to the log file containing learning curve data.")
+parser.add_argument("--log_file_path", type=str, default="tabpfn_learning_curves/MNIST_example_runs/at=mlp,bs=256,cs=,d=cosine,e=100,hls=32,lr=0.001,lrf=0.0005,m=0.005,o=SGD,s=42,i=2/logs.txt", help="Path to the log file containing learning curve data.")
 parser.add_argument("--splitting_epoch", type=int, default=20, help="Epoch at which to split the data into training and testing sets.")
 parser.add_argument("--sine_period", type=float, default=6*np.pi, help="Period for the sine transformation applied to the learning curve data.")
 parser.add_argument("--path_to_save", type=str, default=None, help="Path to save the plot. If not provided, the plot will be displayed.")
