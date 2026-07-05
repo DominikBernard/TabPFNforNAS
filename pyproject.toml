@@ -11,4 +11,4 @@ requires-python = ">=3.9"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["tabpfn_final_accuracy*", "tabpfn_learning_curves*", "rl_with_atbpfn*"]
+include = ["tabpfn_final_accuracy*", "tabpfn_learning_curves*"]
