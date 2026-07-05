@@ -10,7 +10,7 @@ import tabpfn_learning_curves.utils.load_prepare_plot as lpp
 parser = argparse.ArgumentParser(description="Predict learning curves using TabPFN on NATS-Bench data.")
 parser.add_argument("--splitting_epoch", type=int, default=20, help="Epoch at which to split the target data into train and test sets.")
 parser.add_argument("--seed", type=int, default=42, help="Random seed for reproducibility.")
-parser.add_argument("--datapath", type=str, default="tabpfn_with_nats_bench/data/merged_data.json", help="Path to the JSON file containing the data.")
+parser.add_argument("--datapath", type=str, default="tabpfn_final_accuracy/data/merged_data.json", help="Path to the JSON file containing the data.")
 
 def load_arch_data(data: dict, arch_idx: int) -> np.ndarray:
     """Load architecture data and prepare features and labels.

@@ -2,13 +2,13 @@ import os
 import sys
 import subprocess
 
-def run_experiment(logdir: str, script: str="tabpfn_with_nats_bench/pred_from_archs_with_zero_cost_and_train_acc.py", inform_about_progress: bool=True, **kwargs):
+def run_experiment(logdir: str, script: str="tabpfn_final_accuracy/pred_from_archs_with_zero_cost_and_train_acc.py", inform_about_progress: bool=True, **kwargs):
     """
     Run a Python script with specified arguments and log the output.
 
     Args:
         logdir: Directory where logs will be saved.
-        script: Path to the Python script to run, default is "tabpfn_with_nats_bench/pred_from_archs_with_zero_cost_and_train_acc.py".
+        script: Path to the Python script to run, default is "tabpfn_final_accuracy/pred_from_archs_with_zero_cost_and_train_acc.py".
         inform_about_progress: Whether to print progress information.
         kwargs: Additional command-line arguments to pass to the script.
                 Boolean arguments should be passed as True/False flags,

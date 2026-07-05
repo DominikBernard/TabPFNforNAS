@@ -3,9 +3,9 @@ import numpy as np
 import tabpfn
 import json
 
-from tabpfn_with_nats_bench.utils.dataloader import skip_unconnected_archs_using_data
-from tabpfn_with_nats_bench.utils.arch_features import get_features_and_label
-from tabpfn_with_nats_bench.utils.results_utils import verbose_meta_info, plot_predictions_vs_true
+from tabpfn_final_accuracy.utils.dataloader import skip_unconnected_archs_using_data
+from tabpfn_final_accuracy.utils.arch_features import get_features_and_label
+from tabpfn_final_accuracy.utils.results_utils import verbose_meta_info, plot_predictions_vs_true
 
 parser = argparse.ArgumentParser(description='Get predictions from tabpfn')
 
@@ -21,7 +21,7 @@ parser.add_argument('--zero_cost_features',
                     help='Zero-cost features to include, choose from: f (fisher), g_n (grad_norm), g (grasp), j_c (jacob_cov), p (plain), s (snip), sy (synflow), sy_bn (synflow_bn)') 
 parser.add_argument('--epochs_n_features', type=int, default=0, help='Include first n training accuracies as features')
 parser.add_argument('--skip_unconnected', action='store_true', default=True, help='Skip unconnected architectures')
-parser.add_argument('--datafile', type=str, default='tabpfn_with_nats_bench/data/merged_data.json', help='Path to the JSON file containing architecture data')
+parser.add_argument('--datafile', type=str, default='tabpfn_final_accuracy/data/merged_data.json', help='Path to the JSON file containing architecture data')
 parser.add_argument('--verbose', action='store_true', default=True, help='Enable verbose output')
 
 

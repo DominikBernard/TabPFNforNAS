@@ -8,7 +8,7 @@ for i in range(15625):
     d[arch_str] = i
 
 # with indent = 4
-with open("tabpfn_with_nats_bench/data/arch_str_to_index.json", "w") as f:
+with open("tabpfn_final_accuracy/data/arch_str_to_index.json", "w") as f:
     json.dump(d, f, indent=4)
 
 

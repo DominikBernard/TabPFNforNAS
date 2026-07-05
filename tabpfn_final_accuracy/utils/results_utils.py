@@ -9,7 +9,7 @@ from scipy.special import comb
 import itertools
 from collections import defaultdict
 
-import tabpfn_with_nats_bench.utils.get_important_lines as gil
+import tabpfn_final_accuracy.utils.get_important_lines as gil
 
 # default names for zero-cost features
 ZERO_COST_FEATURES_NAMES = {
@@ -26,9 +26,9 @@ ZERO_COST_FEATURES_NAMES = {
 def change_logdir_if_default(main_args: argparse.Namespace):
     """Change logdir if it is the default value."""
     # check if logdir is default
-    if main_args.logdir == 'tabpfn_with_nats_bench/logs':
+    if main_args.logdir == 'tabpfn_final_accuracy/logs':
         # Create logdir name.
-        main_args.logdir = os.path.join("tabpfn_with_nats_bench/logs", "{}-{}-{}".format(
+        main_args.logdir = os.path.join("tabpfn_final_accuracy/logs", "{}-{}-{}".format(
             os.path.basename(__main__.__file__),
             datetime.datetime.now().strftime("%Y-%m-%d_%H%M%S"),
             ",".join(("{}={}".format(re.sub("(.)[^_]*_?", r"\1", k), v) for k, v in sorted(vars(main_args).items())))
@@ -304,6 +304,6 @@ def plot_bar_plot(metric_table, metric_name):
     ax.tick_params(axis='x', labelsize=14)
     ax.tick_params(axis='y', labelsize=14)
 
-    plt.savefig(f"tabpfn_with_nats_bench/plots/{metric_name.replace(' ', '_')}_bar_plot.pdf", dpi=300, bbox_inches='tight')
+    plt.savefig(f"tabpfn_final_accuracy/plots/{metric_name.replace(' ', '_')}_bar_plot.pdf", dpi=300, bbox_inches='tight')
 
 

@@ -10,7 +10,7 @@ parser.add_argument("--train_size", type=int, default=10, help="Number of traini
 parser.add_argument("--test_size", type=int, default=200, help="Number of test examples.")
 parser.add_argument("--test_splitting_epoch", type=int, default=20, help="Epoch at which to split the target data into train and test sets.")
 parser.add_argument("--seed", type=int, default=42, help="Random seed for reproducibility.")
-parser.add_argument("--datapath", type=str, default="tabpfn_with_nats_bench/data/merged_data.json", help="Path to the JSON file containing the data.")
+parser.add_argument("--datapath", type=str, default="tabpfn_final_accuracy/data/merged_data.json", help="Path to the JSON file containing the data.")
 parser.add_argument("--path_to_dir_to_save_results", type=str, default="tabpfn_learning_curves/logs/results/", help="Path to save the results. If not provided, the results will be displayed.")
 parser.add_argument("--sort_indices", default=True, action='store_true', help="Whether to sort the indices based on the test accuracy at the splitting epoch.")
 

@@ -4,7 +4,7 @@
 import itertools
 import argparse
 
-from tabpfn_with_nats_bench.utils.experiment_utils import run_experiment
+from tabpfn_final_accuracy.utils.experiment_utils import run_experiment
 
 
 parser = argparse.ArgumentParser(description="Run multiple experiments with different hyperparameters.")
@@ -35,7 +35,7 @@ if __name__ == "__main__":
         zcf_bool = "withZC" if zcf else "noZC"
         su_bool = "skipUnconnected" if su else "noSkipUnconnected"
 
-        logdir = f"tabpfn_with_nats_bench/logs/grid_search_results/seed_{s}/train-{ts}_cf-{cf}_aif-{aif}_ef-{ef}_{zcf_bool}_{su_bool}_enf-{enf}"
+        logdir = f"tabpfn_final_accuracy/logs/grid_search_results/seed_{s}/train-{ts}_cf-{cf}_aif-{aif}_ef-{ef}_{zcf_bool}_{su_bool}_enf-{enf}"
 
         run_experiment(
             logdir=logdir,

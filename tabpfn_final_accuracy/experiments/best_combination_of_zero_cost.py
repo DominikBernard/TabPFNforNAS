@@ -2,7 +2,7 @@ import itertools
 import tqdm
 import argparse
 
-from tabpfn_with_nats_bench.utils.experiment_utils import run_experiment
+from tabpfn_final_accuracy.utils.experiment_utils import run_experiment
 
 parser = argparse.ArgumentParser(description="Run experiments with different combinations of zero-cost features.")
 parser.add_argument("--train_size", type=int, default=1000, help="Number of training samples.")
@@ -23,7 +23,7 @@ if __name__ == "__main__":
     for seed in args.seeds:
         print(f"Running for seed {seed}...")
         for zcf in tqdm.tqdm(feature_sets):
-            logdir = f"tabpfn_with_nats_bench/logs/zero_cost_combination/{su_path}/seed_{seed}/{'-'.join(zcf) if zcf else 'noZC'}"
+            logdir = f"tabpfn_final_accuracy/logs/zero_cost_combination/{su_path}/seed_{seed}/{'-'.join(zcf) if zcf else 'noZC'}"
             run_experiment(
                 logdir=logdir,
                 train_size=args.train_size,
