@@ -5,9 +5,9 @@ from typing import Optional
 import os
 import tqdm
 
-from tabpfn_with_nats_bench.utils.dataloader import download_data_if_not_exists
+from tabpfn_final_accuracy.utils.dataloader import download_data_if_not_exists
 
-def load_data(path_to_json: str = "tabpfn_with_nats_bench/data/merged_data.json") -> dict:
+def load_data(path_to_json: str = "tabpfn_final_accuracy/data/merged_data.json") -> dict:
     """
     Load data from a JSON file.
     Args:

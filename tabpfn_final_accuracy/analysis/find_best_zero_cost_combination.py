@@ -2,11 +2,11 @@ import os
 from collections import defaultdict
 import argparse
 
-import tabpfn_with_nats_bench.utils.get_important_lines as gil
-from tabpfn_with_nats_bench.utils.results_utils import plot_bar_plot, sort_and_print_results, format_zero_cost_combination_name, fill_metric_tables_from_logs, get_single_seed_paths_to_logs, get_multiple_seed_paths_to_logs
+import tabpfn_final_accuracy.utils.get_important_lines as gil
+from tabpfn_final_accuracy.utils.results_utils import plot_bar_plot, sort_and_print_results, format_zero_cost_combination_name, fill_metric_tables_from_logs, get_single_seed_paths_to_logs, get_multiple_seed_paths_to_logs
 
 parser = argparse.ArgumentParser(description="Analyze results from multiple runs of zero-cost combination experiments.")
-parser.add_argument("--root_dir", type=str, default="tabpfn_with_nats_bench/logs/zero_cost_combination/skipUnconnected/seed_42", help="Root directory containing experiment logs.")
+parser.add_argument("--root_dir", type=str, default="tabpfn_final_accuracy/logs/zero_cost_combination/skipUnconnected/seed_42", help="Root directory containing experiment logs.")
 parser.add_argument("--plot", action="store_true", default=False, help="Whether to plot the results.")
 parser.add_argument("--multiple_seeds", action="store_true", default=False,
                     help="Whether the root_dir contains multiple seeds (subdirectories). If not, it is assumed that the root_dir contains folders with each combination of zero-cost features directly.")

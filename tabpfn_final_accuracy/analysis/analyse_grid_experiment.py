@@ -1,12 +1,12 @@
 import argparse
 import os
 import numpy as np
-import tabpfn_with_nats_bench.utils.get_important_lines as gil
+import tabpfn_final_accuracy.utils.get_important_lines as gil
 import regex as re
 from collections import defaultdict
 
 parser = argparse.ArgumentParser(description='Analyse grid search experiment results')
-parser.add_argument('--logdir', type=str, default='tabpfn_with_nats_bench/logs/grid_search_results', help='Root directory where the grid search results are stored')
+parser.add_argument('--logdir', type=str, default='tabpfn_final_accuracy/logs/grid_search_results', help='Root directory where the grid search results are stored')
 parser.add_argument('--train_size', type=int, default=1000, help='Size of the training set')
 parser.add_argument('--analyse_connected_feature', action='store_true', default=True, help='Analyse the effect of the connected feature')
 parser.add_argument('--analyse_arch_index_feature', action='store_true', default=True, help='Analyse the effect of the architecture index feature')

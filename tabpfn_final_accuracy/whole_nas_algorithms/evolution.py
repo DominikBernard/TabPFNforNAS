@@ -6,12 +6,12 @@ import argparse
 import warnings
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 
-import tabpfn_with_nats_bench.utils.arch_features as arch_features
+import tabpfn_final_accuracy.utils.arch_features as arch_features
 
 parser = argparse.ArgumentParser(description='Parser parsing arguments for the evolutionary NAS algorithm')
 parser.add_argument('--seed', type=int, default=42, help='Random seed for sampling')
-parser.add_argument('--datafile', type=str, default='tabpfn_with_nats_bench/data/merged_data.json', help='Path to the JSON file containing architecture data')
-parser.add_argument('--arch_str_to_index_dict_file', type=str, default='tabpfn_with_nats_bench/data/arch_str_to_index.json', help='Path to the JSON file containing the architecture string to index mapping')
+parser.add_argument('--datafile', type=str, default='tabpfn_final_accuracy/data/merged_data.json', help='Path to the JSON file containing architecture data')
+parser.add_argument('--arch_str_to_index_dict_file', type=str, default='tabpfn_final_accuracy/data/arch_str_to_index.json', help='Path to the JSON file containing the architecture string to index mapping')
 
 # the individual:
 # arch number, for how long it was trained, final (predicated) accuracy

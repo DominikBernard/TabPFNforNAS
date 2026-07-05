@@ -5,7 +5,7 @@ import nats_bench
 import gdown
 import os
 
-from tabpfn_with_nats_bench.utils.arch_features import get_features_and_label, get_basic_features, is_arch_connected
+from tabpfn_final_accuracy.utils.arch_features import get_features_and_label, get_basic_features, is_arch_connected
 
 
 def create_dataset_from_data(indices_to_choose_from: np.ndarray, args: argparse.Namespace, data: list[dict], test_or_train: Literal["test", "train"] = "train") -> tuple[np.ndarray, np.ndarray, np.ndarray]:

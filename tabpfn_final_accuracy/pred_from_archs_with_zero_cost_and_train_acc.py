@@ -23,9 +23,9 @@ parser.add_argument('--zero_cost_features',
                     help='Zero-cost features to include, choose from: f (fisher), g_n (grad_norm), g (grasp), j_c (jacob_cov), p (plain), s (snip), sy (synflow), sy_bn (synflow_bn)') 
 parser.add_argument('--epochs_n_features', type=int, default=0, help='Include first n training accuracies as features')
 parser.add_argument('--skip_unconnected', action='store_true', default=False, help='Skip unconnected architectures')
-parser.add_argument('--datafile', type=str, default='tabpfn_with_nats_bench/data/merged_data.json', help='Path to the JSON file containing architecture data')
+parser.add_argument('--datafile', type=str, default='tabpfn_final_accuracy/data/merged_data.json', help='Path to the JSON file containing architecture data')
 parser.add_argument('--verbose', action='store_true', default=True, help='Enable verbose output')
-parser.add_argument('--logdir', type=str, default='tabpfn_with_nats_bench/logs', help='Directory to save logs and plots, if default, a timestamped directory will be created')
+parser.add_argument('--logdir', type=str, default='tabpfn_final_accuracy/logs', help='Directory to save logs and plots, if default, a timestamped directory will be created')
 
 
 def main(args: argparse.Namespace):

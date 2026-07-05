@@ -6,7 +6,7 @@ def find_best_n_architecture(data: list[dict], n: int) -> list[tuple[int, float]
     return best_archs
 
 if __name__ == "__main__":
-    with open("tabpfn_with_nats_bench/data/merged_data.json", "r") as f:
+    with open("tabpfn_final_accuracy/data/merged_data.json", "r") as f:
         data = json.load(f)
 
     best_archs = find_best_n_architecture(data, 50)

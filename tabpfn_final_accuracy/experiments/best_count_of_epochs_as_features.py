@@ -1,6 +1,6 @@
 import argparse
 
-from tabpfn_with_nats_bench.utils.experiment_utils import run_experiment
+from tabpfn_final_accuracy.utils.experiment_utils import run_experiment
 
 parser = argparse.ArgumentParser(description="Run experiments to find the best count of epochs as features.")
 parser.add_argument("--train_size", type=int, default=1000, help="Number of training samples.")
@@ -19,7 +19,7 @@ if __name__ == "__main__":
     for seed in args.seeds:
         print(f"Running for seed {seed}...")
         for enf in args.epochs_n_features:
-            logdir = f"tabpfn_with_nats_bench/logs/epochs_n_features/{su}/{zcf}/seed_{seed}/{enf}_epochs"
+            logdir = f"tabpfn_final_accuracy/logs/epochs_n_features/{su}/{zcf}/seed_{seed}/{enf}_epochs"
             run_experiment(
                 logdir=logdir,
                 train_size=args.train_size,

@@ -1,12 +1,12 @@
 import numpy as np
 import os
 import argparse
-from tabpfn_with_nats_bench.utils.results_utils import get_multiple_seed_paths_to_logs, fill_metric_tables_from_logs, sort_and_print_results
-import tabpfn_with_nats_bench.utils.get_important_lines as gil
+from tabpfn_final_accuracy.utils.results_utils import get_multiple_seed_paths_to_logs, fill_metric_tables_from_logs, sort_and_print_results
+import tabpfn_final_accuracy.utils.get_important_lines as gil
 
 
 parser = argparse.ArgumentParser(description="Analyze results from multiple runs of experiments with different numbers of epochs as features.")
-parser.add_argument("--root_dir", type=str, default="tabpfn_with_nats_bench/logs/epochs_n_features/skipUnconnected/withZCF/", help="Root directory containing experiment logs.")
+parser.add_argument("--root_dir", type=str, default="tabpfn_final_accuracy/logs/epochs_n_features/skipUnconnected/withZCF/", help="Root directory containing experiment logs.")
 
 def enf_key_extractor_func(log_content):
     """Extract the epochs_n_features key from the log content."""
