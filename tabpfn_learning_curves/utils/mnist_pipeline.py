@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from tabpfn import TabPFNRegressor
 
-from tabpfn_predicting_learning_curves.utils.tensor_extractor import extract_epoch_dev_accuracy
+from tabpfn_learning_curves.utils.tensor_extractor import extract_epoch_dev_accuracy
 
 # constants
 SCALING_FACTOR = 100  # Scaling factor for features to keep them in a similar range as the target values (accuracy in percent)
@@ -283,7 +283,7 @@ def plot_multi_run_learning_curves_side_by_side(learning_curve_data_list, y_pred
 
 
 if __name__ == "__main__":
-    data_log_file_path = "tabpfn_predicting_learning_curves/MNIST_example_runs/at=mlp,bs=256,cs=,d=cosine,e=100,hls=32,lr=0.001,lrf=0.0005,m=0.005,o=SGD,s=42,i=2/logs.txt"
+    data_log_file_path = "tabpfn_learning_curves/MNIST_example_runs/at=mlp,bs=256,cs=,d=cosine,e=100,hls=32,lr=0.001,lrf=0.0005,m=0.005,o=SGD,s=42,i=2/logs.txt"
     X, y = load_learning_curve_data(data_log_file_path)
     splitting_epoch = 20
     y_pred, mse, last_pred_squared_error = split_data_compute_predictions_and_metrics(X, y, splitting_epoch)

@@ -4,7 +4,7 @@ import argparse
 
 from tabpfn import TabPFNRegressor
 
-import tabpfn_predicting_learning_curves.utils.load_prepare_plot as lpp
+import tabpfn_learning_curves.utils.load_prepare_plot as lpp
 
 
 parser = argparse.ArgumentParser(description="Predict learning curves using TabPFN on NATS-Bench data.")

@@ -3,13 +3,13 @@ import matplotlib.pyplot as plt
 import argparse
 from contextlib import redirect_stdout
 
-from tabpfn_predicting_learning_curves.utils.mnist_pipeline import load_learning_curve_data, split_data_compute_predictions_and_metrics, plot_learning_curve, modify_plotting_parameters, SCALING_FACTOR
-from tabpfn_predicting_learning_curves.utils.top_k_seasonalities import extract_top_k_seasonalities, build_fourier_features
-from tabpfn_predicting_learning_curves.utils.find_function_opt_params import inverse_model, log_model, fit_and_evaluate
+from tabpfn_learning_curves.utils.mnist_pipeline import load_learning_curve_data, split_data_compute_predictions_and_metrics, plot_learning_curve, modify_plotting_parameters, SCALING_FACTOR
+from tabpfn_learning_curves.utils.top_k_seasonalities import extract_top_k_seasonalities, build_fourier_features
+from tabpfn_learning_curves.utils.find_function_opt_params import inverse_model, log_model, fit_and_evaluate
 
 parser = argparse.ArgumentParser(description="Predict learning curves using TabPFN")
 parser.add_argument('--splitting_epoch', type=int, default=20, help='Epoch at which to split train and test data')
-parser.add_argument('--log_file_path', type=str, default="tabpfn_predicting_learning_curves/MNIST_example_runs/at=mlp,bs=256,cs=,d=cosine,e=100,hls=32,lr=0.001,lrf=0.0005,m=0.005,o=SGD,s=42,i=2/logs.txt", help='Path to the log file containing learning curve data')
+parser.add_argument('--log_file_path', type=str, default="tabpfn_learning_curves/MNIST_example_runs/at=mlp,bs=256,cs=,d=cosine,e=100,hls=32,lr=0.001,lrf=0.0005,m=0.005,o=SGD,s=42,i=2/logs.txt", help='Path to the log file containing learning curve data')
 parser.add_argument('--path_to_save_plot', type=str, default=None, help='Path to save the plot of the learning curve, if not provided, the plot will be shown instead')
 parser.add_argument('--add_trig_features', nargs="*", choices=['sin_2pi', 'cos_2pi', 'sin_400', 'cos_400'], default=[], help='Whether to add trigonometric features based on the epoch number, choose from: sin_2pi, cos_2pi, sin_400, cos_400')
 parser.add_argument('--add_inverse_feature', default=False, action='store_true', help='Whether to add the inverse feature 1 - 1/epoch')

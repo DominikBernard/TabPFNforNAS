@@ -25,7 +25,7 @@ pip install --no-cache-dir --extra-index-url=https://download.pytorch.org/whl/cu
 pip install --no-cache-dir -r requirements.txt
 pip install -e .
 
-python3 tabpfn_predicting_learning_curves/tabpfn_on_nats_bench/pred_from_multiple_runs.py
+python3 tabpfn_learning_curves/tabpfn_on_nats_bench/pred_from_multiple_runs.py
 
 # copy results from folder results to permanent storage
-cp -r ./tabpfn_predicting_learning_curves/logs/* $DATADIR/tabpfn_predicting_learning_curves/logs/
+cp -r ./tabpfn_learning_curves/logs/* $DATADIR/tabpfn_learning_curves/logs/
