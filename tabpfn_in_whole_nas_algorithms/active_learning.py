@@ -1,11 +1,12 @@
 import argparse
+import os
 import numpy as np
 import tabpfn
 import json
 
 from tabpfn_final_accuracy.utils.dataloader import skip_unconnected_archs_using_data
 from tabpfn_final_accuracy.utils.arch_features import get_features_and_label
-from tabpfn_final_accuracy.utils.results_utils import verbose_meta_info, plot_predictions_vs_true
+from tabpfn_final_accuracy.utils.results_utils import verbose_meta_info, plot_one_scatter_plot
 
 parser = argparse.ArgumentParser(description='Get predictions from tabpfn')
 
@@ -23,7 +24,8 @@ parser.add_argument('--epochs_n_features', type=int, default=0, help='Include fi
 parser.add_argument('--skip_unconnected', action='store_true', default=True, help='Skip unconnected architectures')
 parser.add_argument('--datafile', type=str, default='tabpfn_final_accuracy/data/merged_data.json', help='Path to the JSON file containing architecture data')
 parser.add_argument('--verbose', action='store_true', default=True, help='Enable verbose output')
-
+parser.add_argument('--plot', action='store_true', default=False, help='Plot predictions vs true labels after each epoch')
+parser.add_argument('--plot_dir', type=str, default='tabpfn_in_whole_nas_algorithms/plots/', help='Directory to save plots if --plot is enabled, if --plot is enabled and --plot_dir is None, plots will be shown.')
 
 def main(args: argparse.Namespace):
     # set random seed
@@ -77,7 +79,13 @@ def main(args: argparse.Namespace):
         print(f"Mean Squared Error: {mse}")
 
         # plot predictions vs true labels
-        plot_predictions_vs_true(test_labels, preds)
+        if args.plot:
+            if args.plot_dir is not None:
+                # create the plot directory if it doesn't exist
+                os.makedirs(args.plot_dir, exist_ok=True)
+                plot_one_scatter_plot(test_labels, preds, output_file=f"{args.plot_dir}/predictions_vs_true_epoch_{epoch}.pdf")
+            else:
+                plot_one_scatter_plot(test_labels, preds)
 
         # take the 10 highest predictions
         top_10_pred_indices = np.argsort(preds)[-10:]
