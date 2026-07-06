@@ -7,11 +7,22 @@ import warnings
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 
 import tabpfn_final_accuracy.utils.arch_features as arch_features
+from tabpfn_final_accuracy.utils.dataloader import download_data_if_not_exists
 
 parser = argparse.ArgumentParser(description='Parser parsing arguments for the evolutionary NAS algorithm')
 parser.add_argument('--seed', type=int, default=42, help='Random seed for sampling')
 parser.add_argument('--datafile', type=str, default='tabpfn_final_accuracy/data/merged_data.json', help='Path to the JSON file containing architecture data')
 parser.add_argument('--arch_str_to_index_dict_file', type=str, default='tabpfn_final_accuracy/data/arch_str_to_index.json', help='Path to the JSON file containing the architecture string to index mapping')
+
+# arguments for the evolutionary algorithm
+parser.add_argument('--num_offspring', type=int, default=20, help='Number of offspring architectures to generate in each generation')
+parser.add_argument('--num_generations', type=int, default=10, help='Number of generations to run the evolutionary algorithm')
+parser.add_argument('--mut_prob', type=float, default=1/6, help='Mutation probability for each edge in the architecture')
+parser.add_argument('--init_population_size', type=int, default=20, help='Initial population size of architectures. These architectures are fully trained for 200 epochs and their final accuracy is known.')
+parser.add_argument('--num_parents', type=int, default=5, help='Number of parent architectures to select for mutation in each generation')
+parser.add_argument('--treshold_to_train_further', type=float, default=3, help='Threshold for determining if an architecture is promising enough to train further')
+parser.add_argument('--prediction_variance_treshold', type=float, default=0.1, help='Threshold for considering the prediction stable, meaning it does not change much in the last epochs')
+
 
 # the individual:
 # arch number, for how long it was trained, final (predicated) accuracy
@@ -154,7 +165,7 @@ def split_offspring_to_promising_and_finalized(offspring_archs, offsprings_predi
         offsprings_predicted_acc_dict[offspring_archs[i]].append(children_predicted_acc[i])
         no_longer_promising_condition = children_predicted_acc[i] <= (best_individual[2] - current_treshold)
         prediction_stable_condition = False
-        if architectures_trained_for_epochs > 10:
+        if architectures_trained_for_epochs > 9:
             # if the prediction has small changes in the last 10 epochs, we consider it stable
             prediction_stable_condition = np.std(offsprings_predicted_acc_dict[offspring_archs[i]][-10:]) < prediction_variance_treshold
         if no_longer_promising_condition or prediction_stable_condition:
@@ -185,9 +196,7 @@ def evolutionary_algorithm(num_offspring, num_generations, mut_prob, init_popula
 
         # we keep track of the predicted accuracies for each offspring architecture in each epoch of training
         # this is needed to decide if the architecture is promising or not, and if we should train it further or not
-        offsprings_predicted_acc_dict = dict()
-        for i in range(len(offspring_archs)):
-            offsprings_predicted_acc_dict[offspring_archs[i]] = [children_predicted_acc[i]]
+        offsprings_predicted_acc_dict = {arch: [] for arch in offspring_archs}
 
         # we split the offspring architectures into promising and finalized
         # finalized architectures are added to the finalized children list, which will not be trained further
@@ -221,7 +230,6 @@ def evolutionary_algorithm(num_offspring, num_generations, mut_prob, init_popula
         population.extend(finalized_children)
 
     best_individual = max(population, key=lambda x: x[2])
-    print(f"Best individual after {num_generations} generations: arch {best_individual[0]}, trained for {best_individual[1]} epochs, predicted accuracy: {best_individual[2]}")
     return best_individual, population
 
 
@@ -230,9 +238,7 @@ def main(args: argparse.Namespace):
     np.random.seed(args.seed)
 
     # check if datafile exists
-    if not os.path.exists(args.datafile):
-        print("Error: Data file does not exist.")
-        return
+    download_data_if_not_exists(args.datafile)
     
     with open(args.datafile, 'r') as f:
         data = json.load(f)
@@ -243,26 +249,41 @@ def main(args: argparse.Namespace):
     # mut prob should be 1/6 to happen approximately one mutation per architecture, since there are 6 edges to mutate
     # num parents should be around 10-20% of the init population size, to have enough diversity but also good performance
 
-    best_individual, population = evolutionary_algorithm(num_offspring=20, num_generations=10, mut_prob=1/6, init_population_size=20, num_parents=4, data=data, arch_str_to_index=arch_str_to_index, treshold_to_train_further=3, prediction_variance_treshold=0.1)
+    best_predicted_individual, population = evolutionary_algorithm(num_offspring=args.num_offspring, num_generations=args.num_generations, mut_prob=args.mut_prob, init_population_size=args.init_population_size, num_parents=args.num_parents, data=data, arch_str_to_index=arch_str_to_index, treshold_to_train_further=args.treshold_to_train_further, prediction_variance_treshold=args.prediction_variance_treshold)
+
+    # count the total number of epochs trained for all architectures in the population
+    total_epochs_trained = sum(ind[1] for ind in population)
+    
+    print()
+    print(f"Final size of the population: {len(population)}")
+    print(f"Total epochs trained for all architectures: {total_epochs_trained}")
+    print(f"Best individual after {args.num_generations} generations: arch {best_predicted_individual[0]}, trained for {best_predicted_individual[1]} epochs, predicted accuracy: {best_predicted_individual[2]}")
 
     # now we will "train" the best individual for 200 epochs and see how good it is
-    best_arch = best_individual[0]
-    print(f"Best architecture {best_arch} accuracy after training for 200 epochs: {data[best_arch]['testacc']}")
+    best_predicted_arch = best_predicted_individual[0]
+    best_predicted_arch_true_accuracy = data[best_predicted_arch]["testacc"]
+    print(f"Best predicted architecture {best_predicted_arch} true accuracy after training for 200 epochs: {best_predicted_arch_true_accuracy}")
 
     # now we will check wether the best architecture is truly the best one from the population
-    best_ind_arch_from_population = best_arch
-    achieved_accuracy = data[best_arch]['testacc']
-    for ind in population:
-        ind_arch = ind[0]
-        ind_acc = data[ind_arch]['testacc']
-        if ind_acc > achieved_accuracy:
-            best_ind_arch_from_population = ind_arch
-            achieved_accuracy = ind_acc
+    # sort the population by true accuracy
+    population_sorted_by_true_accuracy = sorted(population, key=lambda x: data[x[0]]['testacc'], reverse=True)
+    true_best_ind_arch_from_population = population_sorted_by_true_accuracy[0][0]
+    true_achieved_accuracy_of_true_best = data[true_best_ind_arch_from_population]['testacc']
 
-    if best_ind_arch_from_population != best_arch:
-        print(f"Best architecture from population is {best_ind_arch_from_population} with accuracy {achieved_accuracy}, which is better than the best individual from the evolutionary algorithm.")
+    if true_best_ind_arch_from_population != best_predicted_arch:
+        # what is the difference in accuracy between the best architecture from the population and the best individual from the evolutionary algorithm?
+        accuracy_difference = true_achieved_accuracy_of_true_best - best_predicted_arch_true_accuracy
+        # at what position ended the best individual from the evolutionary algorithm in the sorted population?
+        for i in range(len(population_sorted_by_true_accuracy)):
+            if population_sorted_by_true_accuracy[i][0] == best_predicted_arch:
+                best_predicted_individual_position = i + 1
+                break
+        
+        print(f"Best architecture from population is {true_best_ind_arch_from_population} with accuracy {true_achieved_accuracy_of_true_best}, which is better than the best individual from the evolutionary algorithm.")
+        print(f"Accuracy difference: {accuracy_difference}")
+        print(f"Best individual from evolutionary algorithm is at position {best_predicted_individual_position} in the sorted population.")
     else:
-        print(f"Best architecture from population is the same as the best individual from the evolutionary algorithm, with accuracy {achieved_accuracy}.")
+        print(f"Best architecture from population is the same as the best individual from the evolutionary algorithm, with accuracy {true_achieved_accuracy_of_true_best}.")
         print("Algorithm was successful in finding the best architecture in the searched part of the population.")
 
 
