@@ -67,7 +67,7 @@ def verbose_meta_info(args: argparse.Namespace):
                     print(f"  {arg}: {value}")
         print()
 
-def plot_one_scatter_plot(x, y, xlabel, ylabel, title, ax=None, output_file=None):
+def plot_one_scatter_plot(x, y, xlabel="True Labels", ylabel="Predictions", title="Predikce", ax=None, output_file=None):
     """Plot a scatter plot of x vs y."""
     if ax is None:
         fig, ax = plt.subplots(figsize=(7, 7))
@@ -81,6 +81,8 @@ def plot_one_scatter_plot(x, y, xlabel, ylabel, title, ax=None, output_file=None
 
     if output_file is not None:
         plt.savefig(output_file)
+    else:
+        plt.show()
 
 
 def plot_predictions_vs_true(test_labels, preds, logdir = None):
@@ -89,10 +91,6 @@ def plot_predictions_vs_true(test_labels, preds, logdir = None):
     # plot the results
     plot_one_scatter_plot(test_labels, preds, xlabel="True Labels", ylabel="Predictions", title="True Labels vs Predictions", output_file=output_file)
     
-    # show the figure if not saved to file
-    if logdir is None:
-        plt.show()
-
 
 def plot_two_predictions_vs_true(test_labels_1, test_labels_2, preds1, preds2, title1="Predikce 1", title2="Predikce 2", path_to_save=None):
     # plot the results next to each other
