@@ -22,7 +22,7 @@ parser.add_argument('--init_population_size', type=int, default=20, help='Initia
 parser.add_argument('--num_parents', type=int, default=5, help='Number of parent architectures to select for mutation in each generation')
 parser.add_argument('--treshold_to_train_further', type=float, default=3, help='Threshold for determining if an architecture is promising enough to train further')
 parser.add_argument('--prediction_variance_treshold', type=float, default=0.1, help='Threshold for considering the prediction stable, meaning it does not change much in the last epochs')
-
+parser.add_argument('--variance_measurement_epochs', type=int, default=10, help='Number of epochs to consider for measuring prediction variance')
 
 # the individual:
 # arch number, for how long it was trained, final (predicated) accuracy
@@ -136,7 +136,7 @@ def generate_offspring(population, num_parents, num_offspring, mut_prob, data, a
 
     return offspring_archs
 
-def split_offspring_to_promising_and_finalized(offspring_archs, offsprings_predicted_acc_dict, children_predicted_acc, best_individual, architectures_trained_for_epochs, current_treshold, prediction_variance_treshold):
+def split_offspring_to_promising_and_finalized(offspring_archs, offsprings_predicted_acc_dict, children_predicted_acc, best_individual, architectures_trained_for_epochs, current_treshold, prediction_variance_treshold, variance_measurement_epochs):
     """
     Splits the offspring architectures into promising and finalized.
 
@@ -151,9 +151,10 @@ def split_offspring_to_promising_and_finalized(offspring_archs, offsprings_predi
         offsprings_predicted_acc_dict: dictionary mapping offspring architectures to a list of their predicted accuracies in each epoch of training
         children_predicted_acc: list of the latest predicted accuracies for the offspring architectures
         best_individual: the best individual in the population
+        architectures_trained_for_epochs: how many epochs the offspring architectures have been trained for
         current_treshold: the current threshold for being promising, which can change during training
         prediction_variance_treshold: the threshold for considering the prediction stable, meaning it does not change much in the last epochs
-        architectures_trained_for_epochs: how many epochs the offspring architectures have been trained for
+        variance_measurement_epochs: the number of epochs to consider for measuring prediction variance
 
     returns:
         finalized_children: list of architectures that are finalized and will not be trained further
@@ -165,9 +166,9 @@ def split_offspring_to_promising_and_finalized(offspring_archs, offsprings_predi
         offsprings_predicted_acc_dict[offspring_archs[i]].append(children_predicted_acc[i])
         no_longer_promising_condition = children_predicted_acc[i] <= (best_individual[2] - current_treshold)
         prediction_stable_condition = False
-        if architectures_trained_for_epochs > 9:
-            # if the prediction has small changes in the last 10 epochs, we consider it stable
-            prediction_stable_condition = np.std(offsprings_predicted_acc_dict[offspring_archs[i]][-10:]) < prediction_variance_treshold
+        if architectures_trained_for_epochs > (variance_measurement_epochs - 1):
+            # if the prediction has small changes in the last variance_measurement_epochs epochs, we consider it stable
+            prediction_stable_condition = np.std(offsprings_predicted_acc_dict[offspring_archs[i]][-variance_measurement_epochs:]) < prediction_variance_treshold
         if no_longer_promising_condition or prediction_stable_condition:
             # if the architecture is no longer promising, or the prediction is stable, we finalize it
             finalized_children.append((offspring_archs[i], architectures_trained_for_epochs, children_predicted_acc[i] if children_predicted_acc[i] > 0 else 0))
@@ -179,7 +180,7 @@ def split_offspring_to_promising_and_finalized(offspring_archs, offsprings_predi
     return finalized_children, offspring_archs
 
 
-def evolutionary_algorithm(num_offspring, num_generations, mut_prob, init_population_size, num_parents, data, arch_str_to_index, treshold_to_train_further, prediction_variance_treshold = 0.1):
+def evolutionary_algorithm(num_offspring, num_generations, mut_prob, init_population_size, num_parents, data, arch_str_to_index, treshold_to_train_further, prediction_variance_treshold = 0.1, variance_measurement_epochs = 10):
     # Initialize the population with random architectures
     population = initialize_population(init_population_size, data)
 
@@ -200,7 +201,7 @@ def evolutionary_algorithm(num_offspring, num_generations, mut_prob, init_popula
 
         # we split the offspring architectures into promising and finalized
         # finalized architectures are added to the finalized children list, which will not be trained further
-        finalized_children, offspring_archs = split_offspring_to_promising_and_finalized(offspring_archs, offsprings_predicted_acc_dict, children_predicted_acc, best_individual, architectures_trained_for_epochs, treshold_to_train_further, prediction_variance_treshold)
+        finalized_children, offspring_archs = split_offspring_to_promising_and_finalized(offspring_archs, offsprings_predicted_acc_dict, children_predicted_acc, best_individual, architectures_trained_for_epochs, treshold_to_train_further, prediction_variance_treshold, variance_measurement_epochs)
 
         # we will lower the treshold for being promising during training
         treshold = treshold_to_train_further
@@ -212,7 +213,7 @@ def evolutionary_algorithm(num_offspring, num_generations, mut_prob, init_popula
             children_predicted_acc = tabpfn_predict(offspring_archs, population, data, architectures_trained_for_epochs)
 
             # we check for each architecture if it is still promising, or if we don't need to train it further
-            new_finalized_children, offspring_archs = split_offspring_to_promising_and_finalized(offspring_archs, offsprings_predicted_acc_dict, children_predicted_acc, best_individual, architectures_trained_for_epochs, treshold, prediction_variance_treshold)
+            new_finalized_children, offspring_archs = split_offspring_to_promising_and_finalized(offspring_archs, offsprings_predicted_acc_dict, children_predicted_acc, best_individual, architectures_trained_for_epochs, treshold, prediction_variance_treshold, variance_measurement_epochs)
             finalized_children.extend(new_finalized_children)
 
             # we lower the treshold for further training,
@@ -249,7 +250,18 @@ def main(args: argparse.Namespace):
     # mut prob should be 1/6 to happen approximately one mutation per architecture, since there are 6 edges to mutate
     # num parents should be around 10-20% of the init population size, to have enough diversity but also good performance
 
-    best_predicted_individual, population = evolutionary_algorithm(num_offspring=args.num_offspring, num_generations=args.num_generations, mut_prob=args.mut_prob, init_population_size=args.init_population_size, num_parents=args.num_parents, data=data, arch_str_to_index=arch_str_to_index, treshold_to_train_further=args.treshold_to_train_further, prediction_variance_treshold=args.prediction_variance_treshold)
+    best_predicted_individual, population = evolutionary_algorithm(
+        num_offspring=args.num_offspring,
+        num_generations=args.num_generations,
+        mut_prob=args.mut_prob,
+        init_population_size=args.init_population_size,
+        num_parents=args.num_parents,
+        data=data,
+        arch_str_to_index=arch_str_to_index,
+        treshold_to_train_further=args.treshold_to_train_further,
+        prediction_variance_treshold=args.prediction_variance_treshold,
+        variance_measurement_epochs=args.variance_measurement_epochs
+        )
 
     # count the total number of epochs trained for all architectures in the population
     total_epochs_trained = sum(ind[1] for ind in population)
