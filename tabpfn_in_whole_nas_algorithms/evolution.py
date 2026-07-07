@@ -293,7 +293,7 @@ def main(args: argparse.Namespace):
         
         print(f"Best architecture from population is {true_best_ind_arch_from_population} with accuracy {true_achieved_accuracy_of_true_best}, which is better than the best individual from the evolutionary algorithm.")
         print(f"Accuracy difference: {accuracy_difference}")
-        print(f"Best individual from evolutionary algorithm is at position {best_predicted_individual_position} in the sorted population.")
+        print(f"Best individual from evolutionary algorithm is at position {best_predicted_individual_position} in the sorted population (indexed from 1).")
     else:
         print(f"Best architecture from population is the same as the best individual from the evolutionary algorithm, with accuracy {true_achieved_accuracy_of_true_best}.")
         print("Algorithm was successful in finding the best architecture in the searched part of the population.")
