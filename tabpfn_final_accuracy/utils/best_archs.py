@@ -9,8 +9,11 @@ if __name__ == "__main__":
     with open("tabpfn_final_accuracy/data/merged_data.json", "r") as f:
         data = json.load(f)
 
-    best_archs = find_best_n_architecture(data, 50)
+    n = 10
+
+    best_archs = find_best_n_architecture(data, n)
     print("Best architectures:")
     for i in range(len(best_archs)):
         print(f"{i+1}. Arch index: {best_archs[i][0]}, Test accuracy: {best_archs[i][1]}")
+    print(f"Average test accuracy of best {n} architectures: {sum([arch[1] for arch in best_archs]) / len(best_archs):.4f}")
 
