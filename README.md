@@ -70,7 +70,7 @@ source venv/bin/activate  # On Windows use `venv\Scripts\activate`
 
 **2. Install dependencies:**
 
-**Note:** The `requirements.txt` is configured to automatically install PyTorch 2.6.0 with CUDA 12.4 support.
+> **Note:** The `requirements.txt` is configured to automatically install PyTorch 2.6.0 with CUDA 12.4 support.
 ```bash
 # Install dependencies
 pip install -r requirements.txt
