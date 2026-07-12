@@ -6,21 +6,28 @@ This repository contains the source code, experiments, and analysis for my diplo
 
 ## Abstract
 
-Neural Architecture Search (NAS) automates the design of neural networks but often suffers from prohibitive computational costs due to the need to train thousands of candidate models.
+**Neural Architecture Search (NAS)** is a~computationally demanding process requiring exhaustive evaluation of candidate architectures.
+This thesis investigates the tabular foundation model **TabPFN (Tabular Prior-Data Fitted Network)** as a~performance estimator.
+This model predicts target values in a~single forward pass, completely eliminating iterative training. The aim of this work is to propose and evaluate the integration of TabPFN into the NAS process, focusing on learning curve prediction and the direct estimation of final accuracy using structural features and zero-cost proxy metrics.
+These approaches are subsequently integrated into comprehensive search algorithms.
+Experimental~evaluation on the NATS-Bench benchmark demonstrates that deploying TabPFN~enhances~evaluation efficiency, enabling the reliable discovery of highly performant architectures.
 
-The goal of this thesis is to explore the application of **TabPFN** (Tabular Prior-data Fitted Network) for predicting the performance of neural architectures. TabPFN is a transformer-based foundation model for tabular data that allows for extremely fast predictions via inference, without the need for traditional gradient-based training on the target dataset.
+Czech version (česká verze):
 
-This project focuses on:
-1.  **Performance Prediction:** Utilizing TabPFN to predict the final accuracy of architectures based on structural characteristics and **Zero-Cost Proxies**.
-2.  **Learning Curve Extrapolation:** Investigating the use of TabPFN to forecast the training trajectory of architectures.
-3.  **Benchmarking:** Verifying the suitability of these methods on **NATS-Bench**.
+**Hledání neuronové architektury (NAS)** je výpočetně velmi náročný proces vyžadující zdlouhavé vyhodnocování mnoha kandidátních architektur.
+Tato práce zkoumá potenciál inovativního tabulárního základního modelu **TabPFN (Tabular Prior-Data Fitted Network)** v~roli odhadce výkonnosti.
+Klíčovou předností tohoto modelu je jeho schopnost předpovídat cílové hodnoty jediným dopředným průchodem zcela bez nutnosti iterativního trénování.
+Cílem práce je navrhnout a~vyhodnotit zapojení TabPFN do procesu NAS se zaměřením na predikci vývoje učících křivek a~na přímý odhad finální přesnosti na základě strukturálních příznaků a~zero-cost proxy metrik.
+Tyto přístupy jsou následně integrovány do ucelených prohledávacích algoritmů.
+Experimentální vyhodnocení na benchmarku NATS-Bench prokazuje, že nasazení modelu TabPFN zefektivňuje evaluační fázi a~umožňuje spolehlivé nalezení mimořádně výkonných architektur.
 
 ## Key Concepts
 
-* **Foundation Models:** Pre-trained models capable of in-context learning on new tasks.
+* **Tabular Foundation Models:** Pre-trained models capable of in-context learning on tabular dataset.
 * **NAS (Neural Architecture Search):** Automating the design of ANN topologies.
 * **Zero-Cost Proxies:** Metrics that estimate architecture performance at initialization (e.g., *synflow*, *snip*) to avoid full training.
-* **Learning Curves Extrapolation:** Predicting final performance based on early training statistics.
+* **Learning Curves Extrapolation:** Predicting the learning curves based on early training statistics.
+* **Direct Performance Estimation:** Predicting final performance based on structural characteristics and Zero-Cost Proxies.
 
 ## Installation
 
@@ -45,9 +52,9 @@ pip install -r requirements.txt
 pip install -e .
 ```
 
-## Usage
-
 ## Project Structure
+
+## Usage
 
 ## References & Literature
 
