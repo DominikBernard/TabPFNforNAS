@@ -1,0 +1,7 @@
+Tabular Foundation Model for Performance Prediction in NAS
+Copyright 2026 Dominik Bernard
+
+This product includes software developed by the authors of "Zero-Cost Proxies for Lightweight NAS" (https://github.com/SamsungLabs/zero-cost-nas), licensed under the Apache License 2.0.
+
+This product includes software and model weights from TabPFN, licensed under the Prior Labs License (Apache 2.0 with ADDITIONAL PROVISION). 
+Built with PriorLabs-TabPFN.
