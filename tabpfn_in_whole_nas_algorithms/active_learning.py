@@ -31,6 +31,9 @@ def main(args: argparse.Namespace):
     # set random seed
     np.random.seed(args.seed)
 
+    if args.verbose:
+        verbose_meta_info(args)
+
     with open(args.datafile, 'r') as f:
         data = json.load(f)
 
@@ -57,13 +60,6 @@ def main(args: argparse.Namespace):
         train_labels = labels[train_indices]
         test_features = features[test_indices]
         test_labels = labels[test_indices]
-        
-        if args.verbose:
-            verbose_meta_info(args)
-            print(f"Train features shape: {train_features.shape}")
-            print(f"Test features shape: {test_features.shape}")
-            print(f"Train labels shape: {train_labels.shape}")
-            print(f"Test labels shape: {test_labels.shape}")
 
         # load tabpfn regression model
         model = tabpfn.TabPFNRegressor()
@@ -71,12 +67,11 @@ def main(args: argparse.Namespace):
 
         # make predictions
         preds = model.predict(test_features)
-        if args.verbose:
-            print(f"Predictions shape: {preds.shape}")
 
         # evaluate
         mse = np.mean((preds - test_labels) ** 2)
-        print(f"Mean Squared Error: {mse}")
+        if args.verbose:
+            print(f"Epoch {epoch}: Mean Squared Error: {mse}")
 
         # plot predictions vs true labels
         if args.plot:
@@ -92,9 +87,17 @@ def main(args: argparse.Namespace):
 
         # check if any of the top 10 predictions are among the top 10 true labels
         top_10_true_indices = np.argsort(test_labels)[-10:]
-        if len(set(top_10_pred_indices).intersection(set(top_10_true_indices))) > 0:
+        top_10_intersection = set(top_10_pred_indices).intersection(set(top_10_true_indices))
+        if len(top_10_intersection) > 0:
+            intersection_indices = [int(test_indices[i]) for i in top_10_intersection]
+            intersection_accuracies = [float(test_labels[i]) for i in top_10_intersection]
+            print(f"Intersection size: {len(top_10_intersection)}")
+            print(f"Indices of intersection: {intersection_indices}")
+            print(f"Accuracies of intersection: {intersection_accuracies}")
+            print(f"Maximal accuracy in intersection: {max(intersection_accuracies)}")
+
             print("Stopping criterion met: at least one of the top 10 predictions is among the top 10 true labels.")
-            print(f"The goal was achieved at the end of the {epoch}. epoch.")
+            print(f"The goal was achieved at the end of the {epoch}. epoch -> {(epoch + 1) * 10} architectures trained.")
             break
         else:
             train_indices = np.concatenate((train_indices, top_10_pred_indices))
