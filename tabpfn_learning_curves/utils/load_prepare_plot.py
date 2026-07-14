@@ -113,7 +113,7 @@ def plot_results(data: dict, train_indices: np.ndarray, test_indices: np.ndarray
         test_indices (np.ndarray): Indices of the test examples.
         predictions (np.ndarray): The predicted values.
         test_splitting_epoch (int): Epoch at which to split the target data into train and test sets.
-        path_to_save (Optional[str]): Path to save the plots. If None, the first plot will be displayed.
+        path_to_save (Optional[str]): Path directory to save the plots. If None, the first plot will be displayed.
     """
 
     for pred_index in tqdm.tqdm(range(len(predictions)), desc="Plotting results"):
@@ -138,6 +138,7 @@ def plot_results(data: dict, train_indices: np.ndarray, test_indices: np.ndarray
         plt.legend()
 
         if path_to_save:
+            os.makedirs(path_to_save, exist_ok=True)
             plt.savefig(os.path.join(path_to_save, f'learning_curve_arch_{test_indices[pred_index]}.png'))
             # Close the plot to avoid more and more plots being opened in memory
             plt.close()
@@ -170,6 +171,7 @@ def store_results(test_indices: np.ndarray, predictions: np.ndarray, mse: float,
     result_str += f"Variance for Last Epoch: {variance_for_last_epoch}\n"
 
     if path_to_save:
+        os.makedirs(path_to_save, exist_ok=True)
         with open(os.path.join(path_to_save, "results.txt"), 'w') as file:
             file.write(result_str)
         with open(os.path.join(path_to_save, "predictions.txt"), 'w') as file:

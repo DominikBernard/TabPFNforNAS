@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 from tabpfn import TabPFNRegressor
@@ -110,6 +111,7 @@ def plot_learning_curve(epochs: np.ndarray, X: np.ndarray, y: np.ndarray, y_pred
         ax.legend()
         plt.tight_layout()
         if path_to_save:
+            os.makedirs(os.path.dirname(path_to_save), exist_ok=True)
             plt.savefig(path_to_save, dpi=300)
         else:
             plt.show()
@@ -145,6 +147,7 @@ def plot_dual_learning_curves(epochs: np.ndarray, X1: np.ndarray, y1: np.ndarray
 
     plt.tight_layout()
     if path_to_save:
+        os.makedirs(os.path.dirname(path_to_save), exist_ok=True)
         plt.savefig(path_to_save, dpi=300)
     else:
         plt.show()
@@ -257,6 +260,7 @@ def plot_multi_run_learning_curves(learning_curve_data_list: list, y_pred_list: 
         ax.legend()
         plt.tight_layout()
         if path_to_save:
+            os.makedirs(os.path.dirname(path_to_save), exist_ok=True)
             plt.savefig(path_to_save, dpi=300)
         else:
             plt.show()
@@ -291,6 +295,7 @@ def plot_multi_run_learning_curves_side_by_side(learning_curve_data_list: list, 
     plt.tight_layout()
 
     if path_to_save:
+        os.makedirs(os.path.dirname(path_to_save), exist_ok=True)
         plt.savefig(path_to_save, dpi=300)
     else:
         plt.show()

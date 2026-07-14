@@ -1,5 +1,6 @@
 import argparse
 from contextlib import redirect_stdout
+import os
 import numpy as np
 from typing import Optional
 
@@ -106,6 +107,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.output_text_file:
+        os.makedirs(os.path.dirname(args.output_text_file), exist_ok=True)
         with open(args.output_text_file, "w", encoding="utf-8") as f, redirect_stdout(f):
             main(args)
     else:

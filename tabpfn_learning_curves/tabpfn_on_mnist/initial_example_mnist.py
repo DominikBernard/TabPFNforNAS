@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 import argparse
@@ -244,6 +245,7 @@ def run_multiple_added_features(args: argparse.Namespace):
     
     plt.tight_layout()
     if args.path_to_save_plot:
+        os.makedirs(os.path.dirname(args.path_to_save_plot), exist_ok=True)
         plt.savefig(args.path_to_save_plot, dpi=300)
     else:
         plt.show()
@@ -264,6 +266,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.output_text_file:
+        os.makedirs(os.path.dirname(args.output_text_file), exist_ok=True)
         with open(args.output_text_file, "w", encoding="utf-8") as f, redirect_stdout(f):
             execute_experiments(args)
     else:

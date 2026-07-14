@@ -81,6 +81,7 @@ def plot_one_scatter_plot(x: list, y: list, xlabel: str="True Labels", ylabel: s
     ax.set_title(title)
 
     if output_file is not None:
+        os.makedirs(os.path.dirname(output_file), exist_ok=True)
         plt.savefig(output_file)
     else:
         plt.show()
@@ -132,6 +133,7 @@ def plot_two_predictions_vs_true(test_labels_1: list, test_labels_2: list, preds
     plt.tight_layout()
 
     if path_to_save is not None:
+        os.makedirs(os.path.dirname(path_to_save), exist_ok=True)
         plt.savefig(path_to_save)
     else:
         plt.show()
@@ -341,6 +343,7 @@ def plot_bar_plot(metric_table: dict, metric_name: str):
     ax.tick_params(axis='x', labelsize=14)
     ax.tick_params(axis='y', labelsize=14)
 
+    os.makedirs(os.path.dirname(f"tabpfn_final_accuracy/plots/{metric_name.replace(' ', '_')}_bar_plot.pdf"), exist_ok=True)
     plt.savefig(f"tabpfn_final_accuracy/plots/{metric_name.replace(' ', '_')}_bar_plot.pdf", dpi=300, bbox_inches='tight')
 
 

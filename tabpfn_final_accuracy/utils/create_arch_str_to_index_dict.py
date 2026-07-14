@@ -1,6 +1,7 @@
 import nats_bench
 import json
 import tqdm
+import os
 
 def create_arch_str_to_index_dict(path_to_save: str = "tabpfn_final_accuracy/data/arch_str_to_index.json"):
     """Create a dictionary mapping architecture strings to their corresponding indices in the NATS-Bench search space."""
@@ -10,6 +11,8 @@ def create_arch_str_to_index_dict(path_to_save: str = "tabpfn_final_accuracy/dat
     for i in tqdm.tqdm(range(15625)):
         arch_str = api.arch(i)
         d[arch_str] = i
+
+    os.makedirs(os.path.dirname(path_to_save), exist_ok=True)
 
     # with indent = 4
     with open(path_to_save, "w") as f:

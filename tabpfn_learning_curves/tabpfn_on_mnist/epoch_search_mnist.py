@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 from tabpfn import TabPFNRegressor
@@ -42,6 +43,7 @@ def cumulate_plots_for_different_splitting_epochs(epochs: np.ndarray, y: np.ndar
     plt.tight_layout()
 
     if path_to_save:
+        os.makedirs(os.path.dirname(path_to_save), exist_ok=True)
         plt.savefig(path_to_save, dpi=300)
     else:
         plt.show()
