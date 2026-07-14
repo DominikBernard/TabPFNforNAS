@@ -17,17 +17,16 @@ parser.add_argument('--analyse_epochs_n_features', action='store_true', default=
 parser.add_argument('--verbose_warning', action='store_true', default=False, help='Print warnings for experiments where TabPFN was unable to make predictions')
 
 
-"""
-the structure of the logdir is expected to be as follows:
-logdir/
-    seed_1/
-        all_experimental_dirs...
-    seed_2/
-        all_experimental_dirs...
-    ...
-"""
+def find_all_log_file_paths(logdir: str):
+    """
+    Find all log file paths in the specified log directory.
 
-def find_all_log_file_paths(logdir):
+    Args:
+        logdir: The root directory where the grid search results are stored.
+
+    Returns:
+        A list of paths to all log files found in the directory structure.
+    """
     # check if logdir exists
     if not os.path.exists(logdir):
         raise ValueError(f"Log directory does not exist: {logdir}")
@@ -52,7 +51,18 @@ def find_all_log_file_paths(logdir):
 
     return log_file_paths
 
-def filter_log_file_paths_by_args(log_file_paths, args: argparse.Namespace):
+def filter_log_file_paths_by_args(log_file_paths: list[str], args: argparse.Namespace):
+    """
+    Filter the list of log file paths based on the specified command-line arguments.
+
+    Args:
+        log_file_paths: A list of paths to log files.
+        args: The command-line arguments.
+
+    Returns:
+        A list of log file paths that match the specified arguments.
+    """
+
     # now we have all log file paths, we will remove files not matching the specified arguments
     # at first, we will filter by train_size
     filtered_log_file_paths = [path for path in log_file_paths if f"train-{args.train_size}_" in path]
@@ -78,11 +88,18 @@ def filter_log_file_paths_by_args(log_file_paths, args: argparse.Namespace):
 
     return filtered_log_file_paths
 
-def create_results_dictionary(filtered_log_file_paths, verbose_warning=False):
-    # create dictionary to store results
-    # the dictionary will have the following structure:
-    # results = { key: { "mse": [], "spearman": [], "kendall": [] } }
-    # key will be a string representing the combination of arguments, e.g. "cf-True_aif-False_ef-onehot_noZC_noSkipUnconnected_enf-0"
+def create_results_dictionary(filtered_log_file_paths: list[str], verbose_warning: bool=False):
+    """
+    Create a dictionary to store the results of the grid search experiments.
+
+    Args:
+        filtered_log_file_paths: A list of paths to log files.
+        verbose_warning: Whether to print warning messages.
+
+    Returns:
+        A dictionary containing the results of the grid search experiments.
+    """
+
     results = defaultdict(lambda: {"mse": [], "spearman": [], "kendall": []})
 
     # create pattern to extract the key from the log file path
@@ -122,7 +139,13 @@ def create_results_dictionary(filtered_log_file_paths, verbose_warning=False):
 
     return results
 
-def print_results(results):
+def print_results(results: dict[str, dict[str, list[float]]]):
+    """
+    Print the results of the grid search experiments.
+
+    Args:
+        results: A dictionary containing the results of the grid search experiments.
+    """
 
     # print the results
     for key, metrics in results.items():
@@ -138,12 +161,15 @@ def print_results(results):
         print(f"Spearman's Rank Correlation Coefficient: {spearman_mean:.6f} (Variance: {spearman_var:.6f})")
         print(f"Kendall's Tau (rank correlation coefficient): {kendall_mean:.6f} (Variance: {kendall_var:.6f})")
 
-def create_results_table(results):
-    # create a table with the results in format
-    # the table will have the following structure:
-    # key & mse_mean & spearman_mean & kendall_mean \\
-    # filter only cf-False aif-False and noSkipUnconnected
-    # or filter other combinations
+def create_results_table(results: dict[str, dict[str, list[float]]]):
+    """
+    Create a table with the results of the grid search experiments.
+
+    Args:
+        results: A dictionary containing the results of the grid search experiments.
+    Returns:
+        A list of strings representing the rows of the results table.
+    """
     table = []
     for key, metrics in results.items():
         # if "cf-False" not in key or "aif-False" not in key or "noSkipUnconnected" not in key:
@@ -159,6 +185,12 @@ def create_results_table(results):
     return table
 
 def main(args: argparse.Namespace):
+    """
+    Main function to analyse the grid search experiment results.
+
+    Args:
+        args: The command-line arguments.
+    """
 
     log_file_paths = find_all_log_file_paths(args.logdir)
     

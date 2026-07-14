@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 from scipy.special import comb
 import itertools
 from collections import defaultdict
+from typing import Optional
 
 import tabpfn_final_accuracy.utils.get_important_lines as gil
 
@@ -67,7 +68,7 @@ def verbose_meta_info(args: argparse.Namespace):
                     print(f"  {arg}: {value}")
         print()
 
-def plot_one_scatter_plot(x, y, xlabel="True Labels", ylabel="Predictions", title="Predikce", ax=None, output_file=None):
+def plot_one_scatter_plot(x: list, y: list, xlabel: str="True Labels", ylabel: str="Predictions", title: str="Predikce", ax: Optional[plt.Axes]=None, output_file: Optional[str]=None):
     """Plot a scatter plot of x vs y."""
     if ax is None:
         fig, ax = plt.subplots(figsize=(7, 7))
@@ -85,14 +86,35 @@ def plot_one_scatter_plot(x, y, xlabel="True Labels", ylabel="Predictions", titl
         plt.show()
 
 
-def plot_predictions_vs_true(test_labels, preds, logdir = None):
+def plot_predictions_vs_true(test_labels: list, preds: list, logdir: Optional[str] = None):
+    """
+    Plot predictions vs true labels.
+
+    Args:
+        test_labels: The true labels.
+        preds: The predicted labels.
+        logdir: Directory where the plot will be saved. If None, the plot will be shown instead of saved.
+    """
 
     output_file = os.path.join(logdir, "true_vs_pred.png") if logdir is not None else None
     # plot the results
     plot_one_scatter_plot(test_labels, preds, xlabel="True Labels", ylabel="Predictions", title="True Labels vs Predictions", output_file=output_file)
     
 
-def plot_two_predictions_vs_true(test_labels_1, test_labels_2, preds1, preds2, title1="Predikce 1", title2="Predikce 2", path_to_save=None):
+def plot_two_predictions_vs_true(test_labels_1: list, test_labels_2: list, preds1: list, preds2: list, title1: str="Predikce 1", title2: str="Predikce 2", path_to_save: Optional[str]=None):
+    """
+    Plot two sets of predictions vs true labels side by side.
+
+    Args:
+        test_labels_1: The true labels for the first set of predictions.
+        test_labels_2: The true labels for the second set of predictions.
+        preds1: The first set of predicted labels.
+        preds2: The second set of predicted labels.
+        title1: Title for the first plot.
+        title2: Title for the second plot.
+        path_to_save: Path to save the plot. If None, the plot will be shown instead of saved.
+    """
+    
     # plot the results next to each other
     fig, axs = plt.subplots(1, 2, figsize=(10, 5))
 
@@ -115,7 +137,7 @@ def plot_two_predictions_vs_true(test_labels_1, test_labels_2, preds1, preds2, t
         plt.show()
 
 
-def get_single_seed_paths_to_logs(root_dir):
+def get_single_seed_paths_to_logs(root_dir: str):
     """Get all log paths from a single seed directory."""
     log_paths = []
     for subdir in os.listdir(root_dir):
@@ -126,7 +148,7 @@ def get_single_seed_paths_to_logs(root_dir):
                 log_paths.append(log_path)
     return log_paths
 
-def get_multiple_seed_paths_to_logs(root_dir):
+def get_multiple_seed_paths_to_logs(root_dir: str):
     """Get all log paths from multiple seed directories."""
     log_paths = []
     for seed_dir in os.listdir(root_dir):
@@ -171,14 +193,23 @@ def fill_metric_tables_from_logs(log_paths: list[str], key_extractor_func: calla
 
     return mse_table, spearman_table, kendall_table
 
-def format_zero_cost_combination_name(zcf_tuple):
+def format_zero_cost_combination_name(zcf_tuple: tuple):
     """Format the zero-cost combination name for printing."""
     if not zcf_tuple:
         return "No Zero-Cost Features"
     else:
         return ", ".join([ZERO_COST_FEATURES_NAMES[feat] for feat in zcf_tuple])
 
-def sort_and_print_results(metric_table, metric_name, name_format_func=str, sort_ascending=True):
+def sort_and_print_results(metric_table: dict, metric_name: str, name_format_func: callable=str, sort_ascending: bool=True):
+    """
+    Sort and print the results from a metric table.
+    
+    Args:
+        metric_table: A dictionary where keys are experiment identifiers and values are lists of metric values.
+        metric_name: The name of the metric being printed (e.g., "Mean Squared Error").
+        name_format_func: A function to format the keys for printing. Default is str.
+        sort_ascending: Whether to sort the results in ascending order. Default is True.
+    """
     sorted_results = []
     for key, metric_values in metric_table.items():
         name = name_format_func(key)
@@ -198,10 +229,15 @@ def sort_and_print_results(metric_table, metric_name, name_format_func=str, sort
     best = sorted_results[0]
     print(f"\nBest {metric_name}: {best[0]} ({best[1]:.6f})")
 
-def plot_binomial_groups(data, color='royalblue', title="Bars Grouped by Binomial Coefficients"):
+def plot_binomial_groups(data: list, color: str='royalblue', title: str="Bars Grouped by Binomial Coefficients"):
     """
     Plots a dense bar chart grouped by n-choose-k combinations.
     Automatically detects 'n' based on the length of the data (len(data) must be a power of 2).
+
+    Args:
+        data: A list of values to plot. Length must be a power of 2.
+        color: The color of the bars. Default is 'royalblue'.
+        title: The title of the plot. Default is "Bars Grouped by Binomial Coefficients".
     """
     data = np.asarray(data)
 
@@ -248,11 +284,14 @@ def plot_binomial_groups(data, color='royalblue', title="Bars Grouped by Binomia
 
     return fig, ax
 
-def plot_bar_plot(metric_table, metric_name):
-    # we will plot the data from noZC, then all combinations of 1, 2, 3, 4, 5, 6, 7, 8 zero-cost features
-    # all together it will be 1 + 8 + 28 + 56 + 70 + 56 + 28 + 8 + 1 = 256 bars
-    # we will group the bars by the number of zero-cost features used
-    # we will use the function plot_binomial_groups to plot the data
+def plot_bar_plot(metric_table: dict, metric_name: str):
+    """
+    Plot a bar plot of the metric values grouped by the number of zero-cost features used.
+
+    Args:
+        metric_table: A dictionary where keys are tuples of zero-cost features and values are lists of metric values.
+        metric_name: The name of the metric being plotted (e.g., "Mean Squared Error").
+    """
 
     # start with the no zero-cost features case
     no_zc_values = metric_table.get((), [])

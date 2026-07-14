@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.signal import find_peaks
 
-def extract_top_k_seasonalities(series, k, L):
+def extract_top_k_seasonalities(series: np.ndarray, k: int, L: int):
     """
     Extracts the top-k seasonality periods and frequencies, following Algorithm 3
     from the paper: "From Tables to Time: How TabPFN-v2 Outperforms Specialized Time Series Forecasting Models"
@@ -73,9 +73,16 @@ def extract_top_k_seasonalities(series, k, L):
     
     return top_k_periods, top_k_freqs
 
-def build_fourier_features(t, top_k_freqs):
+def build_fourier_features(t: np.ndarray, top_k_freqs: list):
     """
     Builds the Phi_auto(t) feature vector based on detected frequencies.
+
+    Args:
+        t (np.ndarray): The time step(s) for which to build the feature vector.
+        top_k_freqs (list): The list of detected frequencies.
+
+    Returns:
+        np.ndarray: The feature vector Phi_auto(t) of shape (2k,) for a single time step or (len(t), 2k) for multiple time steps.
     """
     t = np.asarray(t)
     features = []

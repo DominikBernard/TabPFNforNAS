@@ -1,10 +1,22 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from tabpfn import TabPFNRegressor
+from typing import Optional
 
 from tabpfn_learning_curves.utils.tensor_extractor import extract_epoch_dev_accuracy
 
-def cumulate_plots_for_different_splitting_epochs(epochs, y, y_pred, splitting_epoch, path_to_save=None):
+def cumulate_plots_for_different_splitting_epochs(epochs: np.ndarray, y: np.ndarray, y_pred: list, splitting_epoch: list, path_to_save: Optional[str] = None):
+    """
+    Plots the true accuracy and predicted accuracy for different splitting epochs in a grid of subplots.
+
+    Args:
+        epochs (np.ndarray): Array of epoch numbers.
+        y (np.ndarray): Array of true accuracy values.
+        y_pred (list): List of predicted accuracy arrays for each splitting epoch.
+        splitting_epoch (list): List of splitting epochs corresponding to the predictions.
+        path_to_save (Optional[str]): Path to save the plot. If None, the plot will be shown instead of saved.
+
+    """
     height = 3
     width = 2
     fig, axs = plt.subplots(height, width, figsize=(10, 8))
@@ -34,7 +46,14 @@ def cumulate_plots_for_different_splitting_epochs(epochs, y, y_pred, splitting_e
     else:
         plt.show()
 
-def run_multiple_splitting_epochs(path_to_save_plot=None):
+def run_multiple_splitting_epochs(path_to_save_plot: Optional[str] = None):
+    """
+    Runs the multiple splitting epochs analysis and saves the plot.
+
+    Args:
+        path_to_save_plot (Optional[str]): Path to save the plot. If None, the plot will be shown instead of saved.
+
+    """
     # set up nicer plot style
     plt.rcParams.update({
         "font.size": 16,        # base size

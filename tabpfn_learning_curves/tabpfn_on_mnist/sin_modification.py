@@ -13,11 +13,13 @@ parser.add_argument("--mode", type=str, default="sin_multiplication", choices=["
 
 
 def addition_and_subtraction_function():
+    """Creates addition and subtraction functions for transforming and inverse transforming the learning curve data."""
     add = lambda x, y: x + y
     subtract = lambda x, y: x - y
     return add, subtract
 
 def multiplication_and_division_function():
+    """Creates multiplication and division functions for transforming and inverse transforming the learning curve data."""
     multiply = lambda x, y: x * y / SCALING_FACTOR
     divide = lambda x, y: x * SCALING_FACTOR / y
     return multiply, divide

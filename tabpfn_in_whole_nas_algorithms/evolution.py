@@ -27,11 +27,31 @@ parser.add_argument('--variance_measurement_epochs', type=int, default=10, help=
 # the individual:
 # arch number, for how long it was trained, final (predicated) accuracy
 
-def initialize_population(size, data):
+def initialize_population(size: int, data: dict):
+    """
+    Initialize the population with random architectures.
+
+    Args:
+        size: The size of the population to initialize.
+        data: The data containing architecture information.
+
+    Returns:
+        list: A list of tuples representing the initial population.
+    """
     archs = np.random.choice(15625, size=size, replace=False)
     return [(arch, 200, np.float64(data[arch]["testacc"])) for arch in archs]
 
-def select_parents(population, num_parents):
+def select_parents(population: list, num_parents: int):
+    """
+    Select parent architectures for reproduction, based on roulette wheel selection.
+
+    Args:
+        population: The current population of architectures.
+        num_parents: The number of parent architectures to select.
+
+    Returns:
+        list: A list of selected parent architectures.
+    """
     # select parents according to roulette wheel selection
     total_fitness = sum(individual[2] for individual in population)
     assert total_fitness > 0, "Total fitness is zero, cannot perform selection"
@@ -40,7 +60,19 @@ def select_parents(population, num_parents):
     selected_parents = [population[i] for i in selected_indices]
     return selected_parents
 
-def mutate_architecture(arch, mut_prob, data, arch_str_to_index):
+def mutate_architecture(arch: int, mut_prob: float, data: dict, arch_str_to_index: dict):
+    """
+    Mutate the architecture by randomly changing edges with a given mutation probability.
+
+    Args:
+        arch: The architecture index to mutate.
+        mut_prob: The probability of mutation for each edge in the architecture.
+        data: The data containing architecture information.
+        arch_str_to_index: A dictionary mapping architecture strings to their corresponding indices.
+
+    Returns:
+        int: The index of the mutated architecture.
+    """
     # mutate the architecture by randomly changing edges with mut_prob probability
     arch_str = data[arch]["arch"]
     arch_list = arch_features.arch_to_list(arch_str)
@@ -61,7 +93,19 @@ def mutate_architecture(arch, mut_prob, data, arch_str_to_index):
     new_arch_inx = arch_features.get_arch_index_from_edges(arch_list, arch_str_to_index)
     return new_arch_inx
 
-def tabpfn_predict(archs_to_predict, population, data, first_n_epochs_features):
+def tabpfn_predict(archs_to_predict: list, population: list, data: dict, first_n_epochs_features: int):
+    """
+    Predict the accuracy of architectures using the TabPFN model.
+
+    Args:
+        archs_to_predict: List of architecture indices to predict.
+        population: The current population of architectures.
+        data: The data containing architecture information.
+        first_n_epochs_features: Number of epochs to include as features for prediction.
+
+    Returns:
+        np.array: Predicted accuracies for the given architectures.
+    """
     # get features and labels for training architectures
     train_features = []
     train_labels = []
@@ -100,7 +144,7 @@ def tabpfn_predict(archs_to_predict, population, data, first_n_epochs_features):
         print(f"arch {archs_to_predict[i]}: last test accuracy: {data[archs_to_predict[i]]['accuracies'][str(first_n_epochs_features)]['test_accuracy']}, prediction: {pred_acc[i]}, true label: {true_labels_for_printing_only[i]}")
     return pred_acc
 
-def generate_offspring(population, num_parents, num_offspring, mut_prob, data, arch_str_to_index):
+def generate_offspring(population: list, num_parents: int, num_offspring: int, mut_prob: float, data: dict, arch_str_to_index: dict):
     """
     Generates offspring architectures by mutating the parent architectures.
 
@@ -136,7 +180,7 @@ def generate_offspring(population, num_parents, num_offspring, mut_prob, data, a
 
     return offspring_archs
 
-def split_offspring_to_promising_and_finalized(offspring_archs, offsprings_predicted_acc_dict, children_predicted_acc, best_individual, architectures_trained_for_epochs, current_treshold, prediction_variance_treshold, variance_measurement_epochs):
+def split_offspring_to_promising_and_finalized(offspring_archs: list, offsprings_predicted_acc_dict: dict, children_predicted_acc: list, best_individual: tuple, architectures_trained_for_epochs: list, current_treshold: float, prediction_variance_treshold: float, variance_measurement_epochs: int):
     """
     Splits the offspring architectures into promising and finalized.
 
@@ -146,19 +190,20 @@ def split_offspring_to_promising_and_finalized(offspring_archs, offsprings_predi
     Such architectures are added to the finalized children list, which will not be trained further.
     Others are kept in the offspring list, which will be trained further.
 
-    args:
-        offspring_archs: list of offspring architectures to split
-        offsprings_predicted_acc_dict: dictionary mapping offspring architectures to a list of their predicted accuracies in each epoch of training
-        children_predicted_acc: list of the latest predicted accuracies for the offspring architectures
-        best_individual: the best individual in the population
-        architectures_trained_for_epochs: how many epochs the offspring architectures have been trained for
-        current_treshold: the current threshold for being promising, which can change during training
-        prediction_variance_treshold: the threshold for considering the prediction stable, meaning it does not change much in the last epochs
-        variance_measurement_epochs: the number of epochs to consider for measuring prediction variance
+    Args:
+        offspring_archs (list): list of offspring architectures to split
+        offsprings_predicted_acc_dict (dict): dictionary mapping offspring architectures to a list of their predicted accuracies in each epoch of training
+        children_predicted_acc (list): list of the latest predicted accuracies for the offspring architectures
+        best_individual (tuple): the best individual in the population
+        architectures_trained_for_epochs (list): how many epochs the offspring architectures have been trained for
+        current_treshold (float): the current threshold for being promising, which can change during training
+        prediction_variance_treshold (float): the threshold for considering the prediction stable, meaning it does not change much in the last epochs
+        variance_measurement_epochs (int): the number of epochs to consider for measuring prediction variance
 
-    returns:
-        finalized_children: list of architectures that are finalized and will not be trained further
-        offspring_archs: list of architectures that are still promising and will be trained further
+    Returns:
+        tuple: (finalized_children, offspring_archs), where:
+            finalized_children: list of architectures that are finalized and will not be trained further
+            offspring_archs: list of architectures that are still promising and will be trained further
     """
     
     finalized_children = []
@@ -180,7 +225,28 @@ def split_offspring_to_promising_and_finalized(offspring_archs, offsprings_predi
     return finalized_children, offspring_archs
 
 
-def evolutionary_algorithm(num_offspring, num_generations, mut_prob, init_population_size, num_parents, data, arch_str_to_index, treshold_to_train_further, prediction_variance_treshold = 0.1, variance_measurement_epochs = 10):
+def evolutionary_algorithm(num_offspring: int, num_generations: int, mut_prob: float, init_population_size: int, num_parents: int, data: dict, arch_str_to_index: dict, treshold_to_train_further: float, prediction_variance_treshold: float = 0.1, variance_measurement_epochs: int = 10):
+    """
+    Runs the evolutionary algorithm for neural architecture search using TabPFN for predicting architecture performance.
+
+    Args:
+        num_offspring (int): Number of offspring architectures to generate in each generation.
+        num_generations (int): Number of generations to run the evolutionary algorithm.
+        mut_prob (float): Mutation probability for each edge in the architecture.
+        init_population_size (int): Initial population size of architectures. These architectures are fully trained for 200 epochs and their final accuracy is known.
+        num_parents (int): Number of parent architectures to select for mutation in each generation.
+        data (dict): The dataset containing information about each architecture.
+        arch_str_to_index (dict): A dictionary mapping architecture strings to their corresponding indices.
+        treshold_to_train_further (float): Threshold for determining if an architecture is promising enough to train further.
+        prediction_variance_treshold (float): Threshold for considering the prediction stable, meaning it does not change much in the last epochs.
+        variance_measurement_epochs (int): Number of epochs to consider for measuring prediction variance.
+
+    Returns:
+        tuple: (best_individual, population), where:
+            best_individual: The best architecture found after running the evolutionary algorithm, represented as a tuple (arch_index, trained_epochs, predicted_accuracy).
+            population: The final population of architectures after running the evolutionary algorithm, represented as a list of tuples (arch_index, trained_epochs, predicted_accuracy).
+    """
+    
     # Initialize the population with random architectures
     population = initialize_population(init_population_size, data)
 
@@ -235,6 +301,12 @@ def evolutionary_algorithm(num_offspring, num_generations, mut_prob, init_popula
 
 
 def main(args: argparse.Namespace):
+    """
+    Main function to run the evolutionary algorithm for neural architecture search using TabPFN for predicting architecture performance.
+
+    Args:
+        args (argparse.Namespace): Command line arguments.
+    """
     # set random seed
     np.random.seed(args.seed)
 

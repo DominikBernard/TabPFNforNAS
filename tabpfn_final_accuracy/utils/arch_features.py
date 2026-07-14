@@ -38,6 +38,7 @@ def log_scale_synflow(synflow_value: float) -> float:
     return np.log10(synflow_value + 1e-12)
 
 def get_first_n_train_accuracies_from_data(arch_index: int, data: list[dict], n: int = 10) -> list[float]:
+    """Get the first n train accuracies from the data for a given architecture index."""
     train_accuracies = []
     for i in range(n):
         train_accuracies.append(data[arch_index]["accuracies"][str(i)]['train_accuracy'])
@@ -89,7 +90,7 @@ def get_basic_features(arch_str: str, arch_index: int, connected_feature: bool, 
     """
     Get basic features from architecture string.
 
-    This is used when creating dataset directly from the API, since we don't have access to zero-cost features and train accuracies in that case.
+    This is used when creating dataset directly from the API, and we don't have access to zero-cost features and train accuracies in that case.
     """
     features = []
     if arch_index_feature:

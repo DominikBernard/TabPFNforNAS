@@ -28,6 +28,12 @@ parser.add_argument('--plot', action='store_true', default=False, help='Plot pre
 parser.add_argument('--plot_dir', type=str, default='tabpfn_in_whole_nas_algorithms/plots/', help='Directory to save plots if --plot is enabled, if --plot is enabled and --plot_dir is None, plots will be shown.')
 
 def main(args: argparse.Namespace):
+    """
+    Main function to run the active learning loop using TabPFN.
+
+    Args:
+        args (argparse.Namespace): Command line arguments.
+    """
     # set random seed
     np.random.seed(args.seed)
 

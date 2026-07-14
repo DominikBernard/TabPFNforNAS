@@ -2,27 +2,32 @@ import numpy as np
 from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
 import warnings
+from typing import Optional
 
-def inverse_model(x, a, b):
+def inverse_model(x: np.ndarray, a: float, b: float) -> np.ndarray:
     """Model a - (b/x)."""
     return a - (b / x)
 
-def log_model(x, a, b, c, d):
+def log_model(x: np.ndarray, a: float, b: float, c: float, d: float) -> np.ndarray:
     """The logarithmic model: a * log(bx + c) + d."""
     # We suppress warnings here just in case the optimizer probes a negative value
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
         return a * np.log(b * x + c) + d
 
-def fit_and_evaluate(model_func, x_data, y_data, p0=None, bounds=(-np.inf, np.inf)):
+def fit_and_evaluate(model_func: callable, x_data: np.ndarray, y_data: np.ndarray, p0: Optional[list] = None, bounds: tuple = (-np.inf, np.inf)):
     """
     Generic function to fit a model to the data and calculate MSE.
     
-    Parameters:
-      model_func: The function to fit (e.g., inverse_model, log_model, ...)
-      x_data, y_data: The datasets
-      p0: Initial guesses for the parameters
-      bounds: Bounds for the parameters
+    Args:
+        model_func: The function to fit (e.g., inverse_model, log_model, ...)
+        x_data, y_data: The datasets
+        p0: Initial guesses for the parameters
+        bounds: Bounds for the parameters
+
+    Returns:
+        popt: Optimal parameters for the model
+        mse: Mean Squared Error of the fit
     """
     # Fit the curve.
     popt, pcov = curve_fit(model_func, x_data, y_data, p0=p0, bounds=bounds, maxfev=10000)
@@ -35,7 +40,7 @@ def fit_and_evaluate(model_func, x_data, y_data, p0=None, bounds=(-np.inf, np.in
 
 if __name__ == "__main__":
 
-    def plot_results(x_data, y_data, model_func, params, mse, label):
+    def plot_results(x_data: np.ndarray, y_data: np.ndarray, model_func: callable, params: list, mse: float, label: str):
         """Helper function to plot the results."""
         plt.plot(x_data, y_data, label='Actual Data', color='black', marker='x')
         x_smooth = np.linspace(min(x_data), max(x_data), 100)

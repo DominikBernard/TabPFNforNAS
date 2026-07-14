@@ -48,6 +48,9 @@ def train_and_evaluate(X_train: np.ndarray, y_train: np.ndarray, test_archs_test
     return predictions_reshaped, whole_mse, mse_per_arch, mse_for_last_epoch, variance_of_whole_mse, variance_for_last_epoch
 
 def main(args: argparse.Namespace):
+    """
+    Main function to run the experiment prediction from multiple runs using TabPFN on NATS-Bench data (one-by-one evaluation).
+    """
 
     # fix random seed
     np.random.seed(args.seed)

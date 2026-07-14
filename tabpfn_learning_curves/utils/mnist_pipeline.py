@@ -1,33 +1,34 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from tabpfn import TabPFNRegressor
+from typing import Optional
 
 from tabpfn_learning_curves.utils.tensor_extractor import extract_epoch_dev_accuracy
 
 # constants
 SCALING_FACTOR = 100  # Scaling factor for features to keep them in a similar range as the target values (accuracy in percent)
 
-def load_learning_curve_data(log_file_path):
+def load_learning_curve_data(log_file_path: str):
     """Extracts learning curve data into X (epochs) and y (accuracy)."""
     data = extract_epoch_dev_accuracy(log_file_path, acc_in_percent=True)
     X = data[:, 0].reshape(-1, 1)
     y = data[:, 1]
     return X, y
 
-def train_and_predict(X_train, y_train, X_test):
+def train_and_predict(X_train: np.ndarray, y_train: np.ndarray, X_test: np.ndarray):
     """Trains a TabPFNRegressor on the training data and predicts on the test data."""
     regressor = TabPFNRegressor()
     regressor.fit(X_train, y_train)
     y_pred = regressor.predict(X_test)
     return y_pred
 
-def compute_metrics(y_test, y_pred):
+def compute_metrics(y_test: np.ndarray, y_pred: np.ndarray):
     """Computes mean squared error and squared error of the last prediction."""
     mse = np.mean((y_pred - y_test) ** 2)
     last_pred_squared_error = (y_pred[-1] - y_test[-1]) ** 2
     return mse, last_pred_squared_error
 
-def split_data_compute_predictions_and_metrics(X, y, splitting_epoch):
+def split_data_compute_predictions_and_metrics(X: np.ndarray, y: np.ndarray, splitting_epoch: int):
     """
     Splits the dataset into training and testing sets based on the specified splitting epoch,
     trains a TabPFNRegressor on the training set,
@@ -57,7 +58,7 @@ def split_data_compute_predictions_and_metrics(X, y, splitting_epoch):
 
     return y_pred, mse, last_pred_squared_error
 
-def plot_learning_curve(epochs, X, y, y_pred, splitting_epoch, ax=None, mse=None, feature_names=None, path_to_save=None):
+def plot_learning_curve(epochs: np.ndarray, X: np.ndarray, y: np.ndarray, y_pred: np.ndarray, splitting_epoch: int, ax: Optional[plt.Axes] = None, mse: Optional[float] = None, feature_names: Optional[list] = None, path_to_save: Optional[str] = None):
     """
     Utility function to plot the learning curve along with any engineered features and predictions.
 
@@ -114,7 +115,7 @@ def plot_learning_curve(epochs, X, y, y_pred, splitting_epoch, ax=None, mse=None
             plt.show()
 
 
-def plot_dual_learning_curves(epochs, X1, y1, y_pred1, X2, y2, y_pred2, splitting_epoch, feature_names=None, path_to_save=None):
+def plot_dual_learning_curves(epochs: np.ndarray, X1: np.ndarray, y1: np.ndarray, y_pred1: np.ndarray, X2: np.ndarray, y2: np.ndarray, y_pred2: np.ndarray, splitting_epoch: int, feature_names: Optional[list] = None, path_to_save: Optional[str] = None):
     """
     Plots two learning curves side by side for comparison.
 
@@ -149,6 +150,8 @@ def plot_dual_learning_curves(epochs, X1, y1, y_pred1, X2, y2, y_pred2, splittin
         plt.show()
 
 def modify_plotting_parameters():
+    """Modifies the plotting parameters for a more aesthetically pleasing appearance."""
+
     plt.rcParams.update({
         "font.size": 12,        # base size
         "axes.titlesize": 14,   # title
@@ -158,7 +161,7 @@ def modify_plotting_parameters():
         "ytick.labelsize": 10,
     })
 
-def prepare_multi_run_data(learning_curve_data_list, splitting_epoch, test_run_index=-1, custom_indices=None):
+def prepare_multi_run_data(learning_curve_data_list: list, splitting_epoch: int, test_run_index: int = -1, custom_indices: Optional[list] = None):
     """
     Prepares data for multiple runs of the learning curve prediction experiment.
 
@@ -204,7 +207,18 @@ def prepare_multi_run_data(learning_curve_data_list, splitting_epoch, test_run_i
 
     return X_train, y_train, X_test, y_test
 
-def plot_multi_run_learning_curves(learning_curve_data_list, y_pred_list, splitting_epoch, test_run_index=-1, ax=None, path_to_save=None):
+def plot_multi_run_learning_curves(learning_curve_data_list: list, y_pred_list: list, splitting_epoch: int, test_run_index: int = -1, ax: Optional[plt.Axes] = None, path_to_save: Optional[str] = None):
+    """
+    Plots multiple learning curves for different runs, highlighting the test run and its predictions.
+
+    Args:
+        learning_curve_data_list (list of np.ndarray): List of learning curve data arrays for each run.
+        y_pred_list (list of np.ndarray): List of predicted values for each run.
+        splitting_epoch (int): Epoch at which the train/test split occurs.
+        test_run_index (int, optional): Index of the run to be used as the test run. Defaults to -1 (last run).
+        ax (matplotlib.axes.Axes, optional): If provided, the plot will be drawn on this axes instead of creating a new figure.
+        path_to_save (str, optional): Path to save the plot. If not provided, the plot will be displayed.
+    """
     modify_plotting_parameters()
 
     standalone = False
@@ -247,7 +261,7 @@ def plot_multi_run_learning_curves(learning_curve_data_list, y_pred_list, splitt
         else:
             plt.show()
 
-def plot_multi_run_learning_curves_side_by_side(learning_curve_data_list, y_pred_lists, splitting_epoch, path_to_save=None):
+def plot_multi_run_learning_curves_side_by_side(learning_curve_data_list: list, y_pred_lists: list, splitting_epoch: int, path_to_save: Optional[str] = None):
     """
     Plots multiple learning curves side by side for comparison.
 

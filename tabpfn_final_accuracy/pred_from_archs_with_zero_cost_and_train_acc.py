@@ -29,6 +29,12 @@ parser.add_argument('--logdir', type=str, default='tabpfn_final_accuracy/logs', 
 
 
 def main(args: argparse.Namespace):
+    """
+    Main function to run the TabPFN on the features defined by the command line arguments (direct prediction of final accuracy).
+
+    Args:
+        args: Command line arguments.
+    """
     # set random seed
     np.random.seed(args.seed)
 

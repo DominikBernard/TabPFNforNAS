@@ -75,7 +75,18 @@ def prepare_dataset(data: dict, train_examples: int = 10, test_examples: int = 2
 
     return np.array(train_features), np.array(train_labels), test_archs_test, test_archs_train, train_indices, test_indices, test_labels_implicit_shape
 
-def calc_results(predictions, y_test, implicit_test_labels_shape):
+def calc_results(predictions: np.ndarray, y_test: np.ndarray, implicit_test_labels_shape: tuple) -> tuple:
+    """
+    Calculate the results (MSE, variances) for the predictions.
+
+    Args:
+        predictions (np.ndarray): The predicted values.
+        y_test (np.ndarray): The true values.
+        implicit_test_labels_shape (tuple): The shape of the implicit test labels.
+
+    Returns:
+        tuple: A tuple containing the reshaped predictions, whole MSE, MSE per architecture, MSE for the last epoch, variance of the whole MSE, and variance for the last epoch.
+    """
     whole_mse = np.mean((np.array(predictions) - np.array(y_test)) ** 2)
 
     y_test_reshaped = np.array(y_test).reshape(implicit_test_labels_shape)

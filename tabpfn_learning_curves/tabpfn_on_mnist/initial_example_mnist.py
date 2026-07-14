@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import argparse
 from contextlib import redirect_stdout
+from typing import Optional
 
 from tabpfn_learning_curves.utils.mnist_pipeline import load_learning_curve_data, split_data_compute_predictions_and_metrics, plot_learning_curve, modify_plotting_parameters, SCALING_FACTOR
 from tabpfn_learning_curves.utils.top_k_seasonalities import extract_top_k_seasonalities, build_fourier_features
@@ -25,7 +26,8 @@ parser.add_argument('--output_text_file', type=str, default=None, help='Path to 
 
 # feature engineering functions
 
-def add_trig_features(X, epochs, which_trig_features=[], feature_names=None):
+def add_trig_features(X: np.ndarray, epochs: np.ndarray, which_trig_features: list = [], feature_names: Optional[list] = None):
+    """Adds trigonometric features based on the epoch number to the feature matrix X."""
     features_to_add = []
     if 'sin_2pi' in which_trig_features:
         features_to_add.append((SCALING_FACTOR * np.sin(epochs)[:, np.newaxis], 'sinus s periodou 2π'))
@@ -43,39 +45,45 @@ def add_trig_features(X, epochs, which_trig_features=[], feature_names=None):
 
     return X
 
-def add_inverse_feature(X, epochs, feature_names=None):
+def add_inverse_feature(X: np.ndarray, epochs: np.ndarray, feature_names: Optional[list] = None):
+    """Adds the inverse feature 1 - 1/epoch to the feature matrix X."""
     f = SCALING_FACTOR * (1 - 1 / (epochs))[:, np.newaxis]
     if feature_names is not None:
         feature_names.extend(['rostoucí asymptotická funkce'])
     return np.hstack((X, f))
 
-def add_optimal_inverse_feature(X, epochs, y, feature_names=None):
+def add_optimal_inverse_feature(X: np.ndarray, epochs: np.ndarray, y: np.ndarray, feature_names: Optional[list] = None):
+    """Adds an optimally parameterized inverse function as a feature to the feature matrix X."""
     params, _ = fit_and_evaluate(inverse_model, epochs, y)
     f = inverse_model(epochs, *params)[:, np.newaxis]
     if feature_names is not None:
         feature_names.extend(['optimalizovaná asymptotická funkce'])
     return np.hstack((X, f))
 
-def add_log_feature(X, epochs, feature_names=None):
+def add_log_feature(X: np.ndarray, epochs: np.ndarray, feature_names: Optional[list] = None):
+    """Adds the log feature to the feature matrix X."""
     f = (10 * (np.log(SCALING_FACTOR * epochs - 90)))[:, np.newaxis]
     if feature_names is not None:
         feature_names.extend(['logaritmus'])
     return np.hstack((X, f))
 
-def add_optimal_log_feature(X, epochs, y, feature_names=None):
+def add_optimal_log_feature(X: np.ndarray, epochs: np.ndarray, y: np.ndarray, feature_names: Optional[list] = None):
+    """Adds an optimally parameterized logarithmic function as a feature to the feature matrix X."""
     params, _ = fit_and_evaluate(log_model, epochs, y, p0=[1, 1, 1, 1])
     f = log_model(epochs, *params)[:, np.newaxis]
     if feature_names is not None:
         feature_names.extend(['optimalizovaný logaritmus'])
     return np.hstack((X, f))
 
-def add_square_feature(X, epochs, feature_names=None):
+def add_square_feature(X: np.ndarray, epochs: np.ndarray, feature_names: Optional[list] = None):
+    """Adds the square of the epoch as a feature to the feature matrix X."""
     f = SCALING_FACTOR * (epochs ** 2 / 10_000)[:, np.newaxis]
     if feature_names is not None:
         feature_names.extend(['čtverec epochy'])
     return np.hstack((X, f))
 
-def add_seasonality_features(X, y, splitting_epoch, k=5, L=10, feature_names=None):
+def add_seasonality_features(X: np.ndarray, y: np.ndarray, splitting_epoch: int, k: int = 5, L: int = 10, feature_names: Optional[list] = None):
+    """Adds seasonality features based on top k detected seasonalities in the training data to the feature matrix X."""
     periods, freqs = extract_top_k_seasonalities(y[:splitting_epoch], k, L)
     print(f"Detected periods: {periods}, frequencies: {freqs}")
     seasonality_features = build_fourier_features(X[:, 0], freqs) * SCALING_FACTOR
@@ -85,20 +93,38 @@ def add_seasonality_features(X, y, splitting_epoch, k=5, L=10, feature_names=Non
             feature_names.append(f'sezónnost, cosinus s periodou {period}')
     return np.hstack((X, seasonality_features))
 
-def add_target_noise_feature(X, y, seed=42, feature_names=None):
+def add_target_noise_feature(X: np.ndarray, y: np.ndarray, seed: int = 42, feature_names: Optional[list] = None):
+    """Adds a feature that is the target value with some noise added to the feature matrix X."""
     np.random.seed(seed)
     f = (y + np.random.normal(0, 0.5, size=y.shape))[:, np.newaxis]
     if feature_names is not None:
         feature_names.extend(['zašuměná cílová hodnota'])
     return np.hstack((X, f))
 
-def add_target_as_feature(X, y, feature_names=None):
+def add_target_as_feature(X: np.ndarray, y: np.ndarray, feature_names: Optional[list] = None):
+    """Adds the target value as a feature (without noise) to the feature matrix X."""
     f = y[:, np.newaxis]
     if feature_names is not None:
         feature_names.extend(['cílová hodnota'])
     return np.hstack((X, f))
 
 def compute_one_experiment(args: argparse.Namespace):
+    """
+    Computes the predictions and metrics for a single experiment based on the provided command line arguments.
+
+    Args:
+        args (argparse.Namespace): Command line arguments.
+
+    Returns:
+        tuple: (epochs, X, y, y_pred, splitting_epoch, mse, feature_names) where:
+            epochs (np.ndarray): Array of epoch numbers.
+            X (np.ndarray): Feature matrix.
+            y (np.ndarray): Array of true accuracy values.
+            y_pred (list): List of predicted accuracy arrays for each splitting epoch.
+            splitting_epoch (int): The epoch at which the data was split.
+            mse (float): Mean Squared Error of the predictions.
+            feature_names (list): List of names of the features used in the experiment.
+    """
     splitting_epoch = args.splitting_epoch
     
     # Load learning curve data
@@ -134,7 +160,16 @@ def compute_one_experiment(args: argparse.Namespace):
 
     return epochs, X, y, y_pred, splitting_epoch, mse, feature_names
 
-def prepare_features_for_multiple_experiments(args):
+def prepare_features_for_multiple_experiments(args: argparse.Namespace):
+    """
+    Prepares a list of features to be added for multiple experiments based on the command line arguments.
+
+    Args:
+        args (argparse.Namespace): Command line arguments.
+
+    Returns:
+        list: A list of tuples where each tuple contains the feature name and its corresponding value to be added in the experiments.
+    """
     features_list = []
     for feature in args.add_trig_features:
         features_list.append(('add_trig_features', [feature]))
@@ -169,6 +204,12 @@ def prepare_features_for_multiple_experiments(args):
 
 
 def run_multiple_added_features(args: argparse.Namespace):
+    """
+    Runs multiple experiments with different combinations of added features and cumulates the plots.
+
+    Args:
+        args (argparse.Namespace): Command line arguments.
+    """
     # set up nicer plot style
     modify_plotting_parameters()
 
@@ -207,7 +248,7 @@ def run_multiple_added_features(args: argparse.Namespace):
     else:
         plt.show()
 
-def execute_experiments(args):
+def execute_experiments(args: argparse.Namespace):
     """Handles the core logic for running experiments."""
     if args.run_multiple_added_features:
         run_multiple_added_features(args)

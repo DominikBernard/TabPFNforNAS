@@ -1,6 +1,7 @@
 import argparse
 from contextlib import redirect_stdout
 import numpy as np
+from typing import Optional
 
 from tabpfn_learning_curves.utils.mnist_pipeline import prepare_multi_run_data, train_and_predict, compute_metrics, plot_multi_run_learning_curves, plot_multi_run_learning_curves_side_by_side
 from tabpfn_learning_curves.utils.tensor_extractor import extract_epoch_dev_accuracy
@@ -46,7 +47,17 @@ def load_learning_curve_data(args: argparse.Namespace):
 
     return learning_curve_data_list, indices
 
-def execute_experiment_for_one_test_run_index(test_run_index, learning_curve_data_list, splitting_epoch, custom_indices=None):
+def execute_experiment_for_one_test_run_index(test_run_index: int, learning_curve_data_list: list, splitting_epoch: int, custom_indices: Optional[list] = None):
+    """
+    Executes the experiment for a specific test run index.
+
+    Args:
+        test_run_index (int): The index of the run to be used as the test run.
+        learning_curve_data_list (list): A list of numpy arrays containing learning curve data for each run.
+        splitting_epoch (int): The epoch at which to split the tested run into training and testing set.
+        custom_indices (Optional[list]): A list of indices to use when adding a special feature to distinguish the runs. If None, the default indices will be used (without any sorting).
+    """
+    
     print(f"Testing on run {test_run_index + 1}")
     X_train, y_train, X_test, y_test = prepare_multi_run_data(learning_curve_data_list, splitting_epoch, test_run_index=test_run_index, custom_indices=custom_indices)
 
@@ -64,6 +75,12 @@ def execute_experiment_for_one_test_run_index(test_run_index, learning_curve_dat
     return y_pred, mse, se_last
 
 def main(args: argparse.Namespace):
+    """
+    Main function to run the experiment on multiple learning curves with TabPFNRegressor on MNIST curves.
+
+    Args:
+        args (argparse.Namespace): Command line arguments.
+    """
 
     splitting_epoch = args.splitting_epoch
     test_run_index = args.test_run_index
