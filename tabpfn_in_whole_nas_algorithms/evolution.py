@@ -8,6 +8,7 @@ warnings.filterwarnings("ignore", category=RuntimeWarning)
 
 import tabpfn_final_accuracy.utils.arch_features as arch_features
 from tabpfn_final_accuracy.utils.dataloader import download_data_if_not_exists
+from tabpfn_final_accuracy.utils.create_arch_str_to_index_dict import create_index_to_arch_str_dict_if_not_exists
 
 parser = argparse.ArgumentParser(description='Parser parsing arguments for the evolutionary NAS algorithm')
 parser.add_argument('--seed', type=int, default=42, help='Random seed for sampling')
@@ -316,8 +317,8 @@ def main(args: argparse.Namespace):
     with open(args.datafile, 'r') as f:
         data = json.load(f)
 
-    with open(args.arch_str_to_index_dict_file, 'r') as f:
-        arch_str_to_index = json.load(f)
+    
+    arch_str_to_index = create_index_to_arch_str_dict_if_not_exists()
     
     # mut prob should be 1/6 to happen approximately one mutation per architecture, since there are 6 edges to mutate
     # num parents should be around 10-20% of the init population size, to have enough diversity but also good performance
