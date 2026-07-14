@@ -1,12 +1,18 @@
 import json
 
+from tabpfn_final_accuracy.utils.dataloader import download_data_if_not_exists
+
 def find_best_n_architecture(data: list[dict], n: int) -> list[tuple[int, float]]:
     """Find the best n architectures in the data."""
     best_archs = sorted([(i, data[i]["testacc"]) for i in range(len(data))], key=lambda x: x[1], reverse=True)[:n]
     return best_archs
 
 if __name__ == "__main__":
-    with open("tabpfn_final_accuracy/data/merged_data.json", "r") as f:
+    path_to_data = "tabpfn_final_accuracy/data/merged_data.json"
+
+    download_data_if_not_exists(path_to_data)
+
+    with open(path_to_data, "r") as f:
         data = json.load(f)
 
     n = 10

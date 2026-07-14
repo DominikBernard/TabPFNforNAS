@@ -4,7 +4,7 @@ import numpy as np
 import tabpfn
 import json
 
-from tabpfn_final_accuracy.utils.dataloader import skip_unconnected_archs_using_data
+from tabpfn_final_accuracy.utils.dataloader import skip_unconnected_archs_using_data, download_data_if_not_exists
 from tabpfn_final_accuracy.utils.arch_features import get_features_and_label
 from tabpfn_final_accuracy.utils.results_utils import verbose_meta_info, plot_one_scatter_plot
 
@@ -39,6 +39,8 @@ def main(args: argparse.Namespace):
 
     if args.verbose:
         verbose_meta_info(args)
+
+    download_data_if_not_exists(args.datafile)
 
     with open(args.datafile, 'r') as f:
         data = json.load(f)
