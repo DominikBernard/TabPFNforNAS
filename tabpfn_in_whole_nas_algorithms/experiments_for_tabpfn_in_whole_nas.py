@@ -7,7 +7,7 @@ parser = argparse.ArgumentParser(description='Run an experiment with the evoluti
 parser.add_argument('--logdir', type=str, default='tabpfn_in_whole_nas_algorithms/logs/', help='Directory to save logs.')
 parser.add_argument('--seeds', type=int, nargs='+', default=[42, 200, 300, 400, 1500, 1600, 1700, 2500, 2600, 2700], help='List of random seeds to run the experiment with.')
 parser.add_argument('--script_dir', type=str, default='tabpfn_in_whole_nas_algorithms/', help='Path to the Python script to run.')
-parser.add_argument('--search_algorithm', type=str, default='active_learning', choices=['evolution', 'active_learning'], help='Search algorithm to use: evolution or active_learning')
+parser.add_argument('--search_algorithm', type=str, default='evolution', choices=['evolution', 'active_learning'], help='Search algorithm to use: evolution or active_learning')
 
 def run_experiment(logdir: str, script: str="tabpfn_in_whole_nas_algorithms/evolution.py", inform_about_progress: bool=True, **kwargs):
     """
@@ -51,24 +51,15 @@ def run_experiment(logdir: str, script: str="tabpfn_in_whole_nas_algorithms/evol
 if __name__ == "__main__":
     args = parser.parse_args()
 
-    if args.search_algorithm == "evolution":
-        script = os.path.join(args.script_dir, "evolution.py")
-        logdir = os.path.join(args.logdir, "evolution")
-        for seed in args.seeds:
-            seed_logdir = os.path.join(logdir, f"seed_{seed}")
+    script = os.path.join(args.script_dir, f"{args.search_algorithm}.py")
+    logdir = os.path.join(args.logdir, args.search_algorithm)
+
+    for seed in args.seeds:
+        seed_logdir = os.path.join(logdir, f"seed_{seed}")
+        if args.search_algorithm == "evolution":
             run_experiment(logdir=seed_logdir, script=script, seed=seed)
-    else:
-        script = os.path.join(args.script_dir, "active_learning.py")
-        logdir = os.path.join(args.logdir, "active_learning")
-        for seed in args.seeds:
-            seed_logdir = os.path.join(logdir, f"seed_{seed}")
+        elif args.search_algorithm == "active_learning":
             run_experiment(logdir=seed_logdir, script=script, seed=seed, plot=True, plot_dir=seed_logdir)
-
-
-
-
-
-
 
 
 
