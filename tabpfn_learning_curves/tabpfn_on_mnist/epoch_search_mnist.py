@@ -67,6 +67,8 @@ def run_multiple_splitting_epochs(path_to_save_plot: Optional[str] = None):
     })
 
     log_file_path = "tabpfn_learning_curves/MNIST_example_runs/at=cnn,bs=1024,cs=conv3x3-BN-relu-conv3x3-BN-relu-linear,d=linear,e=100,hls=32,lr=0.0005,lrf=1e-05,m=0.005,o=SGD,s=42,i=9/logs.txt"
+    print(f"Extracting learning curve data from: {log_file_path}")
+
     learning_curve_data = extract_epoch_dev_accuracy(log_file_path, acc_in_percent=True)
     epochs = learning_curve_data[:, 0]
     y = learning_curve_data[:, 1]
@@ -82,6 +84,10 @@ def run_multiple_splitting_epochs(path_to_save_plot: Optional[str] = None):
         regressor.fit(X_train, y_train)
         y_pred = regressor.predict(X_test)
         y_preds.append(y_pred)
+
+        mse = np.mean((y_pred - y_test) ** 2)
+        se_last = (y_pred[-1] - y_test[-1]) ** 2
+        print(f"Splitting epoch: {splitting_epoch}, MSE: {mse}, SE of last point: {se_last}")
 
     cumulate_plots_for_different_splitting_epochs(epochs, y, y_preds, splitting_epochs, path_to_save=path_to_save_plot)
 
