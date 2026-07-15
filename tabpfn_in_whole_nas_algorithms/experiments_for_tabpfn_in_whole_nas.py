@@ -5,9 +5,9 @@ import sys
 
 parser = argparse.ArgumentParser(description='Run an experiment with the evolutionary or active learning algorithm')
 parser.add_argument('--logdir', type=str, default='tabpfn_in_whole_nas_algorithms/logs/', help='Directory to save logs.')
-parser.add_argument('--seeds', type=int, nargs='+', default=[42, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300], help='List of random seeds to run the experiment with.')
+parser.add_argument('--seeds', type=int, nargs='+', default=[42, 200, 300, 400, 1500, 1600, 1700, 2500, 2600, 2700], help='List of random seeds to run the experiment with.')
 parser.add_argument('--script_dir', type=str, default='tabpfn_in_whole_nas_algorithms/', help='Path to the Python script to run.')
-parser.add_argument('--search_algorithm', type=str, default='evolution', choices=['evolution', 'active_learning'], help='Search algorithm to use: evolution or active_learning')
+parser.add_argument('--search_algorithm', type=str, default='active_learning', choices=['evolution', 'active_learning'], help='Search algorithm to use: evolution or active_learning')
 
 def run_experiment(logdir: str, script: str="tabpfn_in_whole_nas_algorithms/evolution.py", inform_about_progress: bool=True, **kwargs):
     """
