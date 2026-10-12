@@ -13,3 +13,5 @@ tabpfn_learning_curves/tabpfn_on_nats_bench/pred_one_from_multiple.py
 tabpfn_learning_curves/plots/
 tabpfn_final_accuracy/analysis/analise_grid_specific_cf_with_skipped_unconnected_after_pred.py
 tabpfn_final_accuracy/plots/
+tabpfn_final_accuracy/utils/count_time.py
+tabpfn_learning_curves/utils/plot_10_nats_bench_runs.py
